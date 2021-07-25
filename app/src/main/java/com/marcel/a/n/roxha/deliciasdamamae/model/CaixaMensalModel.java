@@ -1,6 +1,20 @@
 package com.marcel.a.n.roxha.deliciasdamamae.model;
 
+import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CaixaMensalModel implements Serializable {
 
@@ -10,8 +24,11 @@ public class CaixaMensalModel implements Serializable {
     private double valorTotalBolosVendidosMensal;
     private double valorTotalCustosBolosVendidosMensal;
     private double totalGastoMensal;
+    public Context context;
 
     public CaixaMensalModel() {
+
+        this.context = context;
 
     }
 
@@ -62,4 +79,57 @@ public class CaixaMensalModel implements Serializable {
     public void setTotalGastoMensal(double totalGastoMensal) {
         this.totalGastoMensal = totalGastoMensal;
     }
+
+
+
+    public void  processaVendaBolo(String idBoloDelete, String id, int mesReferencia, int quantTotalBolosAdicionadosMensal,
+                                   double valorTotalBolosVendidosMensal, double valorTotalCustosBolosVendidosMensal,double totalGastoMensal){
+
+            String idBoloVitrineDelete = idBoloDelete;
+            String idRecebido = id;
+            int mesRecebido = mesReferencia;
+            double totalRecebido = quantTotalBolosAdicionadosMensal;
+            double totalVenda = valorTotalBolosVendidosMensal;
+            double custoRecebido = valorTotalCustosBolosVendidosMensal;
+            double totalmes = totalGastoMensal;
+
+
+        Map<String, Object> montanteAtualiza = new HashMap<>();
+
+        montanteAtualiza.put("identificadorCaixaMensal", idRecebido);
+        montanteAtualiza.put("mesReferencia", mesRecebido);
+        montanteAtualiza.put("quantTotalBolosAdicionadosMensal", totalRecebido);
+        montanteAtualiza.put("valorTotalBolosVendidosMensal", totalVenda);
+        montanteAtualiza.put("valorTotalCustosBolosVendidosMensal", custoRecebido);
+        montanteAtualiza.put("totalGastoMensal", totalmes);
+
+        FirebaseFirestore.getInstance().collection("CAIXA_MENSAL").document(idRecebido).update(montanteAtualiza).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+
+                FirebaseFirestore.getInstance().collection("BOLOS_EXPOSTOS_VITRINE").document(idBoloVitrineDelete).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+
+
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                        Log.i("Exclusão erro bolo vitrine:", e.getMessage());
+                    }
+                });
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+
+    }
+
 }

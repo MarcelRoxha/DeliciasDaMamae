@@ -30,6 +30,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.marcel.a.n.roxha.deliciasdamamae.R;
 import com.marcel.a.n.roxha.deliciasdamamae.adapter.ListaIngredientesReceitaFinalizarCompraAdapter;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
+import com.marcel.a.n.roxha.deliciasdamamae.model.BoloVendidoModel;
 import com.marcel.a.n.roxha.deliciasdamamae.model.BolosAdicionadosVitrine;
 import com.marcel.a.n.roxha.deliciasdamamae.model.CaixaMensalModel;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ItemEstoqueModel;
@@ -101,6 +102,8 @@ public class FinalizarVendaBoloExpostoVitrineActivity extends AppCompatActivity 
         idBoloRecuperado = getIntent().getStringExtra("idBoloVenda");
         idReceitaRecuperada = getIntent().getStringExtra("idReceitaBolo");
         idMontanteRecuperado = getIntent().getStringExtra("idMontate");
+
+        Toast.makeText(this, "id recuperado montante: " + idMontanteRecuperado, Toast.LENGTH_SHORT).show();
 
         //Componentes  de tela - toolbar
         botao_voltar_tela.setOnClickListener(new View.OnClickListener() {
@@ -186,7 +189,8 @@ public class FinalizarVendaBoloExpostoVitrineActivity extends AppCompatActivity 
 
             }
         });
-
+        alerEditValor.create();
+        alerEditValor.show();
     }
 
     private void atualizarValorVendaBolo(double valorConvert) {
@@ -204,6 +208,14 @@ public class FinalizarVendaBoloExpostoVitrineActivity extends AppCompatActivity 
                 vendaBolo = boloAtualizaVitrine.getValorVenda();
 
 
+                if(nomeBoloRecuperado != null && enderecoFotoBolo != null && custoBolo > 0 && vendaBolo >0){
+                    BoloVendidoModel boloVendidoModel = new BoloVendidoModel(FinalizarVendaBoloExpostoVitrineActivity.this);
+                    boloVendidoModel.salvarBolobanco(idMontanteRecuperado, idBoloRecuperado, nomeBoloRecuperado, valorRecebido, custoBolo);
+
+
+                }
+
+
 
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -213,10 +225,6 @@ public class FinalizarVendaBoloExpostoVitrineActivity extends AppCompatActivity 
             }
         });
 
-
-
-        Map<String, Object> boloAtualizaVendaIfood = new HashMap<>();
-        boloAtualizaVendaIfood.put("valorTotalVendaBolosAdicionados", valorRecebido);
 
 
 
@@ -243,11 +251,7 @@ public class FinalizarVendaBoloExpostoVitrineActivity extends AppCompatActivity 
 
     }
 
-    private void atualizarDadosCaixaMensal(String idCaixaMensal) {
 
-
-
-    }
 
     public void carregarListaIngredientesReceita() {
 
