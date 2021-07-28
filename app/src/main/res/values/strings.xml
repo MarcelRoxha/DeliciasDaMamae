@@ -112,9 +112,14 @@
     <string name="texto_venda_ifood">VENDA PELO IFOOD</string>
     <string name="texto_botao_venda_loja">VENDA PELA LOJA</string>
     <string name="texto_delicias_da_mamae_toolbar">Delicias da Mamãe</string>
-    <string name="botao_voltar_tela" />
+    <string name="botao_voltar_tela">VOLTAR</string>
     <string name="texto_toolbar_finalizar_venda">Finalizar venda</string>
     <string name="texto_ingrediente_adicionados_bolo_venda_finalizar">INGREDIENTES UTILIZADOS</string>
+    <string name="texto_botao_bolos_vendidos">BOLOS VENDIDOS</string>
+    <string name="texto_nome_bolo_vendido">NOME:</string>
+    <string name="texto_valor_venda_bolo">VALOR DE VENDA R$:</string>
+    <string name="texto_custo_bolo_vendido">VALOR CUSTO BOLO R$:</string>
+    <string name="texto_botao_bolo_vendido">ATUALIZAR INFORMAÇÕES</string>
     <!-- TODO: Remove or change this placeholder text -->
 
 

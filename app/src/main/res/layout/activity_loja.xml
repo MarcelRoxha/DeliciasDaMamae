@@ -23,7 +23,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_logo" />
+            app:srcCompat="@drawable/ic_logo"
+            android:contentDescription="TODO" />
 
         <TextView
             android:id="@+id/textView32"
@@ -67,7 +68,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="32dp"
             android:layout_marginEnd="16dp"
             android:background="@drawable/btn"
             android:text="@string/texto_botao_encerrar_dia"
@@ -75,7 +76,7 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/botao_compras_id" />
+            app:layout_constraintTop_toBottomOf="@+id/botao_bolos_vendidos_id" />
 
         <Button
             android:id="@+id/botao_compras_id"
@@ -142,6 +143,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="4dp"
             android:layout_marginEnd="16dp"
+            android:contentDescription="@string/imagem_bolo_cadastrado_venda_add_vitrine_adapter"
             android:paddingRight="40dp"
             android:scaleType="centerCrop"
             app:layout_constraintEnd_toEndOf="parent"
@@ -165,6 +167,21 @@
             app:layout_constraintStart_toStartOf="@+id/imagemCasoNaoTemBolosAdicionadoVitrineId"
             app:layout_constraintTop_toTopOf="@+id/imagemCasoNaoTemBolosAdicionadoVitrineId"
             app:layout_constraintVertical_bias="0.625" />
+
+        <Button
+            android:id="@+id/botao_bolos_vendidos_id"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/btn"
+            android:text="@string/texto_botao_bolos_vendidos"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/botao_compras_id" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

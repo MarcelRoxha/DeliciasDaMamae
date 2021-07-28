@@ -75,6 +75,7 @@ public class LojaActivity extends AppCompatActivity {
     private TextView textoCasoNaoTemBolosAdicionadosVitrine;
     private TextView textoBolosExpostosVitrine;
     private TextView texto_data;
+    private Button telabolosvendidos;
 
     //adapter
     private BolosConfecionadosExpostosVitrineAdapter adapter;
@@ -113,6 +114,7 @@ public class LojaActivity extends AppCompatActivity {
         imagemCasoNaoTemBolosAdicionadosVitrine = findViewById(R.id.imagemCasoNaoTemBolosAdicionadoVitrineId);
         textoCasoNaoTemBolosAdicionadosVitrine = findViewById(R.id.textoCasoNaoTenhaBoloAdicionadoVitrineId);
         textoBolosExpostosVitrine = findViewById(R.id.textView_expostos_na_vitrine_id);
+        telabolosvendidos = findViewById(R.id.botao_bolos_vendidos_id);
 
         //Instanciando as classes
         date = new Date();
@@ -144,6 +146,19 @@ public class LojaActivity extends AppCompatActivity {
                 }else{
                     carregarAlertMontanteNaoCriado();
                 }
+
+
+            }
+        });
+
+        telabolosvendidos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(LojaActivity.this, BolosVendidosActivity2.class);
+               // intent.putExtra("idMontanteRecuperado",idRecuperadoMontanteCasoExista);
+                startActivity(intent);
+                finish();
 
 
             }

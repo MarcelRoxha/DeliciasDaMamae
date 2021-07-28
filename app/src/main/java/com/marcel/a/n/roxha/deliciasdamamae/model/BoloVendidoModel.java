@@ -40,8 +40,8 @@ public class BoloVendidoModel implements Serializable {
 
     CaixaMensalModel caixaMensalModel;
 
-    public BoloVendidoModel(Context context) {
-            this.context = context;
+    public BoloVendidoModel() {
+
 
     }
 
