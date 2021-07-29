@@ -40,6 +40,8 @@ public class BolosVendidosActivity2 extends AppCompatActivity {
 
     //Variáveis
 
+    private String idMontanteAtual;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +50,7 @@ public class BolosVendidosActivity2 extends AppCompatActivity {
 
         recyclerView_lista_bolos_vendidos = findViewById(R.id.recyclerview_lista_bolos_vendidos_id);
 
-
+        idMontanteAtual = getIntent().getStringExtra("idMontanteRecuperado");
 
 
     }
@@ -96,6 +98,7 @@ public class BolosVendidosActivity2 extends AppCompatActivity {
 
                 Intent intent = new Intent(BolosVendidosActivity2.this, EditarBoloVendidoBancoActivity.class);
                 intent.putExtra("idBoloVendido", idBolo);
+                intent.putExtra("idMontanteAtual", idMontanteAtual);
                 startActivity(intent);
 
 

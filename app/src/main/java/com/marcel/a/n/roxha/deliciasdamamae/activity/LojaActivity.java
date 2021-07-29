@@ -156,7 +156,7 @@ public class LojaActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 Intent intent = new Intent(LojaActivity.this, BolosVendidosActivity2.class);
-               // intent.putExtra("idMontanteRecuperado",idRecuperadoMontanteCasoExista);
+                intent.putExtra("idMontanteRecuperado",idRecuperadoMontanteCasoExista);
                 startActivity(intent);
                 finish();
 
