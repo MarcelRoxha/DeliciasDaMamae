@@ -46,6 +46,7 @@ public class EditarBoloVendidoBancoActivity extends AppCompatActivity {
     private double valorVendaConvertidoDigitado = 0;
     private double resultadoVenda = 0;
     private double resultadoCusto = 0;
+    private double resultadoTotalGasto = 0;
     private double valorVendaConvert = 0;
     private double valorCustoConvert = 0;
 
@@ -233,8 +234,8 @@ public class EditarBoloVendidoBancoActivity extends AppCompatActivity {
 
     private void processaAtualizacaoMontante(String idMontante, double valorVendaBoloVendido, double valorCustoBoloVendido) {
 
-         double valorCustoConvert = valorVendaBoloVendido;
-         double valorVendaConvert = valorCustoBoloVendido;
+         double valorVendaConvert = valorVendaBoloVendido;
+         double valorCustoConvert = valorCustoBoloVendido;
 
 
         Toast.makeText(this, "Entrou no processa ", Toast.LENGTH_SHORT).show();
@@ -253,7 +254,7 @@ public class EditarBoloVendidoBancoActivity extends AppCompatActivity {
                           valorTotalCustosBolosVendidosMensal = caixaMensalModel.getValorTotalCustosBolosVendidosMensal();
                           totalGastoMensal = caixaMensalModel.getTotalGastoMensal();
 
-                        calcularValoresMontante(idRecuperadoMontanteAtual, valorCustoConvert, valorVendaConvert, valorTotalBolosVendidosMensal, valorTotalCustosBolosVendidosMensal, totalGastoMensal );
+                        calcularValoresMontante();
                         Toast.makeText(EditarBoloVendidoBancoActivity.this, "Entrou no Recupera Caixa Mensal ", Toast.LENGTH_SHORT).show();
 
                     }
@@ -270,53 +271,56 @@ public class EditarBoloVendidoBancoActivity extends AppCompatActivity {
 
 
 
-    private void calcularValoresMontante(String idRecuperadoMontAtual, double valorCustoConvert, double valorVendaConvert, double valorCustoMontate, double valorVendaConvertMontate, double totalGastoMensal) {
-        Toast.makeText(this, "Entrou no calcula Valores", Toast.LENGTH_SHORT).show();
-        resultadoVenda = valorVendaConvertMontate - valorVendaBoloVendidoCadastradoFirebase;
-        resultadoCusto = valorCustoMontate - valorCustoBoloVendidoCadastradoFirebase;
+    private void calcularValoresMontante() {
 
-        double totalGastoRecebido = totalGastoMensal - valorCustoConvert;
+            resultadoVenda = (valorTotalBolosVendidosMensal - valorVendaBoloVendidoCadastradoFirebase);
+            resultadoCusto = (valorTotalCustosBolosVendidosMensal - valorCustoBoloVendidoCadastradoFirebase);
+            resultadoTotalGasto = totalGastoMensal - valorCustoBoloVendidoCadastradoFirebase;
 
-
-            Toast.makeText(this, "Entrou na verificação dos resultados", Toast.LENGTH_SHORT).show();
-            double valorVendaUpdateMontante = resultadoVenda + valorVendaConvertidoDigitado;
-            double valorCustoUpdateMontante = resultadoCusto + valorCustoConvertidoDigitado;
-            double valorTotalGastoUpdateMontante = totalGastoRecebido + valorCustoConvertidoDigitado;
-            int mesUpdateMontante = mesReferencia;
-            int quantBolosAdicionadosMesUpdateMontante = quantTotalBolosAdicionadosMensal;
-            String idUpdateMontante = idRecuperadoMontAtual;
-
-            Map<String, Object> updateMontante = new HashMap<>();
-            updateMontante.put("identificadorCaixaMensal", idUpdateMontante);
-            updateMontante.put("mesReferencia", mesUpdateMontante);
-            updateMontante.put("quantTotalBolosAdicionadosMensal", quantBolosAdicionadosMesUpdateMontante);
-            updateMontante.put("valorTotalBolosVendidosMensal", valorVendaUpdateMontante);
-            updateMontante.put("valorTotalCustosBolosVendidosMensal", valorCustoUpdateMontante);
-            updateMontante.put("totalGastoMensal", valorTotalGastoUpdateMontante);
-
-            FirebaseFirestore.getInstance().collection("CAIXA_MENSAL").document(idUpdateMontante).update(updateMontante).addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-
-                    Toast.makeText(EditarBoloVendidoBancoActivity.this, "Sucesso ao atualizar montante", Toast.LENGTH_SHORT).show();
-
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-
-                    Toast.makeText(EditarBoloVendidoBancoActivity.this, "Erro ao atualizar montante", Toast.LENGTH_SHORT).show();
-
-                }
-            });
-
-
-
+        Toast.makeText(this, "Entrou no calcula montante", Toast.LENGTH_SHORT).show();
+                double somoVenda = resultadoVenda + valorVendaConvertidoDigitado;
+                double somoCusto = resultadoCusto + valorCustoConvertidoDigitado;
+                double somoTotalGasto = resultadoTotalGasto + valorCustoConvertidoDigitado;
+                int somoQuantAdd = quantTotalBolosAdicionadosMensal - 1;
+                atualizaMontante(somoVenda, somoCusto, somoTotalGasto, somoQuantAdd);
 
 
         }
 
+    private void atualizaMontante(double somoVenda, double somoCusto, double somoTotalGasto, int somoQuantAdd) {
 
+        String id = idRecuperadoMontanteAtual;
+        int mes = mesReferencia;
+        double totalVendas = somoVenda;
+        double totaCusto = somoCusto;
+        double totalGastoMensal = somoTotalGasto;
+        int quantAdd = somoQuantAdd;
+        Toast.makeText(this, "Entrou no atualiza montate", Toast.LENGTH_SHORT).show();
+        Map<String, Object> updateMontante = new HashMap<>();
+        updateMontante.put("identificadorCaixaMensal", id);
+        updateMontante.put("mesReferencia", mes);
+        updateMontante.put("quantTotalBolosAdicionadosMensal", quantAdd);
+        updateMontante.put("valorTotalBolosVendidosMensal", totalVendas);
+        updateMontante.put("valorTotalCustosBolosVendidosMensal", totaCusto);
+        updateMontante.put("totalGastoMensal", totalGastoMensal);
+
+        FirebaseFirestore.getInstance().collection("CAIXA_MENSAL").document(idRecuperadoMontanteAtual).update(updateMontante).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+
+                Toast.makeText(EditarBoloVendidoBancoActivity.this, "Sucesso ao atualizar montante", Toast.LENGTH_SHORT).show();
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+                Toast.makeText(EditarBoloVendidoBancoActivity.this, "Erro ao atualizar montante", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+    }
 
 
 }
