@@ -99,6 +99,7 @@ public class LojaActivity extends AppCompatActivity {
     private int numMesReferencia;
     private int verificaCaixaMensalCriado;
     public int verificaBolosExpostosVitrine;
+    public DocumentSnapshot snapshot;
 
 
 

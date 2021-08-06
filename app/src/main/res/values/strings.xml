@@ -120,6 +120,10 @@
     <string name="texto_valor_venda_bolo">VALOR DE VENDA R$:</string>
     <string name="texto_custo_bolo_vendido">VALOR CUSTO BOLO R$:</string>
     <string name="texto_botao_bolo_vendido">ATUALIZAR INFORMAÇÕES</string>
+    <string name="todo">TODO</string>
+    <string name="texto_botao_voltar_tela_bolos_vendidos">VOLTAR</string>
+    <string name="texto_botao_confirmar_deletar_bolo_vendido_banco">CONFIRMAR EXCLUSÃO</string>
+    <string name="texto_botao_cancelar_exclusao_bolo_vendido_banco_id">CANCELAR EXCLUSÃO</string>
     <!-- TODO: Remove or change this placeholder text -->
 
 

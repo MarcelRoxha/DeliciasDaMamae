@@ -102,11 +102,20 @@ public class BolosVendidosActivity2 extends AppCompatActivity {
                 startActivity(intent);
 
 
-
             }
         }).setNeutralButton("DELETAR DO BANCO", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+
+                Intent intent = new Intent(BolosVendidosActivity2.this, DeletarBoloVendidoBancoActivity.class);
+                intent.putExtra("idBoloVendido", idBolo);
+                intent.putExtra("idMontanteAtual", idMontanteAtual);
+                startActivity(intent);
+
+
+
+
+
 
             }
         }).setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {

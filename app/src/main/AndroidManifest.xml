@@ -17,7 +17,8 @@
         android:roundIcon="@mipmap/ic_logo_tela_cel_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.DeliciasDaMamae">
-        <activity android:name=".activity.EditarBoloVendidoBancoActivity"></activity>
+        <activity android:name=".activity.DeletarBoloVendidoBancoActivity"></activity>
+        <activity android:name=".activity.EditarBoloVendidoBancoActivity" />
         <activity android:name=".activity.BolosVendidosActivity2" />
         <activity
             android:name=".activity.FinalizarVendaBoloExpostoVitrineActivity"
