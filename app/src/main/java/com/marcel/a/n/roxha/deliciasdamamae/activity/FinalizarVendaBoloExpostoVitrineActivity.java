@@ -210,7 +210,7 @@ public class FinalizarVendaBoloExpostoVitrineActivity extends AppCompatActivity 
 
                 if(nomeBoloRecuperado != null && enderecoFotoBolo != null && custoBolo > 0 && vendaBolo >0){
                     BoloVendidoModel boloVendidoModel = new BoloVendidoModel();
-                    boloVendidoModel.salvarBolobanco(idMontanteRecuperado, idBoloRecuperado, nomeBoloRecuperado, valorRecebido, custoBolo);
+                    boloVendidoModel.salvarBolobanco(FinalizarVendaBoloExpostoVitrineActivity.this, idMontanteRecuperado, idBoloRecuperado, nomeBoloRecuperado, valorRecebido, custoBolo);
 
 
                 }

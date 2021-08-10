@@ -112,11 +112,6 @@ public class BolosVendidosActivity2 extends AppCompatActivity {
                 intent.putExtra("idMontanteAtual", idMontanteAtual);
                 startActivity(intent);
 
-
-
-
-
-
             }
         }).setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
             @Override

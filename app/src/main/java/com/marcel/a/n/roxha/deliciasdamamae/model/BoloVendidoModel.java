@@ -27,9 +27,10 @@ public class BoloVendidoModel implements Serializable {
     private String nomeBolo;
     private double velorVenda;
     private double custoBolo;
-    public Context context;
+
     double resultadocustobolos = 0;
     double resultadovendabolos = 0;
+    double resultadoTotalGasto = 0;
     int contAddBolo = 0;
 
     String idReferenciaBolo;
@@ -38,7 +39,7 @@ public class BoloVendidoModel implements Serializable {
     double valorReferencia ;
     double custoReferencia;
 
-    CaixaMensalModel caixaMensalModel;
+    public Context context;
 
     public BoloVendidoModel() {
 
@@ -85,8 +86,9 @@ public class BoloVendidoModel implements Serializable {
         this.context = context;
     }
 
-    public void salvarBolobanco(String idMontante, String id, String nomeBolo, double valorVenda, double custoBolo){
+    public void salvarBolobanco(Context context, String idMontante, String id, String nomeBolo, double valorVenda, double custoBolo){
 
+         this.context = context;
          idReferenciaBolo = id;
          idMontanteReferencia = idMontante;
          nomeReferencia = nomeBolo;
@@ -102,14 +104,14 @@ public class BoloVendidoModel implements Serializable {
             @Override
             public void onSuccess(DocumentReference documentReference) {
 
-                Toast.makeText(context, "Parabéns pela venda!", Toast.LENGTH_SHORT).show();
+
                 FirebaseFirestore.getInstance().collection("CAIXA_MENSAL").document(idMontanteReferencia).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
 
 
-                       CaixaMensalModel caixaMensalModel = documentSnapshot.toObject(CaixaMensalModel.class);
-                         String idRecuperado = caixaMensalModel.getIdentificadorCaixaMensal();
+                      CaixaMensalModel caixaMensalModel = documentSnapshot.toObject(CaixaMensalModel.class);
+                         String idRecuperado = idMontanteReferencia;
                         int mesRecuperado = caixaMensalModel.getMesReferencia();
                         int quantBoloAddRecuperado = caixaMensalModel.getQuantTotalBolosAdicionadosMensal();
                         double totalGastoMensalRecuperado = caixaMensalModel.getTotalGastoMensal();
@@ -117,7 +119,6 @@ public class BoloVendidoModel implements Serializable {
                         double totalCustoBolosrecuperaod = caixaMensalModel.getValorTotalCustosBolosVendidosMensal();
                         precessaVendaMontante(idReferenciaBolo, idRecuperado, valorReferencia, custoReferencia, mesRecuperado, quantBoloAddRecuperado,
                         totalGastoMensalRecuperado, totalBolosVendidosRecuperado,  totalCustoBolosrecuperaod);
-
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -156,24 +157,26 @@ public class BoloVendidoModel implements Serializable {
         double custobolo = custoReferencia;
         double valorcustomontante = totalCustoBolosrecuperaod;
 
+        double totalGastoMontante = totalGastoMensalRecuperado;
+
+        resultadoTotalGasto = totalGastoMontante + custobolo;
+
         resultadocustobolos = custobolo + valorcustomontante;
 
         contAddBolo = quantBoloAddRecuperado + 1;
 
-        if(resultadocustobolos > 0 && resultadocustobolos > 0){
 
             String idMontante = idRecuperado;
             String idBoloe = idBoloDelete;
             int mesmMontante = mesRecuperado;
-            double totalGastoMontante = totalGastoMensalRecuperado;
+
 
             CaixaMensalModel caixaProcessa = new CaixaMensalModel();
-            caixaProcessa.processaVendaBolo(idBoloe,idMontante, mesmMontante, contAddBolo, resultadovendabolos, resultadocustobolos, totalGastoMontante);
+            caixaProcessa.processaVendaBolo(this.context, idBoloe,idMontante, mesmMontante, contAddBolo, resultadovendabolos, resultadocustobolos, resultadoTotalGasto);
 
-            Intent intent = new Intent(context, LojaActivity.class);
-            context.startActivity(intent);
+           /* Intent intent = new Intent(context, LojaActivity.class);
+            context.startActivity(intent);*/
 
-        }
 
 
     }

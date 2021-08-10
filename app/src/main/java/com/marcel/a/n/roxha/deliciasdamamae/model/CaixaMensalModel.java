@@ -1,5 +1,6 @@
 package com.marcel.a.n.roxha.deliciasdamamae.model;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -11,6 +12,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.marcel.a.n.roxha.deliciasdamamae.activity.LojaActivity;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -28,7 +30,7 @@ public class CaixaMensalModel implements Serializable {
 
     public CaixaMensalModel() {
 
-        this.context = context;
+
 
     }
 
@@ -82,9 +84,9 @@ public class CaixaMensalModel implements Serializable {
 
 
 
-    public void  processaVendaBolo(String idBoloDelete, String id, int mesReferencia, int quantTotalBolosAdicionadosMensal,
+    public void  processaVendaBolo(Context context, String idBoloDelete, String id, int mesReferencia, int quantTotalBolosAdicionadosMensal,
                                    double valorTotalBolosVendidosMensal, double valorTotalCustosBolosVendidosMensal,double totalGastoMensal){
-
+            this.context = context;
             String idBoloVitrineDelete = idBoloDelete;
             String idRecebido = id;
             int mesRecebido = mesReferencia;
@@ -111,8 +113,8 @@ public class CaixaMensalModel implements Serializable {
                     @Override
                     public void onSuccess(Void aVoid) {
 
-
-
+                        Intent intent = new Intent(context, LojaActivity.class);
+                        context.startActivity(intent);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
