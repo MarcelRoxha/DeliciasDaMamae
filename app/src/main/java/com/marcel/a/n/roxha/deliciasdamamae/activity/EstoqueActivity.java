@@ -31,6 +31,7 @@ import com.google.firebase.firestore.WriteBatch;
 import com.marcel.a.n.roxha.deliciasdamamae.R;
 import com.marcel.a.n.roxha.deliciasdamamae.adapter.ItemEstoqueAdapter;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
+import com.marcel.a.n.roxha.deliciasdamamae.helper.ItemEstoqueDAO;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ItemEstoqueModel;
 
 import java.util.List;
@@ -199,8 +200,8 @@ adapter.setOnItemLongClickListerner(new ItemEstoqueAdapter.OnLongClickListener()
                 String chaveSeguranca = editText.getText().toString();
 
                 if(!chaveSeguranca.isEmpty() && chaveSeguranca.contains(chaveSeg)){
-                    ItemEstoqueModel itemEstoqueModel = new ItemEstoqueModel();
-                    itemEstoqueModel.listaInicial();
+                    ItemEstoqueDAO itemEstoqueDAO = new ItemEstoqueDAO(EstoqueActivity.this);
+                    itemEstoqueDAO.listaDefault();
                     Toast.makeText(EstoqueActivity.this, "Lista iniciada com valores padrão", Toast.LENGTH_SHORT).show();
                 }else {
                     Toast.makeText(EstoqueActivity.this, "Chave de segurança incorreta", Toast.LENGTH_SHORT).show();

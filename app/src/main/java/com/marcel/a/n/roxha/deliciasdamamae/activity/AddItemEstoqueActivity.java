@@ -19,6 +19,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.marcel.a.n.roxha.deliciasdamamae.R;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
+import com.marcel.a.n.roxha.deliciasdamamae.helper.ItemEstoqueDAO;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ItemEstoqueModel;
 
 import java.util.HashMap;
@@ -26,19 +27,31 @@ import java.util.Map;
 
 public class AddItemEstoqueActivity extends AppCompatActivity {
 
+
+    //Componentes de tela:
+
+    //-----------------------------------------------INPUTS-------------------USER
     private TextInputEditText edit_nome_item_estoque;
     private TextInputEditText edit_valor_item_estoque;
     private TextInputEditText edit_quantTotal_item_estoque;
     private TextInputEditText edit_quantPacote_item_estoque;
     private TextInputEditText edit_quantUsadaReceita_item_estoque;
 
+    //-----------------------------------------------RADIOBUTTON-------------------USER
     private RadioButton radioButton_gramas_ml_unid, radioButton_litro_kilo;
-    private RadioButton radioButton_gramas_ml_unid_receita, radioButton_litro_kilo_receita;
 
+
+    //Classes:
     private ItemEstoqueModel itemEstoqueModel, itemEstoqueModelAtualizar;
+    private ItemEstoqueDAO itemEstoqueDAO;
+
+    //Firebase
     private FirebaseFirestore db = ConfiguracaoFirebase.getFirestor();
     private CollectionReference ref = db.collection("Item_Estoque");
 
+
+    //Variaveis temporarias:
+    private String itemKey;
 
 
     @Override
@@ -46,22 +59,24 @@ public class AddItemEstoqueActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item_estoque);
 
+
+        //----->identificando os componentes da tela de acordo com o id inserido<-----
         edit_nome_item_estoque = findViewById(R.id.edit_nome_item_estoque_id);
         edit_valor_item_estoque = findViewById(R.id.edit_valor_item_estoque_id);
         edit_quantTotal_item_estoque = findViewById(R.id.edit_quant_item_estoque_id);
         edit_quantPacote_item_estoque = findViewById(R.id.edit_quant_pacote_item_estoque_id);
         edit_quantUsadaReceita_item_estoque = findViewById(R.id.edit_quant_usada_receita_id);
-
         radioButton_gramas_ml_unid = findViewById(R.id.radioButton_grama_ml_und_id);
-
-
         radioButton_litro_kilo = findViewById(R.id.radioButton_Litro_Kilo_id);
 
+        //Recuperando a chave do item estoque caso seja atualização
+         itemKey = getIntent().getStringExtra("itemKey");
 
-        String itemKey = getIntent().getStringExtra("itemKey");
-
+         /*Verificando se o item recuperado é diferente de nulo, pois se for direfente de nulo significa
+             que é uma atualização e os inputs e RadionButtons serão preenchidos com os dados*/
         if (itemKey != null) {
 
+            //Quando a condição for verdadeira, será recuperado o item do estoque no banco de dados
             FirebaseFirestore.getInstance().collection("Item_Estoque").document(itemKey).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                 @Override
                 public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -92,15 +107,18 @@ public class AddItemEstoqueActivity extends AppCompatActivity {
 
     }
 
+    //Verificando qual icone será exibido no menu suspenso de acordo com a condição de atualização ou cadastro
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        String itemKey = getIntent().getStringExtra("itemKey");
 
+        //Verificando a chave para alternar entre os icones
         if(itemKey != null) {
+            //Se a condição for verdaderia, será uma atualização, então o icone utilizdo é o de atualização
             getMenuInflater().inflate(R.menu.menu_atualizar_item_estoque, menu);
 
         }else {
+            //Se a condição for falsa, será um cadastro, então o icone utilizado é o de salvar
             getMenuInflater().inflate(R.menu.menu_salvar_item_estoque, menu);
         }
 
@@ -108,6 +126,7 @@ public class AddItemEstoqueActivity extends AppCompatActivity {
 
     }
 
+    //Methodo que atualiza o item
     public void atualizarItem(){
 
         String itemKey = getIntent().getStringExtra("itemKey");
@@ -145,11 +164,11 @@ public class AddItemEstoqueActivity extends AppCompatActivity {
                     itemAtualizado.put("valorItem",valorItemDigitado);
                     itemAtualizado.put("quantItem", quantItemDigitado);
                     itemAtualizado.put("unidMedida", itemEstoqueModel.getUnidMedida());
-                    /*itemAtualizado.put("unidReceita", getUnidReceita());*/
+                    itemAtualizado.put("unidReceita", itemEstoqueModel.getUnidReceita());
                     itemAtualizado.put("valorFracionado",       itemEstoqueModel.calcularValorFracionado());
                     itemAtualizado.put("valorItemPorReceita", itemEstoqueModel.valorItemPorReceita());
                     itemAtualizado.put("quantPacote", quantPacoteItemDigitado);
-                    itemAtualizado.put("quantUsadaReceita", quantUsadaReceitaItemDigitado);
+                    itemAtualizado.put("quantUsadaReceita", itemEstoqueModel.getCalcularValorFracionado());
 
                     ref.update(itemAtualizado).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
@@ -196,9 +215,14 @@ public class AddItemEstoqueActivity extends AppCompatActivity {
                   itemEstoqueModel.setUnidMedida("1000");
                 }
 
-
+/*
                 itemEstoqueModel.salvarItemEstoque();
-                Toast.makeText(this, "Sucesso ao salvar item em estoque", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Sucesso ao salvar item em estoque", Toast.LENGTH_SHORT).show();*/
+
+                itemEstoqueDAO = new ItemEstoqueDAO(AddItemEstoqueActivity.this);
+                itemEstoqueDAO.salvarItemEstoque(itemEstoqueModel);
+
+
 
             case R.id.bt_atualizar:
 

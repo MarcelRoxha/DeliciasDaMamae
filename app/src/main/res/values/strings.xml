@@ -9,18 +9,18 @@
     <string name="bt_tela_estoque">ESTOQUE</string>
     <string name="bt_add_item_estoque">CADASTRAR ITEM EM ESTOQUE</string>
     <string name="textViewNomeAdapter">Nome:</string>
-    <string name="textViewPrecoAdapter">Atual R$:</string>
+    <string name="textViewPrecoAdapter">Custo Atual da compra R$:</string>
     <string name="textViewQuantEstoqueAdapter">Quant. Total estoque:</string>
     <string name="textViewQuantPorReceitaAdapter">Quant. Usada na Receita: </string>
     <string name="textViewValorFracionadoAtualAdapter">Valor Fracionado do item atualmente R$:</string>
-    <string name="textViewCustoAtualItemPorReceitaAdapter">Custo desse item por receita:  </string>
+    <string name="textViewQuantUsadaReceita">Ex: 1 kilo = 1000 gramas(informe as gramas):  </string>
     <string name="edit_add_nome_item_estoque_id">Digite o nome do item</string>
     <string name="edit_add_valor_item_estoque">informe o valor pago no item R$:</string>
     <string name="edit_add_quant_item_estoque">Informe a quantidade do item em estoque</string>
     <string name="textViewInfoUnidMedida">Informe ao lado a quantidade por pacote do item e abaixo selecione a unidade de medida desse item</string>
     <string name="radioButton_gramas_ml_unid">Gramas / ML / Unidade</string>
     <string name="radioButton_litro_kilo">Litros / Kilo</string>
-    <string name="textViewInfoQuantUsadaReceita">"Informe ao lado a quantidade utilizada por receita em gramas/ML ou unidade"</string>
+    <string name="textViewInfoQuantUsadaReceita">"Informe a quantidade utilizada por receita em gramas/ML ou unidade"</string>
     <string name="title_activity_main2">MainActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -124,6 +124,7 @@
     <string name="texto_botao_voltar_tela_bolos_vendidos">VOLTAR</string>
     <string name="texto_botao_confirmar_deletar_bolo_vendido_banco">CONFIRMAR EXCLUSÃO</string>
     <string name="texto_botao_cancelar_exclusao_bolo_vendido_banco_id">CANCELAR EXCLUSÃO</string>
+    <string name="texto_custo_por_receita_item">Valor Item por Receita:</string>
     <!-- TODO: Remove or change this placeholder text -->
 
 

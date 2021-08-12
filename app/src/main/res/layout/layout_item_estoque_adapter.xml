@@ -116,7 +116,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="3dp"
         android:layout_marginBottom="3dp"
-        android:text="@string/textViewCustoAtualItemPorReceitaAdapter"
+        android:text="@string/texto_custo_por_receita_item"
         android:textColor="@color/rosa"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -129,7 +129,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="3dp"
-        android:text="@string/textViewCustoAtualItemPorReceitaAdapter"
+        android:text="@string/texto_custo_por_receita_item"
         app:layout_constraintBottom_toBottomOf="@+id/textView11"
         app:layout_constraintStart_toEndOf="@+id/textView11"
         app:layout_constraintTop_toTopOf="@+id/textView11" />
