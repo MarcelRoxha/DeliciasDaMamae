@@ -22,6 +22,12 @@ public class ReceitasProntasActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        setTheme(R.style.Theme_DeliciasDaMamae);
         setContentView(R.layout.activity_receitas_prontas);
 
         recycler_receitas_prontas = findViewById(R.id.recycler_receitas_prontas_id);

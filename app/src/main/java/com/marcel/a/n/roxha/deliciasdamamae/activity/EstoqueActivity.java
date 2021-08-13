@@ -38,6 +38,7 @@ import java.util.List;
 
 public class EstoqueActivity extends AppCompatActivity {
 
+    /*Componentes de tela*/
     private Button botao_adiciona_item_estoque;
     private RecyclerView recyclerView;
     private ItemEstoqueAdapter adapter;
@@ -52,6 +53,13 @@ public class EstoqueActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        setTheme(R.style.Theme_DeliciasDaMamae);
+
         setContentView(R.layout.activity_estoque);
 
 

@@ -36,6 +36,12 @@ public class PrincipalActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        setTheme(R.style.Theme_DeliciasDaMamae);
         setContentView(R.layout.activity_principal);
 
         botao_tela_estoque = findViewById(R.id.bt_tela_estoque_id);
@@ -113,7 +119,6 @@ public class PrincipalActivity extends AppCompatActivity {
     }
 
     public void carregarTelaEstoque(){
-
     Intent intent = new Intent(PrincipalActivity.this, EstoqueActivity.class);
     startActivity(intent);
     }

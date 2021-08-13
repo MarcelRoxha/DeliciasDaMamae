@@ -6,8 +6,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
@@ -39,6 +41,9 @@ public class ItemEstoqueDAO implements InterfaceItemEstoqueDAO{
     boolean resultadoUpdate;
     boolean resultadoDelet;
 
+    //Identificador do item para atualização
+
+    public String idRecuperado;
 
     public ItemEstoqueDAO(Context context) {
         this.context = context;
@@ -48,7 +53,7 @@ public class ItemEstoqueDAO implements InterfaceItemEstoqueDAO{
     public boolean salvarItemEstoque(ItemEstoqueModel itemEstoqueModel) {
 
         try{
-            Map<String, String> item = new HashMap<>();
+            Map<String, Object> item = new HashMap<>();
 
             item.put("nameItem",itemEstoqueModel.getNameItem());
             item.put("versionEstoque", itemEstoqueModel.getVersionEstoque());
@@ -96,12 +101,63 @@ public class ItemEstoqueDAO implements InterfaceItemEstoqueDAO{
     }
 
     @Override
-    public boolean atualizarItemEstoque(ItemEstoqueModel itemEstoqueModel) {
-        return false;
+    public boolean atualizarItemEstoque(String id, ItemEstoqueModel itemEstoqueModel) {
+
+        this.idRecuperado = id;
+
+        if(idRecuperado != null){
+
+            try{
+
+                Map<String, Object> itemAtualiza = new HashMap<>();
+
+                itemAtualiza.put("nameItem",itemEstoqueModel.getNameItem());
+                itemAtualiza.put("versionEstoque", itemEstoqueModel.getVersionEstoque());
+                itemAtualiza.put("valorItem", itemEstoqueModel.getValorItem());
+                itemAtualiza.put("quantItem", itemEstoqueModel.getQuantItem());
+                itemAtualiza.put("unidMedida", itemEstoqueModel.getUnidMedida());
+                itemAtualiza.put("valorFracionado", itemEstoqueModel.calcularValorFracionado());
+                itemAtualiza.put("valorItemPorReceita", itemEstoqueModel.valorItemPorReceita());
+                itemAtualiza.put("quantPacote", itemEstoqueModel.getQuantPacote());
+                itemAtualiza.put("quantUsadaReceita", itemEstoqueModel.getQuantUsadaReceita());
+
+
+                referenceItemEstoque.document(idRecuperado).update(itemAtualiza).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+
+                        Toast.makeText(context, "Suceso ao atualizar item", Toast.LENGTH_SHORT).show();
+                        resultadoUpdate = true;
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(context, "Erro ao atualizar item", Toast.LENGTH_SHORT).show();
+                        resultadoUpdate = false;
+                    }
+                });
+
+
+
+
+            }catch (Exception e){
+
+                Log.i("Error: " , e.getMessage());
+                resultadoUpdate = false;
+            }
+
+
+
+        }
+
+
+        return resultadoUpdate;
     }
 
     @Override
-    public boolean deletarItemEstoque(ItemEstoqueModel itemEstoqueModel) {
+    public boolean deletarItemEstoque(String id, ItemEstoqueModel itemEstoqueModel) {
+
+
         return false;
     }
     //Methodo para inicializar uma lista completa de itens estoque com valores padrão

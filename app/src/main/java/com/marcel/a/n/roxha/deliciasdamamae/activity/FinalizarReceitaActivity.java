@@ -81,6 +81,12 @@ public class FinalizarReceitaActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        setTheme(R.style.Theme_DeliciasDaMamae);
         setContentView(R.layout.activity_finalizar_receita);
 
         nameKeyReceita = getIntent().getStringExtra("nameReceita");

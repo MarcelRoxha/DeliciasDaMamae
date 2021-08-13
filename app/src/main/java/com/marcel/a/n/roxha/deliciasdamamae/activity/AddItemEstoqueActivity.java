@@ -57,6 +57,14 @@ public class AddItemEstoqueActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        setTheme(R.style.Theme_DeliciasDaMamae);
+
         setContentView(R.layout.activity_add_item_estoque);
 
 
@@ -126,69 +134,6 @@ public class AddItemEstoqueActivity extends AppCompatActivity {
 
     }
 
-    //Methodo que atualiza o item
-    public void atualizarItem(){
-
-        String itemKey = getIntent().getStringExtra("itemKey");
-
-        if (itemKey != null) {
-
-            FirebaseFirestore.getInstance().collection("Item_Estoque").document(itemKey).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                @Override
-                public void onSuccess(DocumentSnapshot documentSnapshot) {
-
-                    ItemEstoqueModel itemEstoqueModel = documentSnapshot.toObject(ItemEstoqueModel.class);
-
-                    final String IdEstoque = "Estoque_DeliciasDaMamae";
-
-                    String nomeItemDigitado = edit_nome_item_estoque.getText().toString();
-                    String valorItemDigitado = edit_valor_item_estoque.getText().toString();
-                    String quantItemDigitado = edit_quantTotal_item_estoque.getText().toString();
-                    String quantPacoteItemDigitado = edit_quantPacote_item_estoque.getText().toString();
-                    String quantUsadaReceitaItemDigitado = edit_quantUsadaReceita_item_estoque.getText().toString();
-
-                    if (radioButton_gramas_ml_unid.isChecked()) {
-                        itemEstoqueModel.setUnidMedida("1");
-                    } else if (radioButton_litro_kilo.isChecked()) {
-                        itemEstoqueModel.setUnidMedida("1000");
-                    }
-
-
-                     DocumentReference ref = FirebaseFirestore.getInstance().collection("Item_Estoque")
-                                                                                 .document(itemKey);
-
-                    Map<String, Object > itemAtualizado = new HashMap<>();
-
-                    itemAtualizado.put("nameItem", nomeItemDigitado);
-                    itemAtualizado.put("versionEstoque", IdEstoque);
-                    itemAtualizado.put("valorItem",valorItemDigitado);
-                    itemAtualizado.put("quantItem", quantItemDigitado);
-                    itemAtualizado.put("unidMedida", itemEstoqueModel.getUnidMedida());
-                    itemAtualizado.put("unidReceita", itemEstoqueModel.getUnidReceita());
-                    itemAtualizado.put("valorFracionado",       itemEstoqueModel.calcularValorFracionado());
-                    itemAtualizado.put("valorItemPorReceita", itemEstoqueModel.valorItemPorReceita());
-                    itemAtualizado.put("quantPacote", quantPacoteItemDigitado);
-                    itemAtualizado.put("quantUsadaReceita", itemEstoqueModel.getCalcularValorFracionado());
-
-                    ref.update(itemAtualizado).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-
-                            Toast.makeText(AddItemEstoqueActivity.this, "Sucesso ao atualizar item", Toast.LENGTH_SHORT).show();
-
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-
-                        }
-                    });
-
-                }
-            });
-        }
-    }
-
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
@@ -214,11 +159,6 @@ public class AddItemEstoqueActivity extends AppCompatActivity {
                 } else if (radioButton_litro_kilo.isChecked()) {
                   itemEstoqueModel.setUnidMedida("1000");
                 }
-
-/*
-                itemEstoqueModel.salvarItemEstoque();
-                Toast.makeText(this, "Sucesso ao salvar item em estoque", Toast.LENGTH_SHORT).show();*/
-
                 itemEstoqueDAO = new ItemEstoqueDAO(AddItemEstoqueActivity.this);
                 itemEstoqueDAO.salvarItemEstoque(itemEstoqueModel);
 
@@ -226,7 +166,30 @@ public class AddItemEstoqueActivity extends AppCompatActivity {
 
             case R.id.bt_atualizar:
 
-                atualizarItem();
+                String nomeItemDigitadoAtualiza = edit_nome_item_estoque.getText().toString();
+                String valorItemDigitadoAtualiza = edit_valor_item_estoque.getText().toString();
+                String quantItemDigitadoAtualiza = edit_quantTotal_item_estoque.getText().toString();
+                String quantPacoteItemDigitadoAtualiza = edit_quantPacote_item_estoque.getText().toString();
+                String quantUsadaReceitaItemDigitadoAtualiza = edit_quantUsadaReceita_item_estoque.getText().toString();
+
+                itemEstoqueModel = new ItemEstoqueModel();
+
+                itemEstoqueModel.setNameItem(nomeItemDigitadoAtualiza);
+                itemEstoqueModel.setValorItem(valorItemDigitadoAtualiza);
+                itemEstoqueModel.setQuantItem(quantItemDigitadoAtualiza);
+                itemEstoqueModel.setQuantPacote(quantPacoteItemDigitadoAtualiza);
+                itemEstoqueModel.setQuantUsadaReceita(quantUsadaReceitaItemDigitadoAtualiza);
+
+                if (radioButton_gramas_ml_unid.isChecked()) {
+                    itemEstoqueModel.setUnidMedida("1");
+                } else if (radioButton_litro_kilo.isChecked()) {
+                    itemEstoqueModel.setUnidMedida("1000");
+                }
+                itemEstoqueDAO = new ItemEstoqueDAO(AddItemEstoqueActivity.this);
+                itemEstoqueDAO.atualizarItemEstoque(itemKey, itemEstoqueModel);
+
+
+               // atualizarItem();
 
 
             default:

@@ -16,7 +16,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_logo_tela_cel_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.DeliciasDaMamae">
+        android:theme="@style/Theme.Splash">
         <activity android:name=".activity.DeletarBoloVendidoBancoActivity"></activity>
         <activity android:name=".activity.EditarBoloVendidoBancoActivity" />
         <activity android:name=".activity.BolosVendidosActivity2" />

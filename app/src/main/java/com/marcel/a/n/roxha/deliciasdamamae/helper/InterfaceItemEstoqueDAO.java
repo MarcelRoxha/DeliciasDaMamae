@@ -6,6 +6,6 @@ public interface InterfaceItemEstoqueDAO {
 
     public boolean salvarItemEstoque(ItemEstoqueModel itemEstoqueModel);
     public boolean salvarItemEstoqueRealtimeDataBase(ItemEstoqueModel itemEstoqueModel);
-    public boolean atualizarItemEstoque(ItemEstoqueModel itemEstoqueModel);
-    public boolean deletarItemEstoque(ItemEstoqueModel itemEstoqueModel);
+    public boolean atualizarItemEstoque(String KeyItemEstoque, ItemEstoqueModel itemEstoqueModel);
+    public boolean deletarItemEstoque(String KeyItemEstoque, ItemEstoqueModel itemEstoqueModel);
 }

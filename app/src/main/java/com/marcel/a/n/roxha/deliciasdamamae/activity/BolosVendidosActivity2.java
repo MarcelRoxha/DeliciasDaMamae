@@ -46,6 +46,12 @@ public class BolosVendidosActivity2 extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        setTheme(R.style.Theme_DeliciasDaMamae);
         setContentView(R.layout.activity_bolos_vendidos2);
 
         recyclerView_lista_bolos_vendidos = findViewById(R.id.recyclerview_lista_bolos_vendidos_id);
