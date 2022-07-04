@@ -10,10 +10,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.marcel.a.n.roxha.deliciasdamamae.R;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ReceitaModel;
 
 public class ReceitasProntasAdapter extends FirestoreRecyclerAdapter<ReceitaModel, ReceitasProntasAdapter.ReceitasProntasViewHolder> {
+
+    private ReceitasProntasAdapter.OnItemClickLisener listener;
 
     public ReceitasProntasAdapter(@NonNull FirestoreRecyclerOptions<ReceitaModel> options) {
         super(options);
@@ -50,6 +53,25 @@ public class ReceitasProntasAdapter extends FirestoreRecyclerAdapter<ReceitaMode
             nomeReceita = itemView.findViewById(R.id.text_nome_receita_pronta_adapter_id);
             valorTotalReceita = itemView.findViewById(R.id.text_valor_total_receita_pronta_adapter_id);
             rendimento = itemView.findViewById(R.id.text_rendimento_por_fornada_receita_pronta_adapter_id);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = getAdapterPosition();
+                    if(position != RecyclerView.NO_POSITION && listener != null){
+                        listener.onItemClick(getSnapshots().getSnapshot(position), position);
+
+                    }
+                }
+            });
         }
+    }
+    public interface OnItemClickLisener{
+        void onItemClick(DocumentSnapshot documentSnapshot, int position);
+    }
+    public void setOnItemClickListerner(ReceitasProntasAdapter.OnItemClickLisener listerner){
+
+        this.listener = listerner;
+
     }
 }

@@ -54,6 +54,10 @@
     <string name="text_valores_add">Valores adicionados R$: </string>
     <string name="cancelar_ingredientes_receita">CANCELAR</string>
     <string name="text_quanto_rende_receita">Quantas porções rende essa receita?</string>
+    <string name="text_quanto_rende_receita_editar">Porções por Fornada</string>
+    <string name="text_porcentagem_acrescimo_receita_completa_editar">Porcentagem(gás, detergente, etc..)</string>
+    <string name="text_ingredientes_adicionados_receita_completa_editar">Ingredientes adicionados na receita</string>
+    <string name="text_ingredientes_estoque_receita_completa_editar">Ingredientes em Estoque</string>
     <string name="text_porcentagem_acrescimo_receita">Quantos % deve ser acrescentado a esta receita, que será o custo das despesas não contabilizadas. Ex: Gás, detergente, mão-de-obra, etc...</string>
     <string name="edit_porcentagem">Porcentagem:</string>
     <string name="edit_porcoes_receita">Porções:</string>
@@ -125,6 +129,17 @@
     <string name="texto_botao_confirmar_deletar_bolo_vendido_banco">CONFIRMAR EXCLUSÃO</string>
     <string name="texto_botao_cancelar_exclusao_bolo_vendido_banco_id">CANCELAR EXCLUSÃO</string>
     <string name="texto_custo_por_receita_item">Valor Item por Receita:</string>
+    <string name="title_activity_editar_receita_completa_cadastrada">
+        EditarReceitaCompletaCadastrada
+    </string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <!-- TODO: Remove or change this placeholder text -->
 
 

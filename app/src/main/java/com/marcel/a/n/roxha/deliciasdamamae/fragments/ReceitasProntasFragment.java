@@ -1,5 +1,6 @@
 package com.marcel.a.n.roxha.deliciasdamamae.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -10,11 +11,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.marcel.a.n.roxha.deliciasdamamae.R;
+import com.marcel.a.n.roxha.deliciasdamamae.activity.EditarReceitasCompletasCadastradas;
+import com.marcel.a.n.roxha.deliciasdamamae.activity.FinalizarReceitaActivity;
+import com.marcel.a.n.roxha.deliciasdamamae.activity.NovaReceitaActivity;
 import com.marcel.a.n.roxha.deliciasdamamae.adapter.ReceitasProntasAdapter;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ReceitaModel;
 
@@ -68,12 +74,10 @@ public class ReceitasProntasFragment extends Fragment {
     }
 
     private RecyclerView recyclerView_Receitas_completas_cadastradas;
-    private RecyclerView recyclerView_Massas_cadastradas;
-    private RecyclerView recyclerView_Cobeturas_cadastradas;
+
 
     private ReceitasProntasAdapter adapterReceitaCompleta;
-    private ReceitasProntasAdapter adapterCobertura;
-    private ReceitasProntasAdapter adapterMassa;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -102,7 +106,22 @@ public class ReceitasProntasFragment extends Fragment {
         recyclerView_Receitas_completas_cadastradas.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView_Receitas_completas_cadastradas.setAdapter(adapterReceitaCompleta);
         //recyclerView_Receitas_completas_cadastradas.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
+        System.out.println("Clicado no item da receita completa");
 
+        adapterReceitaCompleta.setOnItemClickListerner(new ReceitasProntasAdapter.OnItemClickLisener() {
+            @Override
+            public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
+
+
+                Intent intent = new Intent(getActivity(), EditarReceitasCompletasCadastradas.class);
+                intent.putExtra("idReceita", documentSnapshot.getId().toString());
+                intent.putExtra("idReceita", documentSnapshot.getId().toString());
+                startActivity(intent);
+
+
+
+            }
+        });
     }
 
     @Override
