@@ -48,6 +48,8 @@
     <string name="qnt">QNT:</string>
     <string name="imagemingredienteselecionado">imagemIngredienteSelecionado</string>
     <string name="textView_nomeReceita">Nome Receita</string>
+    <string name="textView_valorTotalReceita">R$ TOTAL</string>
+    <string name="textView_valorTotalIngredientesReceita">R$ TOTAL INGREDIENTES</string>
     <string name="textView_custoIngredientesReceita">"Custo Ingredientes: "</string>
     <string name="text_valor_item_add_receita">Valor</string>
     <string name="text_valor_itemAdd_receita">Valor Receita</string>

@@ -19,16 +19,24 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.marcel.a.n.roxha.deliciasdamamae.R;
+import com.marcel.a.n.roxha.deliciasdamamae.adapter.IngredienteAdapter;
 import com.marcel.a.n.roxha.deliciasdamamae.adapter.IngredienteAdicionadoAdapter;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
 import com.marcel.a.n.roxha.deliciasdamamae.model.BolosModel;
 import com.marcel.a.n.roxha.deliciasdamamae.model.CalcularValorIngredienteAdicionadoReceitaCompletaCadastrada;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ItemEstoqueModel;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ReceitaModel;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class EditarReceitasCompletasCadastradas extends AppCompatActivity {
 
@@ -37,13 +45,22 @@ public class EditarReceitasCompletasCadastradas extends AppCompatActivity {
     private String nomeReceitaCompletaCadastradaparaEditar;
     private String porceosReceita = "";
     private String porcentReceita = "";
+    private List<Double> listaIngredientesAdicionadosReceitaCompletaCadastrada = new ArrayList<>();
+    private String valorItemReceitaCadastradaCompleta;
+    private String valorTotalIngredientesReceitaCadastradaCompleta;
+    private Double valor;
+    private String idIngredientesReceitaCadastradaCompletaCadastrada = "";
     private boolean statusCarregamentoValorIngredientes;
     private double valorRecuperado = 0;
+    private double valorAdicionado = 0;
+    private double resultado = 0;
 
     private Button botaoSalvarAlteracoesReceitaCadastrada ;
 
     private TextInputEditText inputPorcoesPorFornadaReceitaCompletaCadastradaEditar ;
     private TextView texto_nome_receita_completa_cadastrada_editar ;
+    private TextView texto_valor_total_receita_completa_cadastrada_editar ;
+    private TextView texto_valor_total_ingredientes_receita_completa_cadastrada_editar ;
     private TextInputEditText inputPorcentagemPorReceitaCompletaCadastradaEditar ;
 
     private RecyclerView listaIngredientesAdicionadosReceitaCompletaEditar;
@@ -53,6 +70,9 @@ public class EditarReceitasCompletasCadastradas extends AppCompatActivity {
     private CollectionReference referenceReceitaCompleta = db.collection("Receitas_completas");
 
     private IngredienteAdicionadoAdapter adicionadoAdapter;
+    private IngredienteAdapter adapterItemEstoque;
+
+
 
 
 
@@ -73,8 +93,11 @@ public class EditarReceitasCompletasCadastradas extends AppCompatActivity {
         inputPorcoesPorFornadaReceitaCompletaCadastradaEditar = findViewById(R.id.input_editar_porcoes_por_fornada_receita_completa_id);
         inputPorcentagemPorReceitaCompletaCadastradaEditar = findViewById(R.id.input_editar_porcentagem_acrescimo_receita_completa_id);
         texto_nome_receita_completa_cadastrada_editar = findViewById(R.id.nome_receita_completa_cadastrada_editar_id);
+        texto_valor_total_receita_completa_cadastrada_editar = findViewById(R.id.valor_total_receita_cadastrada_completa_editar_id);
+        texto_valor_total_ingredientes_receita_completa_cadastrada_editar = findViewById(R.id.valor_total_ingredientes_receitas_cadastrada_completa_editar_id);
 
         listaIngredientesAdicionadosReceitaCompletaEditar = findViewById(R.id.recyclerView_ingredientes_adicionados_receita_completa_editar_id);
+        listaIngredientesEstoqueEditar = findViewById(R.id.recyclerView_ingredientes_estoque_id);
 
         botaoSalvarAlteracoesReceitaCadastrada.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,13 +143,10 @@ public class EditarReceitasCompletasCadastradas extends AppCompatActivity {
                 listaIngredientesAdicionadosReceitaCompletaEditar.addItemDecoration(new DividerItemDecoration(getApplicationContext(), LinearLayout.VERTICAL));
                 adicionadoAdapter.startListening();
 
-              calcularValorIngredienteAdicionadoReceitaCompletaCadastrada.calcularValoresIngredientesAdicionados(idReceitaCompletaCadastradaparaEditar, nomeReceitaCompletaCadastradaparaEditar);
+             // calcularValorIngredienteAdicionadoReceitaCompletaCadastrada.calcularValoresIngredientesAdicionados(idReceitaCompletaCadastradaparaEditar, nomeReceitaCompletaCadastradaparaEditar);
 
                 Toast.makeText(getApplicationContext(), "Teste valor total: " + calcularValorIngredienteAdicionadoReceitaCompletaCadastrada.getValorTotalCalculadoIngredientesReceitaCadastradaCompleta(), Toast.LENGTH_SHORT).show();
-
-
-
-
+                calcularValoresIngredientesAdicionados(idReceitaCompletaCadastradaparaEditar, nomeReceitaCompletaCadastradaparaEditar);
 
 
             }
@@ -138,9 +158,174 @@ public class EditarReceitasCompletasCadastradas extends AppCompatActivity {
         });
 
     }
+    private void calcularValoresIngredientesAdicionados(String idReceitaCadastradaCompleta, String nomeReceitaCompletaCadastrada){
+
+
+        CollectionReference collectionReferencelistaIngredientesAdicionadosReceitaCompletaCalcularValor =  referenceReceitaCompleta.document(idReceitaCadastradaCompleta).collection(nomeReceitaCompletaCadastrada);
+
+        collectionReferencelistaIngredientesAdicionadosReceitaCompletaCalcularValor.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                List<DocumentSnapshot> listIngredientes = queryDocumentSnapshots.getDocuments();
+                for (DocumentSnapshot list: listIngredientes){
+
+                    idIngredientesReceitaCadastradaCompletaCadastrada = list.getId();
+
+                    collectionReferencelistaIngredientesAdicionadosReceitaCompletaCalcularValor.document(idIngredientesReceitaCadastradaCompletaCadastrada).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                            ItemEstoqueModel itemEstoqueModel = documentSnapshot.toObject(ItemEstoqueModel.class);
+
+                            assert itemEstoqueModel != null;
+
+                            valorItemReceitaCadastradaCompleta = itemEstoqueModel.getValorItemPorReceita();
+
+                            valor = Double.parseDouble(valorItemReceitaCadastradaCompleta);
+                            listaIngredientesAdicionadosReceitaCompletaCadastrada.add(valor);
+
+                          guardarValoresIngredientes(valor);
+
+
+                        }
+
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
+                        }
+                    });
+                }
+
+
+
+            }
+        });
+    }
+
+    private void carregarListaIngredientesEstoque(){
+
+        Query query = FirebaseFirestore.getInstance().collection("Item_Estoque").orderBy("nameItem", Query.Direction.ASCENDING);
+
+
+
+        FirestoreRecyclerOptions<ItemEstoqueModel> options = new FirestoreRecyclerOptions.Builder<ItemEstoqueModel>()
+                .setQuery(query, ItemEstoqueModel.class)
+                .build();
+
+        adapterItemEstoque = new IngredienteAdapter(options);
+
+        listaIngredientesEstoqueEditar.setHasFixedSize(true);
+        listaIngredientesEstoqueEditar.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        listaIngredientesEstoqueEditar.setAdapter(adapterItemEstoque);
+        listaIngredientesEstoqueEditar.addItemDecoration(new DividerItemDecoration(getApplicationContext(), LinearLayout.VERTICAL));
+
+        adapterItemEstoque.setOnItemClickListerner(new IngredienteAdapter.OnItemClickLisener() {
+            @Override
+            public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
+
+
+
+                ItemEstoqueModel itemEstoqueModel = documentSnapshot.toObject(ItemEstoqueModel.class);
+
+                assert itemEstoqueModel != null;
+
+                String nomeItemAdd = itemEstoqueModel.getNameItem();
+                String valorItemAdd = itemEstoqueModel.getValorItemPorReceita();
+                String quantItemAdd = itemEstoqueModel.getQuantUsadaReceita();
+
+
+
+                adicionarIngredienteReceitaCompleta(nomeReceitaCompletaCadastradaparaEditar, nomeItemAdd, valorItemAdd, quantItemAdd);
+
+
+
+
+
+            }
+
+
+        });
+
+
+
+    }
+
+    private double guardarValoresIngredientes(double valorIngrediente){
+
+        resultado += valorIngrediente;
+        System.out.println("Valor do resultado no guardar valores----------->: " + resultado);
+
+        String resultadoConvertidoString = String.valueOf(resultado);
+        System.out.println("Valor do resultadoConvertidoString no guardar valores----------->: " + resultadoConvertidoString);
+        texto_valor_total_ingredientes_receita_completa_cadastrada_editar.setText(resultadoConvertidoString);
+
+        return resultado;
+    }
+
+    private  void adicionarIngredienteReceitaCompleta(String nomeReceita, String nomeItemAdicionado, String valorItemAdicionado, String quantItemAdicionado){
+
+     /*   FirebaseFirestore.getInstance().collection("Receitas_completas").whereEqualTo("nomeReceita", nomeReceita).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                List<DocumentSnapshot> snapshotList = queryDocumentSnapshots.getDocuments();
+
+
+                List<String> listaReceita = new ArrayList<>();
+
+                for (DocumentSnapshot snapshot : snapshotList){
+
+                    idReceita = snapshot.getId();
+
+                }
+
+                CollectionReference reference = db.collection("Receitas_completas").document(idReceita).collection(nomeReceitaDigitado);
+
+                Map<String, Object> ingredietenAdicionadoReceita = new HashMap<>();
+                ingredietenAdicionadoReceita.put("nameItem", nomeItemAdicionado);
+                ingredietenAdicionadoReceita.put("valorItemPorReceita", valorItemAdicionado);
+                ingredietenAdicionadoReceita.put("quantUsadaReceita", quantItemAdicionado);
+
+                reference.add(ingredietenAdicionadoReceita).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+
+                        valorConvert = Double.parseDouble(valorItemAdicionado);
+                        listValoresItensAdd.add(valorConvert);
+                        contItem++ ;
+
+                        setValorReceitaSalvo();
+                        textValorIngredientes.setText("Valores adicionados R$: " + setValorReceitaSalvo());
+
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                });
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });*/
+
+        Toast.makeText(getApplicationContext(), "Clicado no item: \n\n" +
+                "nomeReceita: " + nomeReceita + " \n\n nomeItemAdicionado : " + nomeItemAdicionado + "\n\n valorItemAdicionado:  "+ valorItemAdicionado + "\n\n quantItemAdicionado: " + quantItemAdicionado, Toast.LENGTH_SHORT).show();
+
+    }
+
 
     @Override
     protected void onStart() {
+        carregarListaIngredientesEstoque();
+        adapterItemEstoque.startListening();
         super.onStart();
 
     }
@@ -149,5 +334,6 @@ public class EditarReceitasCompletasCadastradas extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
        adicionadoAdapter.stopListening();
+        adapterItemEstoque.stopListening();
     }
 }

@@ -7,144 +7,196 @@
     android:orientation="vertical"
     tools:context=".activity.EditarReceitasCompletasCadastradas">
 
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/texto_valor_total_receita_cadastrada_completa_editar_id"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/nome_receita_completa_cadastrada_editar_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:fontFamily="@font/bungee_shade"
-        android:text="@string/textView_nomeReceita"
-        android:textColor="@color/rosa"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/textView61"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
-        android:text="@string/text_quanto_rende_receita_editar"
-        android:textColor="@color/rosa"
-        android:textSize="12sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/nome_receita_completa_cadastrada_editar_id"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nome_receita_completa_cadastrada_editar_id" />
-
-    <TextView
-        android:id="@+id/textView62"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
-        android:text="@string/text_porcentagem_acrescimo_receita_completa_editar"
-        android:textColor="@color/rosa"
-        android:textSize="12sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout18" />
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout18"
-        android:layout_width="244dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView61">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/input_editar_porcoes_por_fornada_receita_completa_id"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/nome_receita_completa_cadastrada_editar_id"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="hint" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/bungee_shade"
+            android:text="@string/textView_nomeReceita"
+            android:textColor="@color/rosa"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout19"
-        android:layout_width="244dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView62">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/input_editar_porcentagem_acrescimo_receita_completa_id"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/textView61"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="hint" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:text="@string/text_quanto_rende_receita_editar"
+            android:textColor="@color/rosa"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/nome_receita_completa_cadastrada_editar_id"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/nome_receita_completa_cadastrada_editar_id" />
 
-    <TextView
-        android:id="@+id/textView57"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="@string/text_ingredientes_adicionados_receita_completa_editar"
-        android:textColor="@color/rosa"
-        android:textSize="12sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/recyclerView_ingredientes_adicionados_receita_completa_editar_id"
-        app:layout_constraintStart_toStartOf="@+id/recyclerView_ingredientes_adicionados_receita_completa_editar_id"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout19" />
+        <TextView
+            android:id="@+id/textView62"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:text="@string/text_porcentagem_acrescimo_receita_completa_editar"
+            android:textColor="@color/rosa"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout18" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView_ingredientes_adicionados_receita_completa_editar_id"
-        android:layout_width="0dp"
-        android:layout_height="250dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/background_adapter_ingrediente_adicionado_fundo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView57" />
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout18"
+            android:layout_width="244dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView61">
 
-    <TextView
-        android:id="@+id/textView59"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="@string/text_ingredientes_estoque_receita_completa_editar"
-        android:textColor="@color/rosa"
-        android:textSize="12sp"
-        android:textStyle="bold"        app:layout_constraintEnd_toEndOf="@+id/recyclerView_ingredientes_estoque_id"
-        app:layout_constraintStart_toStartOf="@+id/recyclerView_ingredientes_estoque_id"
-        app:layout_constraintTop_toBottomOf="@+id/recyclerView_ingredientes_adicionados_receita_completa_editar_id" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/input_editar_porcoes_por_fornada_receita_completa_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="hint" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView_ingredientes_estoque_id"
-        android:layout_width="0dp"
-        android:layout_height="250dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/brackground_adapter_ingrediente_fundo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView59" />
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout19"
+            android:layout_width="244dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView62">
 
-    <Button
-        android:id="@+id/botao_salvar_alteracoes_receita_completa_cadastrada_id"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/btn"
-        android:textColor="@color/white"
-        android:text="SALVAR ALTERAÇÕES"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recyclerView_ingredientes_estoque_id" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/input_editar_porcentagem_acrescimo_receita_completa_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="hint" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/textView57"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="@string/text_ingredientes_adicionados_receita_completa_editar"
+            android:textColor="@color/rosa"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/recyclerView_ingredientes_adicionados_receita_completa_editar_id"
+            app:layout_constraintStart_toStartOf="@+id/recyclerView_ingredientes_adicionados_receita_completa_editar_id"
+            app:layout_constraintTop_toBottomOf="@+id/texto_total_ingredientes" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView_ingredientes_adicionados_receita_completa_editar_id"
+            android:layout_width="0dp"
+            android:layout_height="250dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/background_adapter_ingrediente_adicionado_fundo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView57" />
+
+        <TextView
+            android:id="@+id/textView59"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="@string/text_ingredientes_estoque_receita_completa_editar"
+            android:textColor="@color/rosa"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/recyclerView_ingredientes_estoque_id"
+            app:layout_constraintStart_toStartOf="@+id/recyclerView_ingredientes_estoque_id"
+            app:layout_constraintTop_toBottomOf="@+id/recyclerView_ingredientes_adicionados_receita_completa_editar_id" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView_ingredientes_estoque_id"
+            android:layout_width="0dp"
+            android:layout_height="250dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/brackground_adapter_ingrediente_fundo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView59" />
+
+        <Button
+            android:id="@+id/botao_salvar_alteracoes_receita_completa_cadastrada_id"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/btn"
+            android:text="SALVAR ALTERAÇÕES"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/recyclerView_ingredientes_estoque_id" />
+
+        <TextView
+            android:id="@+id/textView63"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:text="@string/textView_valorTotalReceita"
+            android:textColor="@color/rosa"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout19" />
+
+        <TextView
+            android:id="@+id/texto_total_ingredientes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:text="@string/textView_valorTotalIngredientesReceita"
+            android:textColor="@color/rosa"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView63" />
+
+        <TextView
+            android:id="@+id/valor_total_receita_cadastrada_completa_editar_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:text="TextView"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/textView63"
+            app:layout_constraintStart_toEndOf="@+id/textView63"
+            app:layout_constraintTop_toTopOf="@+id/textView63" />
+
+        <TextView
+            android:id="@+id/valor_total_ingredientes_receitas_cadastrada_completa_editar_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:text="TextView"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/texto_total_ingredientes"
+            app:layout_constraintStart_toEndOf="@+id/texto_total_ingredientes"
+            app:layout_constraintTop_toTopOf="@+id/texto_total_ingredientes" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
