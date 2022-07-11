@@ -52,6 +52,8 @@ public class ItemEstoqueDAO implements InterfaceItemEstoqueDAO{
     @Override
     public boolean salvarItemEstoque(ItemEstoqueModel itemEstoqueModel) {
 
+      System.out.println("Objeto recuperado:  \n " + itemEstoqueModel);
+
         try{
             Map<String, Object> item = new HashMap<>();
 

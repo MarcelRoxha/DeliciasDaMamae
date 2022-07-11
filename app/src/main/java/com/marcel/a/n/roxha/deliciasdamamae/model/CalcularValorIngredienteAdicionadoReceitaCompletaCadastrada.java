@@ -21,6 +21,7 @@ public class CalcularValorIngredienteAdicionadoReceitaCompletaCadastrada impleme
 
     private CollectionReference collectionReferenceReceitaCadastradaCompleta = ConfiguracaoFirebase.getFirestor().collection("Receitas_completas");
     private String idIngredientesReceitaCadastradaCompletaCadastrada;
+    private String valorTotalReceitaCadastradaCompletaConvertString;
     private List<Double> listaIngredientesAdicionadosReceitaCompletaCadastrada = new ArrayList<>();
     private String valorItemReceitaCadastradaCompleta;
     private String valorTotalIngredientesReceitaCadastradaCompleta;
@@ -36,8 +37,9 @@ public class CalcularValorIngredienteAdicionadoReceitaCompletaCadastrada impleme
 
 
 
-    public void calcularValoresIngredientesAdicionados(String idReceitaCadastradaCompleta, String nomeReceitaCompletaCadastrada){
+    public String calcularValoresIngredientesAdicionados(String idReceitaCadastradaCompleta, String nomeReceitaCompletaCadastrada){
 
+        final String[][] valorTotalIngredientes = {{""}};
        CollectionReference collectionReferencelistaIngredientesAdicionadosReceitaCompletaCalcularValor =  collectionReferenceReceitaCadastradaCompleta.document(idReceitaCadastradaCompleta).collection(nomeReceitaCompletaCadastrada);
 
     collectionReferencelistaIngredientesAdicionadosReceitaCompletaCalcularValor.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -63,6 +65,7 @@ public class CalcularValorIngredienteAdicionadoReceitaCompletaCadastrada impleme
                         listaIngredientesAdicionadosReceitaCompletaCadastrada.add(valor);
                         statusBancoRecuperar = true;
                         guardarValoresIngredientes(valor);
+
                     }
 
                 }).addOnFailureListener(new OnFailureListener() {
@@ -72,17 +75,28 @@ public class CalcularValorIngredienteAdicionadoReceitaCompletaCadastrada impleme
                     }
                 });
             }
+            System.out.println("Antes do for contagem");
+                double contagem = 0;
+            for (double list: listaIngredientesAdicionadosReceitaCompletaCadastrada){
+                contagem =+ list;
+            }
 
-
+            System.out.println("depois contagem tem o valor de: " + contagem);
 
         }
     });
+
+        System.out.println("Antes do return valor da variável" + this.valorTotalReceitaCadastradaCompletaConvertString);
+
+    return this.valorTotalReceitaCadastradaCompletaConvertString;
     }
 
     public double guardarValoresIngredientes(double valorIngrediente){
 
         resultado += valorIngrediente;
         System.out.println("Valor do resultado no guardar valores: " + resultado);
+        this.valorTotalReceitaCadastradaCompletaConvertString = String.format("%.2f", resultado);
+        System.out.println("Valor do resultado no guardar valores em String: " + resultado);
        return resultado;
     }
 

@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/APLICACOES/DELICIAS_DA_MAMAE/Aplicacao/DeliciasDaMamae/app/src/main/res/layout/activity_add_item_estoque.xml" value="0.2747021723896286" />
         <entry key="..\:/APLICACOES/DELICIAS_DA_MAMAE/Aplicacao/DeliciasDaMamae/app/src/main/res/layout/activity_editar_receitas_completas_cadastradas.xml" value="0.2" />
         <entry key="..\:/APLICACOES/DELICIAS_DA_MAMAE/Aplicacao/DeliciasDaMamae/app/src/main/res/layout/activity_estoque.xml" value="0.20416666666666666" />
         <entry key="..\:/APLICACOES/DELICIAS_DA_MAMAE/Aplicacao/DeliciasDaMamae/app/src/main/res/layout/activity_finalizar_receita.xml" value="0.20416666666666666" />
@@ -10,6 +11,9 @@
         <entry key="..\:/APLICACOES/DELICIAS_DA_MAMAE/Aplicacao/DeliciasDaMamae/app/src/main/res/layout/activity_producao.xml" value="0.20416666666666666" />
         <entry key="..\:/APLICACOES/DELICIAS_DA_MAMAE/Aplicacao/DeliciasDaMamae/app/src/main/res/layout/activity_receitas_prontas.xml" value="0.20416666666666666" />
         <entry key="..\:/APLICACOES/DELICIAS_DA_MAMAE/Aplicacao/DeliciasDaMamae/app/src/main/res/layout/fragment_receitas_prontas.xml" value="0.20416666666666666" />
+        <entry key="..\:/APLICACOES/DELICIAS_DA_MAMAE/Aplicacao/DeliciasDaMamae/app/src/main/res/layout/layout_alertdialog_editar_ingrediente_receita_completa_cadastrada_editar.xml" value="0.25" />
+        <entry key="..\:/APLICACOES/DELICIAS_DA_MAMAE/Aplicacao/DeliciasDaMamae/app/src/main/res/layout/layout_bolos_confecionados_adapter.xml" value="0.20416666666666666" />
+        <entry key="..\:/APLICACOES/DELICIAS_DA_MAMAE/Aplicacao/DeliciasDaMamae/app/src/main/res/layout/layout_ingrediente_adicionado_adapter.xml" value="0.20416666666666666" />
         <entry key="..\:/APLICACOES/DELICIAS_DA_MAMAE/Aplicacao/DeliciasDaMamae/app/src/main/res/layout/layout_item_estoque_adapter.xml" value="0.20416666666666666" />
       </map>
     </option>

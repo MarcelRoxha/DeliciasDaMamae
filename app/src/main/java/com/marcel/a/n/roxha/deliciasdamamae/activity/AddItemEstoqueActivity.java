@@ -20,7 +20,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.marcel.a.n.roxha.deliciasdamamae.R;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
 import com.marcel.a.n.roxha.deliciasdamamae.helper.ItemEstoqueDAO;
+import com.marcel.a.n.roxha.deliciasdamamae.helper.ModeloItemEstoqueDAO;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ItemEstoqueModel;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloItemEstoque;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,12 +40,13 @@ public class AddItemEstoqueActivity extends AppCompatActivity {
     private TextInputEditText edit_quantUsadaReceita_item_estoque;
 
     //-----------------------------------------------RADIOBUTTON-------------------USER
-    private RadioButton radioButton_gramas_ml_unid, radioButton_litro_kilo;
+    private RadioButton radioButton_gramas_ml_unid, radioButton_litro_kilo, radioButton_gramas_ml_unid_utilizado_na_receita, radioButton_litro_kilo_utilizado_na_receita;
 
 
     //Classes:
     private ItemEstoqueModel itemEstoqueModel, itemEstoqueModelAtualizar;
     private ItemEstoqueDAO itemEstoqueDAO;
+    private ModeloItemEstoque modeloItemEstoqueAtualizar;
 
     //Firebase
     private FirebaseFirestore db = ConfiguracaoFirebase.getFirestor();
@@ -51,7 +54,7 @@ public class AddItemEstoqueActivity extends AppCompatActivity {
 
 
     //Variaveis temporarias:
-    private String itemKey;
+    private String itemKey = "";
 
 
     @Override
@@ -76,6 +79,8 @@ public class AddItemEstoqueActivity extends AppCompatActivity {
         edit_quantUsadaReceita_item_estoque = findViewById(R.id.edit_quant_usada_receita_id);
         radioButton_gramas_ml_unid = findViewById(R.id.radioButton_grama_ml_und_id);
         radioButton_litro_kilo = findViewById(R.id.radioButton_Litro_Kilo_id);
+        radioButton_gramas_ml_unid_utilizado_na_receita = findViewById(R.id.radioButton_gramas_ml_unidade_utilizada_na_receita_id);
+        radioButton_litro_kilo_utilizado_na_receita = findViewById(R.id.radioButton_litros_kilo_utilizada_na_receita_id);
 
         //Recuperando a chave do item estoque caso seja atualização
          itemKey = getIntent().getStringExtra("itemKey");
@@ -85,25 +90,31 @@ public class AddItemEstoqueActivity extends AppCompatActivity {
         if (itemKey != null) {
 
             //Quando a condição for verdadeira, será recuperado o item do estoque no banco de dados
-            FirebaseFirestore.getInstance().collection("Item_Estoque").document(itemKey).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            FirebaseFirestore.getInstance().collection("ITEM_ESTOQUE").document(itemKey).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                 @Override
                 public void onSuccess(DocumentSnapshot documentSnapshot) {
 
-                    ItemEstoqueModel itemEstoqueModel = documentSnapshot.toObject(ItemEstoqueModel.class);
+                    ModeloItemEstoque modeloItemEstoque = documentSnapshot.toObject(ModeloItemEstoque.class);
 
-                    String undMedidaRecebida = itemEstoqueModel.getUnidMedida();
+                    String undMedidaPacoteCadastrado = modeloItemEstoque.getUnidadeMedidaPacoteItemEstoque();
+                    String unidadeMedidaReceitaItemRecuperado = modeloItemEstoque.getUnidadeMedidaUtilizadoNasReceitas();
 
+                    edit_nome_item_estoque.setText(modeloItemEstoque.getNomeItemEstoque());
+                    edit_valor_item_estoque.setText(modeloItemEstoque.getValorIndividualItemEstoque());
+                    edit_quantTotal_item_estoque.setText(modeloItemEstoque.getQuantidadeTotalItemEstoque());
+                    edit_quantPacote_item_estoque.setText(modeloItemEstoque.getQuantidadePorPacoteItemEstoque());
+                    edit_quantUsadaReceita_item_estoque.setText(modeloItemEstoque.getQuantidadeUtilizadaNasReceitas());
 
-                    edit_nome_item_estoque.setText(itemEstoqueModel.getNameItem());
-                    edit_valor_item_estoque.setText(itemEstoqueModel.getValorItem());
-                    edit_quantTotal_item_estoque.setText(itemEstoqueModel.getQuantItem());
-                    edit_quantPacote_item_estoque.setText(itemEstoqueModel.getQuantPacote());
-                    edit_quantUsadaReceita_item_estoque.setText(itemEstoqueModel.getQuantUsadaReceita());
-
-                    if (undMedidaRecebida.contains("1000")) {
+                    if (undMedidaPacoteCadastrado.contains("1000")) {
                         radioButton_litro_kilo.toggle();
                     } else  {
                         radioButton_gramas_ml_unid.toggle();
+                    }
+
+                    if(unidadeMedidaReceitaItemRecuperado.contains("1000")){
+                        radioButton_litro_kilo_utilizado_na_receita.toggle();
+                    }else{
+                        radioButton_gramas_ml_unid_utilizado_na_receita.toggle();
                     }
 
 
@@ -138,7 +149,11 @@ public class AddItemEstoqueActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
         switch (item.getItemId()) {
+
             case R.id.salvar_item_estoque:
+
+                ModeloItemEstoque cadastrarNovoItemEstoque = new ModeloItemEstoque();
+                ModeloItemEstoqueDAO modeloItemEstoqueDAO = new ModeloItemEstoqueDAO(AddItemEstoqueActivity.this);
 
                 String nomeItemDigitado = edit_nome_item_estoque.getText().toString();
                 String valorItemDigitado = edit_valor_item_estoque.getText().toString();
@@ -146,25 +161,40 @@ public class AddItemEstoqueActivity extends AppCompatActivity {
                 String quantPacoteItemDigitado = edit_quantPacote_item_estoque.getText().toString();
                 String quantUsadaReceitaItemDigitado = edit_quantUsadaReceita_item_estoque.getText().toString();
 
-                itemEstoqueModel = new ItemEstoqueModel();
 
-                itemEstoqueModel.setNameItem(nomeItemDigitado);
-                itemEstoqueModel.setValorItem(valorItemDigitado);
-                itemEstoqueModel.setQuantItem(quantItemDigitado);
-                itemEstoqueModel.setQuantPacote(quantPacoteItemDigitado);
-                itemEstoqueModel.setQuantUsadaReceita(quantUsadaReceitaItemDigitado);
+
+                cadastrarNovoItemEstoque.setNomeItemEstoque(nomeItemDigitado);
+                cadastrarNovoItemEstoque.setValorIndividualItemEstoque(valorItemDigitado);
+                cadastrarNovoItemEstoque.setQuantidadeTotalItemEstoque(quantItemDigitado);
+                cadastrarNovoItemEstoque.setQuantidadePorPacoteItemEstoque(quantPacoteItemDigitado);
+                cadastrarNovoItemEstoque.setQuantidadeUtilizadaNasReceitas(quantUsadaReceitaItemDigitado);
 
                 if (radioButton_gramas_ml_unid.isChecked()) {
-                   itemEstoqueModel.setUnidMedida("1");
-                } else if (radioButton_litro_kilo.isChecked()) {
-                  itemEstoqueModel.setUnidMedida("1000");
-                }
-                itemEstoqueDAO = new ItemEstoqueDAO(AddItemEstoqueActivity.this);
-                itemEstoqueDAO.salvarItemEstoque(itemEstoqueModel);
+                    cadastrarNovoItemEstoque.setUnidadeMedidaPacoteItemEstoque("1");
 
+                } else if (radioButton_litro_kilo.isChecked()) {
+                    cadastrarNovoItemEstoque.setUnidadeMedidaPacoteItemEstoque("1000");
+                }
+
+                if (radioButton_gramas_ml_unid_utilizado_na_receita.isChecked()) {
+                    cadastrarNovoItemEstoque.setUnidadeMedidaUtilizadoNasReceitas("1");
+
+
+                } else if (radioButton_litro_kilo_utilizado_na_receita.isChecked()) {
+                    cadastrarNovoItemEstoque.setUnidadeMedidaUtilizadoNasReceitas("1000");
+                }
+
+                cadastrarNovoItemEstoque.calcularValorFracionadoModeloItemEstoque();
+                cadastrarNovoItemEstoque.calcularValorItemPorReceita();
+
+
+                modeloItemEstoqueDAO.salvarItemEstoque(cadastrarNovoItemEstoque);
 
 
             case R.id.bt_atualizar:
+
+
+                ModeloItemEstoqueDAO atualizarModeloItemEstoqueDAO = new ModeloItemEstoqueDAO(AddItemEstoqueActivity.this);
 
                 String nomeItemDigitadoAtualiza = edit_nome_item_estoque.getText().toString();
                 String valorItemDigitadoAtualiza = edit_valor_item_estoque.getText().toString();
@@ -172,21 +202,34 @@ public class AddItemEstoqueActivity extends AppCompatActivity {
                 String quantPacoteItemDigitadoAtualiza = edit_quantPacote_item_estoque.getText().toString();
                 String quantUsadaReceitaItemDigitadoAtualiza = edit_quantUsadaReceita_item_estoque.getText().toString();
 
-                itemEstoqueModel = new ItemEstoqueModel();
+                modeloItemEstoqueAtualizar = new ModeloItemEstoque();
 
-                itemEstoqueModel.setNameItem(nomeItemDigitadoAtualiza);
-                itemEstoqueModel.setValorItem(valorItemDigitadoAtualiza);
-                itemEstoqueModel.setQuantItem(quantItemDigitadoAtualiza);
-                itemEstoqueModel.setQuantPacote(quantPacoteItemDigitadoAtualiza);
-                itemEstoqueModel.setQuantUsadaReceita(quantUsadaReceitaItemDigitadoAtualiza);
+                modeloItemEstoqueAtualizar.setNomeItemEstoque(nomeItemDigitadoAtualiza);
+                modeloItemEstoqueAtualizar.setValorIndividualItemEstoque(valorItemDigitadoAtualiza);
+                modeloItemEstoqueAtualizar.setQuantidadeTotalItemEstoque(quantItemDigitadoAtualiza);
+                modeloItemEstoqueAtualizar.setQuantidadePorPacoteItemEstoque(quantPacoteItemDigitadoAtualiza);
+                modeloItemEstoqueAtualizar.setQuantidadeUtilizadaNasReceitas(quantUsadaReceitaItemDigitadoAtualiza);
 
                 if (radioButton_gramas_ml_unid.isChecked()) {
-                    itemEstoqueModel.setUnidMedida("1");
+                    modeloItemEstoqueAtualizar.setUnidadeMedidaPacoteItemEstoque("1");
+
                 } else if (radioButton_litro_kilo.isChecked()) {
-                    itemEstoqueModel.setUnidMedida("1000");
+                    modeloItemEstoqueAtualizar.setUnidadeMedidaPacoteItemEstoque("1000");
                 }
-                itemEstoqueDAO = new ItemEstoqueDAO(AddItemEstoqueActivity.this);
-                itemEstoqueDAO.atualizarItemEstoque(itemKey, itemEstoqueModel);
+
+                if (radioButton_gramas_ml_unid_utilizado_na_receita.isChecked()) {
+                    modeloItemEstoqueAtualizar.setUnidadeMedidaUtilizadoNasReceitas("1");
+
+
+                } else if (radioButton_litro_kilo_utilizado_na_receita.isChecked()) {
+                    modeloItemEstoqueAtualizar.setUnidadeMedidaUtilizadoNasReceitas("1000");
+                }
+
+                modeloItemEstoqueAtualizar.calcularValorFracionadoModeloItemEstoque();
+                modeloItemEstoqueAtualizar.calcularValorItemPorReceita();
+
+
+                atualizarModeloItemEstoqueDAO.atualizarItemEstoque(itemKey, modeloItemEstoqueAtualizar);
 
 
                // atualizarItem();

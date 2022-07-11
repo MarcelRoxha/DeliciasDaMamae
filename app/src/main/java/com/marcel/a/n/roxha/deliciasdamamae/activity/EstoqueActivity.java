@@ -30,9 +30,11 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
 import com.marcel.a.n.roxha.deliciasdamamae.R;
 import com.marcel.a.n.roxha.deliciasdamamae.adapter.ItemEstoqueAdapter;
+import com.marcel.a.n.roxha.deliciasdamamae.adapter.ModeloItemEstoqueAdapter;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
 import com.marcel.a.n.roxha.deliciasdamamae.helper.ItemEstoqueDAO;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ItemEstoqueModel;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloItemEstoque;
 
 import java.util.List;
 
@@ -43,9 +45,11 @@ public class EstoqueActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ItemEstoqueAdapter adapter;
 
+    private ModeloItemEstoqueAdapter modeloItemEstoqueAdapter;
+
 
     private FirebaseFirestore firestore = ConfiguracaoFirebase.getFirestor();
-    private CollectionReference itemEstoqueRef = firestore.collection("Item_Estoque");
+    private CollectionReference itemEstoqueRef = firestore.collection("ITEM_ESTOQUE");
     private String chaveSeg = "DeliciasDaMamae";
 
     private ItemEstoqueModel itemSelecionado;
@@ -86,22 +90,24 @@ public class EstoqueActivity extends AppCompatActivity {
 
     public void carregarListaItensEstoque(){
 
-        Query query = itemEstoqueRef.orderBy("nameItem", Query.Direction.ASCENDING);
+        Query query = itemEstoqueRef.orderBy("nomeItemEstoque", Query.Direction.ASCENDING);
 
-        FirestoreRecyclerOptions<ItemEstoqueModel> options = new FirestoreRecyclerOptions.Builder<ItemEstoqueModel>()
-                .setQuery(query, ItemEstoqueModel.class)
+        FirestoreRecyclerOptions<ModeloItemEstoque> options = new FirestoreRecyclerOptions.Builder<ModeloItemEstoque>()
+                .setQuery(query, ModeloItemEstoque.class)
                 .build();
 
-        adapter = new ItemEstoqueAdapter(options);
+      //  adapter = new ItemEstoqueAdapter(options);
 
+
+        modeloItemEstoqueAdapter = new ModeloItemEstoqueAdapter(options);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(modeloItemEstoqueAdapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), LinearLayout.VERTICAL));
 
 
 
-        adapter.setOnItemClickListerner(new ItemEstoqueAdapter.OnItemClickLisener() {
+        modeloItemEstoqueAdapter.setOnItemClickListerner(new ModeloItemEstoqueAdapter.OnItemClickLisener() {
             @Override
             public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
 
@@ -113,7 +119,7 @@ public class EstoqueActivity extends AppCompatActivity {
             }
         });
 
-adapter.setOnItemLongClickListerner(new ItemEstoqueAdapter.OnLongClickListener() {
+        modeloItemEstoqueAdapter.setOnItemLongClickListerner(new ModeloItemEstoqueAdapter.OnLongClickListener() {
     @Override
     public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
 
@@ -158,14 +164,14 @@ adapter.setOnItemLongClickListerner(new ItemEstoqueAdapter.OnLongClickListener()
     protected void onStart() {
         super.onStart();
         carregarListaItensEstoque();
-        adapter.startListening();
+        modeloItemEstoqueAdapter.startListening();
 
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        adapter.stopListening();
+        modeloItemEstoqueAdapter.stopListening();
     }
 
     @Override

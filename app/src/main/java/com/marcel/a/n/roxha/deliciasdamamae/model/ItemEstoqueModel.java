@@ -34,6 +34,10 @@ public class ItemEstoqueModel implements Serializable {
     String valorItemPorReceita;
     String quantPacote;
     String quantUsadaReceita;
+
+
+
+
 //Atributo final para fazer alterações em massa
     final String IdEstoque = "Estoque_DeliciasDaMamae";
 

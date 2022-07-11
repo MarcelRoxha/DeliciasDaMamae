@@ -6,9 +6,13 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +31,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.marcel.a.n.roxha.deliciasdamamae.R;
 import com.marcel.a.n.roxha.deliciasdamamae.adapter.IngredienteAdapter;
 import com.marcel.a.n.roxha.deliciasdamamae.adapter.IngredienteAdicionadoAdapter;
+import com.marcel.a.n.roxha.deliciasdamamae.adapter.ItemEstoqueAdapter;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
 import com.marcel.a.n.roxha.deliciasdamamae.model.BolosModel;
 import com.marcel.a.n.roxha.deliciasdamamae.model.CalcularValorIngredienteAdicionadoReceitaCompletaCadastrada;
@@ -48,6 +53,7 @@ public class EditarReceitasCompletasCadastradas extends AppCompatActivity {
     private List<Double> listaIngredientesAdicionadosReceitaCompletaCadastrada = new ArrayList<>();
     private String valorItemReceitaCadastradaCompleta;
     private String valorTotalIngredientesReceitaCadastradaCompleta;
+    private String valorIngredienteAlertEditar;
     private Double valor;
     private String idIngredientesReceitaCadastradaCompletaCadastrada = "";
     private boolean statusCarregamentoValorIngredientes;
@@ -72,10 +78,7 @@ public class EditarReceitasCompletasCadastradas extends AppCompatActivity {
     private IngredienteAdicionadoAdapter adicionadoAdapter;
     private IngredienteAdapter adapterItemEstoque;
 
-
-
-
-
+//Swift
 
 
     @Override
@@ -99,6 +102,9 @@ public class EditarReceitasCompletasCadastradas extends AppCompatActivity {
         listaIngredientesAdicionadosReceitaCompletaEditar = findViewById(R.id.recyclerView_ingredientes_adicionados_receita_completa_editar_id);
         listaIngredientesEstoqueEditar = findViewById(R.id.recyclerView_ingredientes_estoque_id);
 
+        texto_valor_total_ingredientes_receita_completa_cadastrada_editar.setVisibility(View.GONE);
+        texto_valor_total_receita_completa_cadastrada_editar.setVisibility(View.GONE);
+
         botaoSalvarAlteracoesReceitaCadastrada.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,25 +115,28 @@ public class EditarReceitasCompletasCadastradas extends AppCompatActivity {
             }
         });
         idReceitaCompletaCadastradaparaEditar = getIntent().getStringExtra("idReceita");
+
+        carregarInformacoesReceitaCompletaCadastrada(idReceitaCompletaCadastradaparaEditar);
         carregarIngredientesAdicionadosReceitaCompletaCadastradaEditar();
+
+
+
 
     }
 
-    private void carregarIngredientesAdicionadosReceitaCompletaCadastradaEditar() {
-        CalcularValorIngredienteAdicionadoReceitaCompletaCadastrada calcularValorIngredienteAdicionadoReceitaCompletaCadastrada = new CalcularValorIngredienteAdicionadoReceitaCompletaCadastrada();
+    private void carregarInformacoesReceitaCompletaCadastrada(String idReceitaCompletaCadastradaparaEditar) {
 
         referenceReceitaCompleta.document(idReceitaCompletaCadastradaparaEditar).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
 
-                ReceitaModel receitaCompletaCadastradaCompleta = documentSnapshot.toObject(ReceitaModel.class);
-                nomeReceitaCompletaCadastradaparaEditar = receitaCompletaCadastradaCompleta.getNomeReceita();
+                ReceitaModel receitaCompletaCadastradaCompletaCarregamentodeinformacoes = documentSnapshot.toObject(ReceitaModel.class);
+                nomeReceitaCompletaCadastradaparaEditar = receitaCompletaCadastradaCompletaCarregamentodeinformacoes.getNomeReceita();
 
-                inputPorcentagemPorReceitaCompletaCadastradaEditar.setText(receitaCompletaCadastradaCompleta.getPorcentagemServico());
-                inputPorcoesPorFornadaReceitaCompletaCadastradaEditar.setText(receitaCompletaCadastradaCompleta.getQuantRendimentoReceita());
+                inputPorcentagemPorReceitaCompletaCadastradaEditar.setText(receitaCompletaCadastradaCompletaCarregamentodeinformacoes.getPorcentagemServico());
+                inputPorcoesPorFornadaReceitaCompletaCadastradaEditar.setText(receitaCompletaCadastradaCompletaCarregamentodeinformacoes.getQuantRendimentoReceita());
                 texto_nome_receita_completa_cadastrada_editar.setText(nomeReceitaCompletaCadastradaparaEditar);
 
-                //carregarIngredientesAdicionadosReceitaCompletaCadastradaEditar();
 
                 Query queryReceitaCompleta = referenceReceitaCompleta.document(idReceitaCompletaCadastradaparaEditar).collection(nomeReceitaCompletaCadastradaparaEditar).orderBy("nameItem", Query.Direction.ASCENDING);
 
@@ -142,12 +151,160 @@ public class EditarReceitasCompletasCadastradas extends AppCompatActivity {
                 listaIngredientesAdicionadosReceitaCompletaEditar.setAdapter(adicionadoAdapter);
                 listaIngredientesAdicionadosReceitaCompletaEditar.addItemDecoration(new DividerItemDecoration(getApplicationContext(), LinearLayout.VERTICAL));
                 adicionadoAdapter.startListening();
-
-             // calcularValorIngredienteAdicionadoReceitaCompletaCadastrada.calcularValoresIngredientesAdicionados(idReceitaCompletaCadastradaparaEditar, nomeReceitaCompletaCadastradaparaEditar);
-
-                Toast.makeText(getApplicationContext(), "Teste valor total: " + calcularValorIngredienteAdicionadoReceitaCompletaCadastrada.getValorTotalCalculadoIngredientesReceitaCadastradaCompleta(), Toast.LENGTH_SHORT).show();
                 calcularValoresIngredientesAdicionados(idReceitaCompletaCadastradaparaEditar, nomeReceitaCompletaCadastradaparaEditar);
 
+                adicionadoAdapter.setOnItemClickListerner(new ItemEstoqueAdapter.OnItemClickLisener() {
+                    @Override
+                    public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
+
+                        ItemEstoqueModel itemEstoqueModelClicado = documentSnapshot.toObject(ItemEstoqueModel.class);
+                        Toast.makeText(getApplicationContext(), "item em estoque é o: " + itemEstoqueModelClicado.getNameItem(), Toast.LENGTH_SHORT).show();
+
+                        if(itemEstoqueModelClicado != null){
+
+                            String nomeReferencia = itemEstoqueModelClicado.getNameItem();
+
+                            AlertDialog.Builder alert = new AlertDialog.Builder(EditarReceitasCompletasCadastradas.this);
+                            alert.setTitle(itemEstoqueModelClicado.getNameItem());
+                            View viewLayout = getLayoutInflater().inflate(R.layout.layout_alertdialog_editar_ingrediente_receita_completa_cadastrada_editar, null);
+                            EditText editQuantUsadaReceita = viewLayout.findViewById(R.id.edit_quant_usada_receita_cadastrada_completa_alert_editar_id);
+                            TextView valorTotaldoIngredienteUtilizadonaReceitaCadastradaCompletaAlertEditar = viewLayout.findViewById(R.id.texto_valor_total_do_ingrediente_utilizado_na_receita_cadastrada_completa_alert_editar_id);
+                            valorIngredienteAlertEditar = itemEstoqueModelClicado.getValorItemPorReceita();
+                            String quantUsadaIngredienteReceitaCadastradaCompletaEditarAlert = itemEstoqueModelClicado.getQuantUsadaReceita();
+                            getValorIngredienteAlertEdit();
+
+
+                            valorTotaldoIngredienteUtilizadonaReceitaCadastradaCompletaAlertEditar.setText(getValorIngredienteAlertEdit());
+                            editQuantUsadaReceita.setText(quantUsadaIngredienteReceitaCadastradaCompletaEditarAlert);
+
+                            Button botaoCalcularAlert = viewLayout.findViewById(R.id.botao_calcular_nova_quant_usada_receita_completa_cadasrada_alert_editar_id);
+
+                            botaoCalcularAlert.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                    if(editQuantUsadaReceita.getText().toString() != "" || editQuantUsadaReceita.getText().toString() != "0" ){
+
+                                        String nomeReferenciaRecebido = nomeReferencia;
+                                        String valorEditTextAlertDialogTextoValorTotalReceita = valorTotaldoIngredienteUtilizadonaReceitaCadastradaCompletaAlertEditar.getText().toString();
+
+                                        valorIngredienteAlertEditar = "0";
+
+                                        FirebaseFirestore firestoreFirestore = ConfiguracaoFirebase.getFirestor();
+                                        CollectionReference collectionReferenceItemEstoque = firestoreFirestore.collection("Item_Estoque");
+                                        collectionReferenceItemEstoque.whereEqualTo("nameItem",nomeReferenciaRecebido ).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+
+                                                String idRecuperado = "";
+                                                List<DocumentSnapshot> snapshotList = queryDocumentSnapshots.getDocuments();
+                                                for (DocumentSnapshot snapshot : snapshotList) {
+
+                                                    idRecuperado =  snapshot.getId();
+
+                                                }
+
+                                                if(idRecuperado != ""){
+
+
+                                                    FirebaseFirestore.getInstance().collection("Item_Estoque").document(idRecuperado).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                        @Override
+                                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                                                            ItemEstoqueModel itemEstoqueModel = documentSnapshot.toObject(ItemEstoqueModel.class);
+
+                                                            String valorItemEstoque = itemEstoqueModel.getValorItem();
+
+                                                            double valorItemFracionado = 0;
+                                                            valorItemFracionado =  Double.parseDouble(valorItemEstoque);
+                                                            double valorQuantidadeDigitadoConvertido = 0;
+                                                            valorQuantidadeDigitadoConvertido=  Double.parseDouble(valorTotaldoIngredienteUtilizadonaReceitaCadastradaCompletaAlertEditar.getText().toString());
+                                                            double resultadodoCalculoEditQuantUsada = 0;
+                                                                if(valorItemFracionado > 0 && valorQuantidadeDigitadoConvertido > 0){
+
+                                                                    resultadodoCalculoEditQuantUsada = valorQuantidadeDigitadoConvertido * valorItemFracionado;
+                                                                }
+
+                                                            valorIngredienteAlertEditar = "0";
+                                                                if(resultadodoCalculoEditQuantUsada > 0){
+                                                                    valorIngredienteAlertEditar = String.valueOf(resultadodoCalculoEditQuantUsada);
+                                                                    getValorIngredienteAlertEdit();
+                                                                    valorTotaldoIngredienteUtilizadonaReceitaCadastradaCompletaAlertEditar.setText(getValorIngredienteAlertEdit());
+                                                                }
+
+
+                                                        }
+                                                    });
+
+                                                }
+
+
+                                            }
+                                        });
+                                    }
+                                    valorIngredienteAlertEditar = "0";
+                                }
+                            });
+
+
+
+
+                            alert.setPositiveButton("SALVAR INGREDIENTE", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+
+
+                                }
+                            }).setNeutralButton("REMOVER DA RECEITA", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+
+                                        Toast.makeText(getApplicationContext(), "Foi clicado no remover", Toast.LENGTH_SHORT).show();
+
+                                }
+                            });
+                            alert.setView(viewLayout);
+                            alert.create();
+                            alert.show();
+
+                        }
+                    }
+                });
+            }
+        });
+
+    }
+
+    private String getValorIngredienteAlertEdit() {
+
+
+        return valorIngredienteAlertEditar;
+    }
+
+    private void calcularValorIngredienteAlertEditar(String nomeReferencia, String valorDigitado) {
+
+
+    }
+
+
+    private void carregarIngredientesAdicionadosReceitaCompletaCadastradaEditar() {
+
+
+/*
+        referenceReceitaCompleta.document(idReceitaCompletaCadastradaparaEditar).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                ReceitaModel receitaCompletaCadastradaCompleta = documentSnapshot.toObject(ReceitaModel.class);
+
+
+
+
+
+
+
+                calcularValoresIngredientesAdicionados(idReceitaCompletaCadastradaparaEditar, nomeReceitaCompletaCadastradaparaEditar);
 
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -155,7 +312,7 @@ public class EditarReceitasCompletasCadastradas extends AppCompatActivity {
             public void onFailure(@NonNull Exception e) {
 
             }
-        });
+        });*/
 
     }
     private void calcularValoresIngredientesAdicionados(String idReceitaCadastradaCompleta, String nomeReceitaCompletaCadastrada){
@@ -185,7 +342,7 @@ public class EditarReceitasCompletasCadastradas extends AppCompatActivity {
                             valor = Double.parseDouble(valorItemReceitaCadastradaCompleta);
                             listaIngredientesAdicionadosReceitaCompletaCadastrada.add(valor);
 
-                          guardarValoresIngredientes(valor);
+                            guardarValoresIngredientes(valor);
 
 
                         }
@@ -202,6 +359,8 @@ public class EditarReceitasCompletasCadastradas extends AppCompatActivity {
 
             }
         });
+
+
     }
 
     private void carregarListaIngredientesEstoque(){
@@ -257,8 +416,11 @@ public class EditarReceitasCompletasCadastradas extends AppCompatActivity {
         resultado += valorIngrediente;
         System.out.println("Valor do resultado no guardar valores----------->: " + resultado);
 
+
         String resultadoConvertidoString = String.valueOf(resultado);
         System.out.println("Valor do resultadoConvertidoString no guardar valores----------->: " + resultadoConvertidoString);
+
+        texto_valor_total_ingredientes_receita_completa_cadastrada_editar.setVisibility(View.VISIBLE);
         texto_valor_total_ingredientes_receita_completa_cadastrada_editar.setText(resultadoConvertidoString);
 
         return resultado;
