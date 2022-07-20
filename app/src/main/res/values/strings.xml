@@ -21,8 +21,12 @@
     <string name="edit_add_quant_item_estoque">Informe a quantidade do item em estoque</string>
     <string name="texto_exemplo_digitacao_unidade_medida_cadastrar_item_estoque">Ex: 1 kilo ou 500 gramas</string>
     <string name="textViewInfoUnidMedida">Cada unidade desse item, contém: </string>
-    <string name="radioButton_gramas_ml_unid">Gramas / ML / Unidade</string>
-    <string name="radioButton_litro_kilo">Litros / Kilo</string>
+    <string name="radioButton_gramas">GRAMA(S)</string>
+    <string name="radioButton_ml">ML(S)</string>
+    <string name="radioButton_unid">UNIDADE(S)</string>
+    <string name="radioButton_litro">LITRO(S)</string>
+    <string name="radioButton_kilo">KILO(S)</string>
+    <string name="radioButton_xicara">XÍCARA(S)</string>
     <string name="textViewInfoQuantUsadaReceita">"E a cada receita feita eu adiciono: "</string>
     <string name="title_activity_main2">MainActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>

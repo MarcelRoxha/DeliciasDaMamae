@@ -8,7 +8,7 @@ public class ModeloItemEstoque  implements Serializable {
     private String idItemEstoque;
     private String nomeItemEstoque;
     private String quantidadeTotalItemEstoque;
-    private String quantidadePorPacoteItemEstoque;
+    private String quantidadePorVolumeItemEstoque;
     private String valorIndividualItemEstoque;
     private String unidadeMedidaPacoteItemEstoque;
     private String unidadeMedidaUtilizadoNasReceitas;
@@ -17,6 +17,10 @@ public class ModeloItemEstoque  implements Serializable {
     private String quantidadeUtilizadaNasReceitas;
     private String resultadoRetornado;
     private String resultadoRetornadoValorItemPorReceita;
+    private double resultado = 0;
+    private double resultadoCustoDoItemNaReceita = 0;
+    private double resultadoDivisaoQuantVolumeVezesValorUnitarioItemEstoque = 0;
+    private double resultadoDivisaoQuantVolumeVezesValorUnitarioItemEstoqueNoCustoDoItemNaReceita = 0;
 
     public ModeloItemEstoque() {
     }
@@ -25,7 +29,7 @@ public class ModeloItemEstoque  implements Serializable {
         this.idItemEstoque = idItemEstoque;
         this.nomeItemEstoque = nomeItemEstoque;
         this.quantidadeTotalItemEstoque = quantidadeTotalItemEstoque;
-        this.quantidadePorPacoteItemEstoque = quantidadePorPacoteItemEstoque;
+        this.quantidadePorVolumeItemEstoque = quantidadePorPacoteItemEstoque;
         this.valorIndividualItemEstoque = valorIndividualItemEstoque;
         this.unidadeMedidaPacoteItemEstoque = unidadeMedidaPacoteItemEstoque;
         this.unidadeMedidaUtilizadoNasReceitas = unidadeMedidaUtilizadoNasReceitas;
@@ -63,12 +67,12 @@ public class ModeloItemEstoque  implements Serializable {
     public String getValorIndividualItemEstoque() {
         return valorIndividualItemEstoque;
     }
-    public String getQuantidadePorPacoteItemEstoque() {
-        return quantidadePorPacoteItemEstoque;
+    public String getQuantidadePorVolumeItemEstoque() {
+        return quantidadePorVolumeItemEstoque;
     }
 
-    public void setQuantidadePorPacoteItemEstoque(String quantidadePorPacoteItemEstoque) {
-        this.quantidadePorPacoteItemEstoque = quantidadePorPacoteItemEstoque;
+    public void setQuantidadePorVolumeItemEstoque(String quantidadePorPacoteItemEstoque) {
+        this.quantidadePorVolumeItemEstoque = quantidadePorPacoteItemEstoque;
     }
 
     public void setValorIndividualItemEstoque(String valorIndividualItemEstoque) {
@@ -119,14 +123,62 @@ public class ModeloItemEstoque  implements Serializable {
     public String calcularValorFracionadoModeloItemEstoque(){
 
 
-        String valorItemLimpo = this.valorIndividualItemEstoque.replaceAll(",", ".");
-        String quantidadePorPacoteLimpo = this.quantidadePorPacoteItemEstoque.replaceAll(",", ".");
 
-        String unidadeMedidaItemEstoque = this.unidadeMedidaPacoteItemEstoque;
+
+        String valorItemLimpo = this.valorIndividualItemEstoque.replaceAll(",", ".");
+        String quantidadePorPacoteLimpo = this.quantidadePorVolumeItemEstoque.replaceAll(",", ".");
+        double valorItemLimpoConvertido = Double.parseDouble(valorItemLimpo);
+        double quantidadePorPacoteLimpoConvertido = Double.parseDouble(quantidadePorPacoteLimpo);
+        double resultado = 0;
+
+        switch (this.unidadeMedidaPacoteItemEstoque){
+            case "GRAMA(S)":
+
+                 resultado = valorItemLimpoConvertido / quantidadePorPacoteLimpoConvertido;
+
+                 this.valorFracionadoItemEstoque = String.valueOf(resultado);
+                System.out.println("GRAMAS FOI SELECIONADO, RESULTADO DA CONTA: " + resultado);
+                System.out.println("ITEM SALVO: " + this.toString());
+                break;
+            case "ML(S)":
+
+                 resultado = valorItemLimpoConvertido / quantidadePorPacoteLimpoConvertido;
+                this.valorFracionadoItemEstoque = String.valueOf(resultado);
+                System.out.println("ML FOI SELECIONADO, RESULTADO DA CONTA: " + resultado);
+                System.out.println("ITEM SALVO: " + this.toString());
+                break;
+            case "UNIDADE(S)":
+
+                 resultado = valorItemLimpoConvertido / 1;
+                this.valorFracionadoItemEstoque = String.valueOf(resultado);
+                System.out.println("UNIDADE FOI SELECIONADO, RESULTADO DA CONTA: " + resultado);
+                System.out.println("ITEM SALVO: " + this.toString());
+                break;
+            case "LITRO(S)":
+                resultado = valorItemLimpoConvertido / 1000;
+                this.valorFracionadoItemEstoque = String.valueOf(resultado);
+                System.out.println("LITRO FOI SELECIONADO, RESULTADO DA CONTA: " + resultado);
+                System.out.println("ITEM SALVO: " + this.toString());
+                break;
+            case "KILO(S)":
+                resultado =  valorItemLimpoConvertido / 1000;
+                this.valorFracionadoItemEstoque = String.valueOf(resultado);
+                System.out.println("KILO FOI SELECIONADO, RESULTADO DA CONTA: "  + resultado);
+                System.out.println("ITEM SALVO: " + this.toString());
+                break;
+            default:
+                break;
+
+        }
+
+
+
+
+/*
 
         double valorConvertido = Double.parseDouble(valorItemLimpo);
         double quantidadePorPacoteConvertido = Double.parseDouble(quantidadePorPacoteLimpo);
-        double unidadeMedidaConvertido = Double.parseDouble(unidadeMedidaItemEstoque);
+        //double unidadeMedidaConvertido = Double.parseDouble(unidadeMedidaItemEstoque);
 
         double totalPorPacote = quantidadePorPacoteConvertido * unidadeMedidaConvertido;
         double resultado = Double.valueOf(valorConvertido / totalPorPacote);
@@ -134,40 +186,92 @@ public class ModeloItemEstoque  implements Serializable {
 
         this.resultadoRetornado = String.valueOf(resultado);
 
-        this.valorFracionadoItemEstoque = this.resultadoRetornado;
+        this.valorFracionadoItemEstoque = this.resultadoRetornado;*/
 
-    return this.resultadoRetornado;
+    return " Passou pelo calcularValorFracionadoModeloItemEstoque";
     }
 
     public String calcularValorItemPorReceita(){
 
+
+        String valorItemLimpo = this.valorIndividualItemEstoque.replaceAll(",", ".");
         String quantidadeUtilizadaPorReceitaLimpo = this.quantidadeUtilizadaNasReceitas.replaceAll(",", ".");
-        String unidadeMedidaUtilizadaPorReceitaLimpo = this.unidadeMedidaUtilizadoNasReceitas;
+        double valorItemLimpoConvertido = Double.parseDouble(valorItemLimpo);
+        double quantidadeUtilizadaNaReceitaLimpoConvertido = Double.parseDouble(quantidadeUtilizadaPorReceitaLimpo);
+        double quantidadePorPacoteLimpoConvertido = Double.parseDouble(this.quantidadePorVolumeItemEstoque);
 
-        double quantidadeUtilizadaPorReceitaConvertido = Double.parseDouble(quantidadeUtilizadaPorReceitaLimpo);
-        double unidadeMedidaUtilizadaPorReceitaConvertido = Double.parseDouble(unidadeMedidaUtilizadaPorReceitaLimpo);
-        double valorFracionadoConvertido = Double.parseDouble(this.valorFracionadoItemEstoque);
 
-        double totalPorReceita = quantidadeUtilizadaPorReceitaConvertido * unidadeMedidaUtilizadaPorReceitaConvertido;
-        double resultado = totalPorReceita * valorFracionadoConvertido;
+        switch (this.unidadeMedidaUtilizadoNasReceitas){
 
-        this.resultadoRetornadoValorItemPorReceita = String.valueOf(resultado);
+            case "KILO(S)":
+            case "LITRO(S)":
+                System.out.println("Passou pelo kilos e litros");
+                resultadoCustoDoItemNaReceita = (quantidadeUtilizadaNaReceitaLimpoConvertido * valorItemLimpoConvertido);
+                this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
+                break;
 
-        this.custoPorReceitaItemEstoque = this.resultadoRetornadoValorItemPorReceita;
+            case "GRAMA(S)":
+            case "ML(S)":
+            case "UNIDADE(S)":
+                resultadoCustoDoItemNaReceita = (quantidadeUtilizadaNaReceitaLimpoConvertido * valorItemLimpoConvertido) / 1000;
+                this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
+                break;
+
+            case "XICARA(S)":
+
+                if(this.nomeItemEstoque.contains("FARINHA")){
+                    resultadoCustoDoItemNaReceita = ((120 * quantidadeUtilizadaNaReceitaLimpoConvertido) * valorItemLimpoConvertido) / 1000;
+                    this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
+                    System.out.println("Entrou no farinha de xicara");
+                }else if (this.nomeItemEstoque.contains("CHOCOLATE EM PO")){
+                    resultadoCustoDoItemNaReceita = ((90 * quantidadeUtilizadaNaReceitaLimpoConvertido) * valorItemLimpoConvertido) / 1000;
+                    this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
+                    System.out.println("Tem chocolate no nome");
+                }else if (this.nomeItemEstoque.contains("CHOCOLATE EM PÓ")){
+                    resultadoCustoDoItemNaReceita = ((90 * quantidadeUtilizadaNaReceitaLimpoConvertido) * valorItemLimpoConvertido) / 1000;
+                    this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
+                }else if (this.nomeItemEstoque.contains("AÇUCAR REFINADO")){
+                    resultadoCustoDoItemNaReceita = ((180 * quantidadeUtilizadaNaReceitaLimpoConvertido) * valorItemLimpoConvertido) / 1000;
+                    this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
+                }else if (this.nomeItemEstoque.contains("AÇUCAR CRISTAL")){
+                    resultadoCustoDoItemNaReceita = ((200 * quantidadeUtilizadaNaReceitaLimpoConvertido) * valorItemLimpoConvertido) / 1000;
+                    this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
+                }else if (this.nomeItemEstoque.contains("AÇUCAR MASCAVO")){
+                    resultadoCustoDoItemNaReceita = ((200 * quantidadeUtilizadaNaReceitaLimpoConvertido) * valorItemLimpoConvertido) / 1000;
+                    this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
+                }else if (this.nomeItemEstoque.contains("AÇÚCAR REFINADO")){
+                    resultadoCustoDoItemNaReceita = ((180 * quantidadeUtilizadaNaReceitaLimpoConvertido) * valorItemLimpoConvertido) / 1000;
+                    this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
+                }else if (this.nomeItemEstoque.contains("AÇÚCAR CRISTAL")){
+                    resultadoCustoDoItemNaReceita = ((200 * quantidadeUtilizadaNaReceitaLimpoConvertido) * valorItemLimpoConvertido) / 1000;
+                    this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
+                }else if (this.nomeItemEstoque.contains("AÇÚCAR MASCAVO")){
+                    resultadoCustoDoItemNaReceita = ((200 * quantidadeUtilizadaNaReceitaLimpoConvertido)* valorItemLimpoConvertido) / 1000;
+                    this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
+                }
+
+                break;
+
+            default:
+                break;
+
+        }
+        this.custoPorReceitaItemEstoque = String.valueOf(this.resultadoCustoDoItemNaReceita);
       return   this.resultadoRetornadoValorItemPorReceita;
     }
     @Override
     public String toString() {
         return "ModeloItemEstoque{" +
-                "idItemEstoque='" + idItemEstoque + '\'' +
-                ", nomeItemEstoque='" + nomeItemEstoque + '\'' +
-                ", quantidadeTotalItemEstoque='" + quantidadeTotalItemEstoque + '\'' +
-                ", valorIndividualItemEstoque='" + valorIndividualItemEstoque + '\'' +
-                ", unidadeMedidaPacoteItemEstoque='" + unidadeMedidaPacoteItemEstoque + '\'' +
-                ", unidadeMedidaUtilizadoNasReceitas='" + unidadeMedidaUtilizadoNasReceitas + '\'' +
-                ", valorFracionadoItemEstoque='" + valorFracionadoItemEstoque + '\'' +
-                ", custoPorReceitaItemEstoque='" + custoPorReceitaItemEstoque + '\'' +
-                ", quantidadeUtilizadaNasReceitas='" + quantidadeUtilizadaNasReceitas + '\'' +
+                "idItemEstoque='" + idItemEstoque + '\'' + "\n" +
+                ", nomeItemEstoque='" + nomeItemEstoque + '\'' + "\n" +
+                ", quantidadeTotalItemEstoque='" + quantidadeTotalItemEstoque + '\'' + "\n" +
+                ", valorIndividualItemEstoque='" + valorIndividualItemEstoque + '\'' + "\n" +
+                ", unidadeMedidaPacoteItemEstoque='" + unidadeMedidaPacoteItemEstoque + '\'' + "\n" +
+                ", unidadeMedidaUtilizadoNasReceitas='" + unidadeMedidaUtilizadoNasReceitas + '\'' + "\n" +
+                ", valorFracionadoItemEstoque='" + valorFracionadoItemEstoque + '\'' + "\n" +
+                ", custoPorReceitaItemEstoque='" + custoPorReceitaItemEstoque + '\'' + "\n" +
+                ", quantidadeUtilizadaNasReceitas='" + quantidadeUtilizadaNasReceitas + '\'' + "\n" +
+                ", quantidadePorVolumeItemEstoque='" + quantidadePorVolumeItemEstoque + '\'' + "\n" +
                 '}';
     }
 }

@@ -40,7 +40,7 @@ public class ModeloItemEstoqueDAO implements InterfaceModeloItemEstoqueDAO{
 
             item.put("nomeItemEstoque",modeloItemEstoque.getNomeItemEstoque());
             item.put("quantidadeTotalItemEstoque", modeloItemEstoque.getQuantidadeTotalItemEstoque());
-            item.put("quantidadePorPacoteItemEstoque", modeloItemEstoque.getQuantidadePorPacoteItemEstoque());
+            item.put("quantidadePorPacoteItemEstoque", modeloItemEstoque.getQuantidadePorVolumeItemEstoque());
             item.put("quantidadeUtilizadaNasReceitas", modeloItemEstoque.getQuantidadeUtilizadaNasReceitas());
 
 
@@ -94,7 +94,7 @@ public class ModeloItemEstoqueDAO implements InterfaceModeloItemEstoqueDAO{
 
                 item.put("nomeItemEstoque",modeloItemEstoque.getNomeItemEstoque());
                 item.put("quantidadeTotalItemEstoque", modeloItemEstoque.getQuantidadeTotalItemEstoque());
-                item.put("quantidadePorPacoteItemEstoque", modeloItemEstoque.getQuantidadePorPacoteItemEstoque());
+                item.put("quantidadePorPacoteItemEstoque", modeloItemEstoque.getQuantidadePorVolumeItemEstoque());
                 item.put("quantidadeUtilizadaNasReceitas", modeloItemEstoque.getQuantidadeUtilizadaNasReceitas());
 
 
