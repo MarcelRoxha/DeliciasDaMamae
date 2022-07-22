@@ -162,7 +162,7 @@
 
         <RadioGroup
             android:id="@+id/radioGroup"
-            android:layout_width="0dp"
+            android:layout_width="400dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="5dp"
@@ -280,12 +280,10 @@
 
         <RadioGroup
             android:id="@+id/radioGroup2"
-            android:layout_width="0dp"
+            android:layout_width="190dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="5dp"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView68">
 
@@ -329,15 +327,56 @@
                 android:textColor="@color/azul_claro"
                 android:textStyle="bold" />
 
+
+        </RadioGroup>
+
+        <RadioGroup
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="16dp"
+            android:gravity="center"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toBottomOf="@+id/radioGroup2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/radioGroup2"
+            app:layout_constraintTop_toTopOf="@+id/radioGroup2">
+
             <RadioButton
                 android:id="@+id/radioButton_xicara_utilizada_receita_id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/radioButton_xicara"
+                android:textAlignment="center"
+                android:textColor="@color/azul_claro"
+                android:textStyle="bold" />
+
+            <RadioButton
+                android:id="@+id/radioButton_1_2_xicara_utilizada_receita_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/radioButton_xicara_1_2"
+                android:textAlignment="center"
                 android:textColor="@color/azul_claro"
                 android:textStyle="bold"/>
 
+            <RadioButton
+                android:id="@+id/radioButton_1_3_xicara_utilizada_receita_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/radioButton_xicara_1_3"
+                android:textAlignment="center"
+                android:textColor="@color/azul_claro"
+                android:textStyle="bold"/>
 
+            <RadioButton
+                android:id="@+id/radioButton_1_4_xicara_utilizada_receita_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/radioButton_xicara_1_4"
+                android:textAlignment="center"
+                android:textColor="@color/azul_claro"
+                android:textStyle="bold"/>
         </RadioGroup>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

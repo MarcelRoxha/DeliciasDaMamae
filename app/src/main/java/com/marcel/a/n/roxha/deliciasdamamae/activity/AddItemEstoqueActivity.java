@@ -52,7 +52,10 @@ public class AddItemEstoqueActivity extends AppCompatActivity {
             radioButton_unid_utilizado_na_receita,
             radioButton_litro_utilizado_na_receita,
             radioButton_kilo_utilizado_na_receita,
-            radioButton_xicara_utilizado_na_receita;
+            radioButton_xicara_utilizado_na_receita,
+            radioButton_1_2_xicara_utilizado_na_receita,
+            radioButton_1_3_xicara_utilizado_na_receita,
+            radioButton_1_4_xicara_utilizado_na_receita;
 
 
 
@@ -103,6 +106,9 @@ public class AddItemEstoqueActivity extends AppCompatActivity {
         radioButton_litro_utilizado_na_receita = findViewById(R.id.radioButton_Litro_utilizada_receita_id);
         radioButton_kilo_utilizado_na_receita = findViewById(R.id.radioButton_Kilo_utilizada_receita_id);
         radioButton_xicara_utilizado_na_receita = findViewById(R.id.radioButton_xicara_utilizada_receita_id);
+        radioButton_1_2_xicara_utilizado_na_receita = findViewById(R.id.radioButton_1_2_xicara_utilizada_receita_id);
+        radioButton_1_3_xicara_utilizado_na_receita = findViewById(R.id.radioButton_1_3_xicara_utilizada_receita_id);
+        radioButton_1_4_xicara_utilizado_na_receita = findViewById(R.id.radioButton_1_4_xicara_utilizada_receita_id);
 
 
         //Recuperando a chave do item estoque caso seja atualização
@@ -128,18 +134,7 @@ public class AddItemEstoqueActivity extends AppCompatActivity {
                     edit_quantPacote_item_estoque.setText(modeloItemEstoque.getQuantidadePorVolumeItemEstoque());
                     edit_quantUsadaReceita_item_estoque.setText(modeloItemEstoque.getQuantidadeUtilizadaNasReceitas());
 
-               /*     if (undMedidaPacoteCadastrado.contains("1000")) {
-                        radioButton_litro_kilo.toggle();
-                    } else  {
-                        radioButton_gramas_ml_unid.toggle();
-                    }
 
-                    if(unidadeMedidaReceitaItemRecuperado.contains("1000")){
-                        radioButton_litro_kilo_utilizado_na_receita.toggle();
-                    }else{
-                        radioButton_gramas_ml_unid_utilizado_na_receita.toggle();
-                    }
-*/
 
                 }
             });
@@ -239,7 +234,18 @@ public class AddItemEstoqueActivity extends AppCompatActivity {
                 }else if (radioButton_xicara_utilizado_na_receita.isChecked()){
                     unidadeMedidaItemNaReceita = "XICARA(S)";
 
+                }else if (radioButton_1_2_xicara_utilizado_na_receita.isChecked()){
+                    unidadeMedidaItemNaReceita = "1/2XICARA(S)";
+
+                }else if (radioButton_1_3_xicara_utilizado_na_receita.isChecked()){
+                    unidadeMedidaItemNaReceita = "1/3XICARA(S)";
+
+                }else if (radioButton_1_4_xicara_utilizado_na_receita.isChecked()){
+                    unidadeMedidaItemNaReceita = "1/4XICARA(S)";
+
                 }
+
+
                 cadastrarNovoItemEstoque.setNomeItemEstoque(nomeItemDigitado);
                 cadastrarNovoItemEstoque.setValorIndividualItemEstoque(valorItemDigitado);
                 cadastrarNovoItemEstoque.setQuantidadePorVolumeItemEstoque(valorItemDigitado);
