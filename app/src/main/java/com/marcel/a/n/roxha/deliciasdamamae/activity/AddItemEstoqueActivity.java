@@ -261,6 +261,12 @@ public class AddItemEstoqueActivity extends AppCompatActivity {
                 //     modeloItemEstoqueDAO.salvarItemEstoque(cadastrarNovoItemEstoque);
 
                 System.out.println("ITEM A SER SALVO: " + cadastrarNovoItemEstoque.toString());
+
+               boolean resultado = modeloItemEstoqueDAO.salvarItemEstoque(cadastrarNovoItemEstoque);
+
+               if(resultado == true){
+                   carregarTelaEstoque();
+               }
             }
 
             }

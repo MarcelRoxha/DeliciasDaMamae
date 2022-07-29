@@ -230,7 +230,7 @@ public class EstoqueActivity extends AppCompatActivity {
 
                 if (!chaveSeguranca.isEmpty() && chaveSeguranca.contains(chaveSeg)) {
 
-                    FirebaseFirestore.getInstance().collection("Item_Estoque")
+                    FirebaseFirestore.getInstance().collection("ITEM_ESTOQUE")
                             .whereEqualTo("versionEstoque", "Estoque_DeliciasDaMamae")
                             .get()
                             .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {

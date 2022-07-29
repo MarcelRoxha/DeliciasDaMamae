@@ -1,6 +1,7 @@
 package com.marcel.a.n.roxha.deliciasdamamae.helper;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -13,6 +14,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.marcel.a.n.roxha.deliciasdamamae.activity.EstoqueActivity;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloItemEstoque;
 
@@ -56,6 +58,8 @@ public class ModeloItemEstoqueDAO implements InterfaceModeloItemEstoqueDAO{
                 public void onSuccess(DocumentReference documentReference) {
 
                     Toast.makeText(context, "Sucesso ao salvar  item estoque", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(context, EstoqueActivity.class);
+                    context.startActivity(intent);
 
                 }
             }).addOnFailureListener(new OnFailureListener() {

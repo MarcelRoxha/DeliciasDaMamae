@@ -290,7 +290,7 @@ public class ModeloItemEstoque  implements Serializable {
                 }else if (this.nomeItemEstoque.contains("CHOCOLATE EM PO")){
                     resultadoCustoDoItemNaReceita = ((30 * quantidadeUtilizadaNaReceitaLimpoConvertido) * valorItemLimpoConvertido) / 1000;
                     this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
-                    System.out.println("Tem chocolate no nome");
+
                 }else if (this.nomeItemEstoque.contains("CHOCOLATE EM PÓ")){
                     resultadoCustoDoItemNaReceita = ((30 * quantidadeUtilizadaNaReceitaLimpoConvertido) * valorItemLimpoConvertido) / 1000;
                     this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
