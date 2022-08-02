@@ -257,16 +257,14 @@ public class AddItemEstoqueActivity extends AppCompatActivity {
 
                 cadastrarNovoItemEstoque.calcularValorFracionadoModeloItemEstoque();
                 cadastrarNovoItemEstoque.calcularValorItemPorReceita();
+                cadastrarNovoItemEstoque.calcularQuantidadeTotalItemEmEstoqueEmGramas();
+                cadastrarNovoItemEstoque.calcularQuantidadeTotalItemEmEstoquePorVolumeSalvar();
 
                 //     modeloItemEstoqueDAO.salvarItemEstoque(cadastrarNovoItemEstoque);
 
                 System.out.println("ITEM A SER SALVO: " + cadastrarNovoItemEstoque.toString());
+               // modeloItemEstoqueDAO.salvarItemEstoque(cadastrarNovoItemEstoque);
 
-               boolean resultado = modeloItemEstoqueDAO.salvarItemEstoque(cadastrarNovoItemEstoque);
-
-               if(resultado == true){
-                   carregarTelaEstoque();
-               }
             }
 
             }

@@ -15,6 +15,8 @@ public class ModeloItemEstoque  implements Serializable {
     private String valorFracionadoItemEstoque;
     private String custoPorReceitaItemEstoque;
     private String quantidadeUtilizadaNasReceitas;
+    private String quantidadeTotalItemEmEstoquePorVolume;
+    private String quantidadeTotalItemEmEstoqueEmGramas;
     private String resultadoRetornado;
     private String resultadoRetornadoValorItemPorReceita;
     private double resultado = 0;
@@ -174,19 +176,6 @@ public class ModeloItemEstoque  implements Serializable {
 
 
 
-/*
-
-        double valorConvertido = Double.parseDouble(valorItemLimpo);
-        double quantidadePorPacoteConvertido = Double.parseDouble(quantidadePorPacoteLimpo);
-        //double unidadeMedidaConvertido = Double.parseDouble(unidadeMedidaItemEstoque);
-
-        double totalPorPacote = quantidadePorPacoteConvertido * unidadeMedidaConvertido;
-        double resultado = Double.valueOf(valorConvertido / totalPorPacote);
-
-
-        this.resultadoRetornado = String.valueOf(resultado);
-
-        this.valorFracionadoItemEstoque = this.resultadoRetornado;*/
 
     return " Passou pelo calcularValorFracionadoModeloItemEstoque";
     }
@@ -358,6 +347,28 @@ public class ModeloItemEstoque  implements Serializable {
         this.custoPorReceitaItemEstoque = String.valueOf(this.resultadoCustoDoItemNaReceita);
       return   this.resultadoRetornadoValorItemPorReceita;
     }
+
+    public void calcularQuantidadeTotalItemEmEstoquePorVolumeSalvar(){
+
+        double quantidadePorVolumeItemConverter = Double.parseDouble(this.quantidadePorVolumeItemEstoque);
+        double quantidadeItemEmEstoqueConverter = Double.parseDouble(this.quantidadeTotalItemEstoque);
+
+        double resultado = quantidadePorVolumeItemConverter * quantidadeItemEmEstoqueConverter;
+        this.quantidadeTotalItemEmEstoquePorVolume = String.valueOf(resultado);
+
+    }
+
+    public void calcularQuantidadeTotalItemEmEstoqueEmGramas(){
+        double quantidadePorVolumeItemConverter = Double.parseDouble(this.quantidadePorVolumeItemEstoque);
+        double quantidadeItemEmEstoqueConverter = Double.parseDouble(this.quantidadeTotalItemEstoque);
+
+        double resultado = (quantidadePorVolumeItemConverter * quantidadeItemEmEstoqueConverter) * 1000;
+        this.quantidadeTotalItemEmEstoqueEmGramas = String.valueOf(resultado);
+    }
+
+
+
+
     @Override
     public String toString() {
         return "ModeloItemEstoque{" +
@@ -371,6 +382,8 @@ public class ModeloItemEstoque  implements Serializable {
                 ", custoPorReceitaItemEstoque='" + custoPorReceitaItemEstoque + '\'' + "\n" +
                 ", quantidadeUtilizadaNasReceitas='" + quantidadeUtilizadaNasReceitas + '\'' + "\n" +
                 ", quantidadePorVolumeItemEstoque='" + quantidadePorVolumeItemEstoque + '\'' + "\n" +
+                ", quantidadeTotalItemEmEstoquePorVolume='" + quantidadeTotalItemEmEstoquePorVolume + '\'' + "\n" +
+                ", quantidadeTotalItemEmEstoqueEmGramas='" + quantidadeTotalItemEmEstoqueEmGramas + '\'' + "\n" +
                 '}';
     }
 }
