@@ -133,9 +133,9 @@ public class EstoqueActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
-                adapter.deletarItemIndividual(position);
+                modeloItemEstoqueAdapter.deletarItemIndividual(position);
 
-                Toast.makeText(EstoqueActivity.this, "Item excluido", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EstoqueActivity.this, "Item excluido permanentemente", Toast.LENGTH_SHORT).show();
 
 
             }

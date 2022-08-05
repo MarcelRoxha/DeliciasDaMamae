@@ -141,6 +141,8 @@
     <string name="texto_botao_confirmar_deletar_bolo_vendido_banco">CONFIRMAR EXCLUSÃO</string>
     <string name="texto_botao_cancelar_exclusao_bolo_vendido_banco_id">CANCELAR EXCLUSÃO</string>
     <string name="texto_custo_por_receita_item">Valor Item por Receita:</string>
+    <string name="texto_total_item_em_estoque_por_volume">Qnt.Total do item em estoque por volume:</string>
+    <string name="texto_total_item_em_estoque_por_gramas">Qnt.Total do item em estoque por gramas:</string>
     <string name="title_activity_editar_receita_completa_cadastrada">
         EditarReceitaCompletaCadastrada
     </string>

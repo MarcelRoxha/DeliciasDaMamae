@@ -73,7 +73,7 @@ public class ItemEstoqueAdapter extends FirestoreRecyclerAdapter<ItemEstoqueMode
             ultimoValotItem = itemView.findViewById(R.id.text_valor_atual_item_estoque_adapter_id);
             quantEstoqueItem = itemView.findViewById(R.id.text_quant_total_estoque_adapter_id);
             valorFracionado = itemView.findViewById(R.id.text_valor_fracionado_adapter_id);
-            custoItemPorReceita = itemView.findViewById(R.id.text_valor_atual_receita_adapter_id);
+            custoItemPorReceita = itemView.findViewById(R.id.texto_quantidade_total_por_volume_item_em_estoque_id);
             quantUsadaReceita = itemView.findViewById(R.id.text_quant_usada_receita_adapter_id);
 
             itemView.setOnClickListener(new View.OnClickListener() {

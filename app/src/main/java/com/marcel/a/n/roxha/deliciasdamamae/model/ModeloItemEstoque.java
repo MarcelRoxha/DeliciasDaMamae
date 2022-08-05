@@ -14,6 +14,7 @@ public class ModeloItemEstoque  implements Serializable {
     private String unidadeMedidaUtilizadoNasReceitas;
     private String valorFracionadoItemEstoque;
     private String custoPorReceitaItemEstoque;
+    private String custoTotalDoItemEmEstoque;
     private String quantidadeUtilizadaNasReceitas;
     private String quantidadeTotalItemEmEstoquePorVolume;
     private String quantidadeTotalItemEmEstoqueEmGramas;
@@ -120,12 +121,19 @@ public class ModeloItemEstoque  implements Serializable {
     public void setQuantidadeUtilizadaNasReceitas(String quantidadeUtilizadaNasReceitas) {
         this.quantidadeUtilizadaNasReceitas = quantidadeUtilizadaNasReceitas;
     }
+    public String getQuantidadeTotalItemEmEstoquePorVolume() {
+        return quantidadeTotalItemEmEstoquePorVolume;
+    }
 
+    public String getQuantidadeTotalItemEmEstoqueEmGramas() {
+        return quantidadeTotalItemEmEstoqueEmGramas;
+    }
+
+    public String getCustoTotalDoItemEmEstoque() {
+        return custoTotalDoItemEmEstoque;
+    }
 
     public String calcularValorFracionadoModeloItemEstoque(){
-
-
-
 
         String valorItemLimpo = this.valorIndividualItemEstoque.replaceAll(",", ".");
         String quantidadePorPacoteLimpo = this.quantidadePorVolumeItemEstoque.replaceAll(",", ".");
@@ -173,10 +181,6 @@ public class ModeloItemEstoque  implements Serializable {
 
         }
 
-
-
-
-
     return " Passou pelo calcularValorFracionadoModeloItemEstoque";
     }
 
@@ -194,152 +198,193 @@ public class ModeloItemEstoque  implements Serializable {
 
             case "KILO(S)":
             case "LITRO(S)":
-                resultadoCustoDoItemNaReceita = (quantidadeUtilizadaNaReceitaLimpoConvertido * valorItemLimpoConvertido);
+                resultadoCustoDoItemNaReceita = valorItemLimpoConvertido  * quantidadeUtilizadaNaReceitaLimpoConvertido;
                 this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
                 break;
 
             case "GRAMA(S)":
             case "ML(S)":
             case "UNIDADE(S)":
-                resultadoCustoDoItemNaReceita = (quantidadeUtilizadaNaReceitaLimpoConvertido * valorItemLimpoConvertido) / 1000;
-                this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
+
+                if(this.unidadeMedidaPacoteItemEstoque == "LITRO(S)" || this.unidadeMedidaPacoteItemEstoque == "KILO(S)" ){
+                    resultadoCustoDoItemNaReceita = (valorItemLimpoConvertido / 1000 * quantidadePorPacoteLimpoConvertido ) * quantidadeUtilizadaNaReceitaLimpoConvertido;
+                    this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
+                }else{
+                    resultadoCustoDoItemNaReceita = (valorItemLimpoConvertido / quantidadePorPacoteLimpoConvertido ) * quantidadeUtilizadaNaReceitaLimpoConvertido;
+                    this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
+                }
+
+
                 break;
 
             case "XICARA(S)":
                 if(this.nomeItemEstoque.contains("FARINHA")){
-                    resultadoCustoDoItemNaReceita = ((120 * quantidadeUtilizadaNaReceitaLimpoConvertido) * valorItemLimpoConvertido) / 1000;
+                    resultadoCustoDoItemNaReceita = (((valorItemLimpoConvertido / 1000 )*  120) * quantidadeUtilizadaNaReceitaLimpoConvertido) ;
                     this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
                 }else if (this.nomeItemEstoque.contains("CHOCOLATE EM PO")){
-                    resultadoCustoDoItemNaReceita = ((90 * quantidadeUtilizadaNaReceitaLimpoConvertido) * valorItemLimpoConvertido) / 1000;
+                    resultadoCustoDoItemNaReceita = (((valorItemLimpoConvertido / 1000 )*  90 )* quantidadeUtilizadaNaReceitaLimpoConvertido) ;
                     this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
                     System.out.println("Tem chocolate no nome");
                 }else if (this.nomeItemEstoque.contains("CHOCOLATE EM PÓ")){
-                    resultadoCustoDoItemNaReceita = ((90 * quantidadeUtilizadaNaReceitaLimpoConvertido) * valorItemLimpoConvertido) / 1000;
+                    resultadoCustoDoItemNaReceita = (((valorItemLimpoConvertido / 1000 )*  90 )* quantidadeUtilizadaNaReceitaLimpoConvertido) ;
                     this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
                     System.out.println("Tem chocolate no nome pó com assento");
                 }else if (this.nomeItemEstoque.contains("AÇUCAR REFINADO")){
-                    resultadoCustoDoItemNaReceita = ((180 * quantidadeUtilizadaNaReceitaLimpoConvertido) * valorItemLimpoConvertido) / 1000;
+                    resultadoCustoDoItemNaReceita = (((valorItemLimpoConvertido / 1000 )* 180) * quantidadeUtilizadaNaReceitaLimpoConvertido) ;
                     this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
                 }else if (this.nomeItemEstoque.contains("AÇUCAR CRISTAL")){
-                    resultadoCustoDoItemNaReceita = ((200 * quantidadeUtilizadaNaReceitaLimpoConvertido) * valorItemLimpoConvertido) / 1000;
+                    resultadoCustoDoItemNaReceita = (((valorItemLimpoConvertido / 1000 )*  200) * quantidadeUtilizadaNaReceitaLimpoConvertido) ;
                     this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
                 }else if (this.nomeItemEstoque.contains("AÇUCAR MASCAVO")){
-                    resultadoCustoDoItemNaReceita = ((200 * quantidadeUtilizadaNaReceitaLimpoConvertido) * valorItemLimpoConvertido) / 1000;
+                    resultadoCustoDoItemNaReceita = (((valorItemLimpoConvertido / 1000 )*  200) * quantidadeUtilizadaNaReceitaLimpoConvertido) ;
                     this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
                 }else if (this.nomeItemEstoque.contains("AÇÚCAR REFINADO")){
-                    resultadoCustoDoItemNaReceita = ((180 * quantidadeUtilizadaNaReceitaLimpoConvertido) * valorItemLimpoConvertido) / 1000;
+                    resultadoCustoDoItemNaReceita = (((valorItemLimpoConvertido / 1000 )*  180) * quantidadeUtilizadaNaReceitaLimpoConvertido) ;
                     this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
                 }else if (this.nomeItemEstoque.contains("AÇÚCAR CRISTAL")){
-                    resultadoCustoDoItemNaReceita = ((200 * quantidadeUtilizadaNaReceitaLimpoConvertido) * valorItemLimpoConvertido) / 1000;
+                    resultadoCustoDoItemNaReceita = (((valorItemLimpoConvertido / 1000 )*  200) * quantidadeUtilizadaNaReceitaLimpoConvertido) ;
                     this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
                 }else if (this.nomeItemEstoque.contains("AÇÚCAR MASCAVO")){
-                    resultadoCustoDoItemNaReceita = ((200 * quantidadeUtilizadaNaReceitaLimpoConvertido)* valorItemLimpoConvertido) / 1000;
+                    resultadoCustoDoItemNaReceita = (((valorItemLimpoConvertido / 1000 )* 200) * quantidadeUtilizadaNaReceitaLimpoConvertido) ;
+                    this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
+                }else if(this.nomeItemEstoque.contains("LEITE")){
+                resultadoCustoDoItemNaReceita = (((valorItemLimpoConvertido / 1000 )* 240) * quantidadeUtilizadaNaReceitaLimpoConvertido) ;
+                this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
+                }else if(this.nomeItemEstoque.contains("ÓLEO") || this.nomeItemEstoque.contains("OLEO")){
+                    resultadoCustoDoItemNaReceita = (((valorItemLimpoConvertido / 900 )* 180) * quantidadeUtilizadaNaReceitaLimpoConvertido) ;
+                    this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
+                }else{
+                    resultadoCustoDoItemNaReceita = ((valorItemLimpoConvertido / 120) * quantidadeUtilizadaNaReceitaLimpoConvertido) ;
                     this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
                 }
-
                 break;
 
             case "1/2XICARA(S)":
                 if(this.nomeItemEstoque.contains("FARINHA")){
-                    resultadoCustoDoItemNaReceita = ((60 * quantidadeUtilizadaNaReceitaLimpoConvertido) * valorItemLimpoConvertido) / 1000;
+                    resultadoCustoDoItemNaReceita = (((valorItemLimpoConvertido / 1000 )* 60) * quantidadeUtilizadaNaReceitaLimpoConvertido) ;
                     this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
                 }else if (this.nomeItemEstoque.contains("CHOCOLATE EM PO")){
-                    resultadoCustoDoItemNaReceita = ((45 * quantidadeUtilizadaNaReceitaLimpoConvertido) * valorItemLimpoConvertido) / 1000;
+                    resultadoCustoDoItemNaReceita = (((valorItemLimpoConvertido / 1000 )* 45 )* quantidadeUtilizadaNaReceitaLimpoConvertido) ;
                     this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
                     System.out.println("Tem chocolate no nome");
                 }else if (this.nomeItemEstoque.contains("CHOCOLATE EM PÓ")){
-                    resultadoCustoDoItemNaReceita = ((45 * quantidadeUtilizadaNaReceitaLimpoConvertido) * valorItemLimpoConvertido) / 1000;
+                    resultadoCustoDoItemNaReceita = (((valorItemLimpoConvertido / 1000 )* 45 )* quantidadeUtilizadaNaReceitaLimpoConvertido) ;
                     this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
+                    System.out.println("Tem chocolate no nome pó com assento");
                 }else if (this.nomeItemEstoque.contains("AÇUCAR REFINADO")){
-                    resultadoCustoDoItemNaReceita = ((90 * quantidadeUtilizadaNaReceitaLimpoConvertido) * valorItemLimpoConvertido) / 1000;
+                    resultadoCustoDoItemNaReceita = (((valorItemLimpoConvertido / 1000 )* 90) * quantidadeUtilizadaNaReceitaLimpoConvertido) ;
                     this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
                 }else if (this.nomeItemEstoque.contains("AÇUCAR CRISTAL")){
-                    resultadoCustoDoItemNaReceita = ((100 * quantidadeUtilizadaNaReceitaLimpoConvertido) * valorItemLimpoConvertido) / 1000;
+                    resultadoCustoDoItemNaReceita = (((valorItemLimpoConvertido / 1000 )* 100) * quantidadeUtilizadaNaReceitaLimpoConvertido) ;
                     this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
                 }else if (this.nomeItemEstoque.contains("AÇUCAR MASCAVO")){
-                    resultadoCustoDoItemNaReceita = ((100 * quantidadeUtilizadaNaReceitaLimpoConvertido) * valorItemLimpoConvertido) / 1000;
+                    resultadoCustoDoItemNaReceita = (((valorItemLimpoConvertido / 1000 )* 200) * quantidadeUtilizadaNaReceitaLimpoConvertido) ;
                     this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
                 }else if (this.nomeItemEstoque.contains("AÇÚCAR REFINADO")){
-                    resultadoCustoDoItemNaReceita = ((90 * quantidadeUtilizadaNaReceitaLimpoConvertido) * valorItemLimpoConvertido) / 1000;
+                    resultadoCustoDoItemNaReceita = (((valorItemLimpoConvertido / 1000 )* 90) * quantidadeUtilizadaNaReceitaLimpoConvertido) ;
                     this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
                 }else if (this.nomeItemEstoque.contains("AÇÚCAR CRISTAL")){
-                    resultadoCustoDoItemNaReceita = ((100 * quantidadeUtilizadaNaReceitaLimpoConvertido) * valorItemLimpoConvertido) / 1000;
+                    resultadoCustoDoItemNaReceita = (((valorItemLimpoConvertido / 1000 )* 100) * quantidadeUtilizadaNaReceitaLimpoConvertido) ;
                     this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
                 }else if (this.nomeItemEstoque.contains("AÇÚCAR MASCAVO")){
-                    resultadoCustoDoItemNaReceita = ((100 * quantidadeUtilizadaNaReceitaLimpoConvertido)* valorItemLimpoConvertido) / 1000;
+                    resultadoCustoDoItemNaReceita = (((valorItemLimpoConvertido / 1000 )* 100) * quantidadeUtilizadaNaReceitaLimpoConvertido) ;
                     this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
-                }
+                }else if(this.nomeItemEstoque.contains("LEITE")){
+                resultadoCustoDoItemNaReceita = (((valorItemLimpoConvertido / 1000 )* 120) * quantidadeUtilizadaNaReceitaLimpoConvertido) ;
+                this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
+                }else if(this.nomeItemEstoque.contains("ÓLEO") || this.nomeItemEstoque.contains("OLEO")){
+                    resultadoCustoDoItemNaReceita = (((valorItemLimpoConvertido / 900 )* 90) * quantidadeUtilizadaNaReceitaLimpoConvertido) ;
+                    this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
+                }else{
+                resultadoCustoDoItemNaReceita = (((valorItemLimpoConvertido / 1000 )* 60) * quantidadeUtilizadaNaReceitaLimpoConvertido) ;
+                this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
+            }
 
                 break;
 
             case "1/3XICARA(S)":
                 if(this.nomeItemEstoque.contains("FARINHA")){
-                    resultadoCustoDoItemNaReceita = ((40 * quantidadeUtilizadaNaReceitaLimpoConvertido) * valorItemLimpoConvertido) / 1000;
+                    resultadoCustoDoItemNaReceita = (((valorItemLimpoConvertido / 1000 )* 40) * quantidadeUtilizadaNaReceitaLimpoConvertido) ;
                     this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
                 }else if (this.nomeItemEstoque.contains("CHOCOLATE EM PO")){
-                    resultadoCustoDoItemNaReceita = ((30 * quantidadeUtilizadaNaReceitaLimpoConvertido) * valorItemLimpoConvertido) / 1000;
+                    resultadoCustoDoItemNaReceita = (((valorItemLimpoConvertido / 1000 )* 30 )* quantidadeUtilizadaNaReceitaLimpoConvertido) ;
                     this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
-
+                    System.out.println("Tem chocolate no nome");
                 }else if (this.nomeItemEstoque.contains("CHOCOLATE EM PÓ")){
-                    resultadoCustoDoItemNaReceita = ((30 * quantidadeUtilizadaNaReceitaLimpoConvertido) * valorItemLimpoConvertido) / 1000;
+                    resultadoCustoDoItemNaReceita = (((valorItemLimpoConvertido / 1000 )* 30 )* quantidadeUtilizadaNaReceitaLimpoConvertido) ;
                     this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
+                    System.out.println("Tem chocolate no nome pó com assento");
                 }else if (this.nomeItemEstoque.contains("AÇUCAR REFINADO")){
-                    resultadoCustoDoItemNaReceita = ((60 * quantidadeUtilizadaNaReceitaLimpoConvertido) * valorItemLimpoConvertido) / 1000;
+                    resultadoCustoDoItemNaReceita = (((valorItemLimpoConvertido / 1000 )* 60) * quantidadeUtilizadaNaReceitaLimpoConvertido) ;
                     this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
                 }else if (this.nomeItemEstoque.contains("AÇUCAR CRISTAL")){
-                    resultadoCustoDoItemNaReceita = ((66.66 * quantidadeUtilizadaNaReceitaLimpoConvertido) * valorItemLimpoConvertido) / 1000;
+                    resultadoCustoDoItemNaReceita = (((valorItemLimpoConvertido / 1000 )* 66.66) * quantidadeUtilizadaNaReceitaLimpoConvertido) ;
                     this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
                 }else if (this.nomeItemEstoque.contains("AÇUCAR MASCAVO")){
-                    resultadoCustoDoItemNaReceita = ((66.66 * quantidadeUtilizadaNaReceitaLimpoConvertido) * valorItemLimpoConvertido) / 1000;
+                    resultadoCustoDoItemNaReceita = (((valorItemLimpoConvertido / 1000 )* 66.66) * quantidadeUtilizadaNaReceitaLimpoConvertido) ;
                     this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
                 }else if (this.nomeItemEstoque.contains("AÇÚCAR REFINADO")){
-                    resultadoCustoDoItemNaReceita = ((60 * quantidadeUtilizadaNaReceitaLimpoConvertido) * valorItemLimpoConvertido) / 1000;
+                    resultadoCustoDoItemNaReceita = (((valorItemLimpoConvertido / 1000 )* 60) * quantidadeUtilizadaNaReceitaLimpoConvertido) ;
                     this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
                 }else if (this.nomeItemEstoque.contains("AÇÚCAR CRISTAL")){
-                    resultadoCustoDoItemNaReceita = ((66.66 * quantidadeUtilizadaNaReceitaLimpoConvertido) * valorItemLimpoConvertido) / 1000;
+                    resultadoCustoDoItemNaReceita = (((valorItemLimpoConvertido / 1000 )* 66.66) * quantidadeUtilizadaNaReceitaLimpoConvertido) ;
                     this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
                 }else if (this.nomeItemEstoque.contains("AÇÚCAR MASCAVO")){
-                    resultadoCustoDoItemNaReceita = ((66.66 * quantidadeUtilizadaNaReceitaLimpoConvertido)* valorItemLimpoConvertido) / 1000;
+                    resultadoCustoDoItemNaReceita = (((valorItemLimpoConvertido / 1000 )* 66.66) * quantidadeUtilizadaNaReceitaLimpoConvertido) ;
                     this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
-                }
-
+                }else if(this.nomeItemEstoque.contains("LEITE")){
+                resultadoCustoDoItemNaReceita = (((valorItemLimpoConvertido / 1000 )* 80) * quantidadeUtilizadaNaReceitaLimpoConvertido) ;
+                this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
+                }else if(this.nomeItemEstoque.contains("ÓLEO") || this.nomeItemEstoque.contains("OLEO")){
+                    resultadoCustoDoItemNaReceita = (((valorItemLimpoConvertido / 900 )* 60) * quantidadeUtilizadaNaReceitaLimpoConvertido) ;
+                    this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
+                }else{
+                resultadoCustoDoItemNaReceita = (((valorItemLimpoConvertido / 1000 )* 40) * quantidadeUtilizadaNaReceitaLimpoConvertido) ;
+                this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
+            }
                 break;
 
             case "1/4XICARA(S)":
                 if(this.nomeItemEstoque.contains("FARINHA")){
-                    resultadoCustoDoItemNaReceita = ((30 * quantidadeUtilizadaNaReceitaLimpoConvertido) * valorItemLimpoConvertido) / 1000;
+                    resultadoCustoDoItemNaReceita = (((valorItemLimpoConvertido / 1000 )* 30) * quantidadeUtilizadaNaReceitaLimpoConvertido) ;
                     this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
                 }else if (this.nomeItemEstoque.contains("CHOCOLATE EM PO")){
-                    resultadoCustoDoItemNaReceita = ((22.5 * quantidadeUtilizadaNaReceitaLimpoConvertido) * valorItemLimpoConvertido) / 1000;
+                    resultadoCustoDoItemNaReceita = (((valorItemLimpoConvertido / 1000 )* 22.5 )* quantidadeUtilizadaNaReceitaLimpoConvertido) ;
                     this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
                     System.out.println("Tem chocolate no nome");
                 }else if (this.nomeItemEstoque.contains("CHOCOLATE EM PÓ")){
-                    resultadoCustoDoItemNaReceita = ((22.5 * quantidadeUtilizadaNaReceitaLimpoConvertido) * valorItemLimpoConvertido) / 1000;
+                    resultadoCustoDoItemNaReceita = (((valorItemLimpoConvertido / 1000 )* 22.5 )* quantidadeUtilizadaNaReceitaLimpoConvertido) ;
                     this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
+                    System.out.println("Tem chocolate no nome pó com assento");
                 }else if (this.nomeItemEstoque.contains("AÇUCAR REFINADO")){
-                    resultadoCustoDoItemNaReceita = ((45 * quantidadeUtilizadaNaReceitaLimpoConvertido) * valorItemLimpoConvertido) / 1000;
+                    resultadoCustoDoItemNaReceita = (((valorItemLimpoConvertido / 1000 )* 45) * quantidadeUtilizadaNaReceitaLimpoConvertido) ;
                     this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
                 }else if (this.nomeItemEstoque.contains("AÇUCAR CRISTAL")){
-                    resultadoCustoDoItemNaReceita = ((50 * quantidadeUtilizadaNaReceitaLimpoConvertido) * valorItemLimpoConvertido) / 1000;
+                    resultadoCustoDoItemNaReceita = (((valorItemLimpoConvertido / 1000 )* 50) * quantidadeUtilizadaNaReceitaLimpoConvertido) ;
                     this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
                 }else if (this.nomeItemEstoque.contains("AÇUCAR MASCAVO")){
-                    resultadoCustoDoItemNaReceita = ((50 * quantidadeUtilizadaNaReceitaLimpoConvertido) * valorItemLimpoConvertido) / 1000;
+                    resultadoCustoDoItemNaReceita = (((valorItemLimpoConvertido / 1000 )* 50) * quantidadeUtilizadaNaReceitaLimpoConvertido) ;
                     this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
                 }else if (this.nomeItemEstoque.contains("AÇÚCAR REFINADO")){
-                    resultadoCustoDoItemNaReceita = ((45 * quantidadeUtilizadaNaReceitaLimpoConvertido) * valorItemLimpoConvertido) / 1000;
+                    resultadoCustoDoItemNaReceita = (((valorItemLimpoConvertido / 1000 )* 45) * quantidadeUtilizadaNaReceitaLimpoConvertido) ;
                     this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
                 }else if (this.nomeItemEstoque.contains("AÇÚCAR CRISTAL")){
-                    resultadoCustoDoItemNaReceita = ((50 * quantidadeUtilizadaNaReceitaLimpoConvertido) * valorItemLimpoConvertido) / 1000;
+                    resultadoCustoDoItemNaReceita = (((valorItemLimpoConvertido / 1000 )* 50) * quantidadeUtilizadaNaReceitaLimpoConvertido) ;
                     this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
                 }else if (this.nomeItemEstoque.contains("AÇÚCAR MASCAVO")){
-                    resultadoCustoDoItemNaReceita = ((50 * quantidadeUtilizadaNaReceitaLimpoConvertido)* valorItemLimpoConvertido) / 1000;
+                    resultadoCustoDoItemNaReceita = (((valorItemLimpoConvertido / 1000 )* 50) * quantidadeUtilizadaNaReceitaLimpoConvertido) ;
                     this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
-                }
-
+                }else if(this.nomeItemEstoque.contains("LEITE")){
+                resultadoCustoDoItemNaReceita = (((valorItemLimpoConvertido / 1000 )* 60) * quantidadeUtilizadaNaReceitaLimpoConvertido) ;
+                this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
+                }else if(this.nomeItemEstoque.contains("ÓLEO") || this.nomeItemEstoque.contains("OLEO")){
+                    resultadoCustoDoItemNaReceita = (((valorItemLimpoConvertido / 900 )* 45) * quantidadeUtilizadaNaReceitaLimpoConvertido) ;
+                    this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
+                }else{
+                resultadoCustoDoItemNaReceita = (((valorItemLimpoConvertido / 1000 )* 30) * quantidadeUtilizadaNaReceitaLimpoConvertido) ;
+                this.custoPorReceitaItemEstoque = String.valueOf(resultadoCustoDoItemNaReceita);
+            }
                 break;
-
-
-
             default:
                 break;
 
@@ -347,6 +392,23 @@ public class ModeloItemEstoque  implements Serializable {
         this.custoPorReceitaItemEstoque = String.valueOf(this.resultadoCustoDoItemNaReceita);
       return   this.resultadoRetornadoValorItemPorReceita;
     }
+
+    public String calcularCustoTotalDoItemEmEstoque(){
+
+        String valorItemLimpo = this.valorIndividualItemEstoque.replaceAll(",", ".");
+        String quantidadeEmEstoque = this.quantidadeTotalItemEstoque.replaceAll(",", ".");
+        double valorItemLimpoConvertido = Double.parseDouble(valorItemLimpo);
+        double quantidadeEmEstoqueLimpoConvertido = Double.parseDouble(quantidadeEmEstoque);
+
+        double resultado = 0;
+
+        resultado = valorItemLimpoConvertido * quantidadeEmEstoqueLimpoConvertido;
+
+        this.custoTotalDoItemEmEstoque = String.valueOf(resultado);
+
+        return this.custoTotalDoItemEmEstoque;
+    }
+
 
     public void calcularQuantidadeTotalItemEmEstoquePorVolumeSalvar(){
 
@@ -361,9 +423,23 @@ public class ModeloItemEstoque  implements Serializable {
     public void calcularQuantidadeTotalItemEmEstoqueEmGramas(){
         double quantidadePorVolumeItemConverter = Double.parseDouble(this.quantidadePorVolumeItemEstoque);
         double quantidadeItemEmEstoqueConverter = Double.parseDouble(this.quantidadeTotalItemEstoque);
+        double resultado = 0 ;
 
-        double resultado = (quantidadePorVolumeItemConverter * quantidadeItemEmEstoqueConverter) * 1000;
-        this.quantidadeTotalItemEmEstoqueEmGramas = String.valueOf(resultado);
+
+        if(this.unidadeMedidaPacoteItemEstoque == "GRAMA(S)"
+                || this.unidadeMedidaPacoteItemEstoque == "ML(S)"
+                || this.unidadeMedidaPacoteItemEstoque == "UNIDADE(S)"){
+            resultado = (quantidadePorVolumeItemConverter * quantidadeItemEmEstoqueConverter);
+            this.quantidadeTotalItemEmEstoqueEmGramas = String.valueOf(resultado);
+        }
+        else{
+            resultado = (quantidadePorVolumeItemConverter * quantidadeItemEmEstoqueConverter) * 1000;
+            this.quantidadeTotalItemEmEstoqueEmGramas = String.valueOf(resultado);
+        }
+
+
+
+
     }
 
 

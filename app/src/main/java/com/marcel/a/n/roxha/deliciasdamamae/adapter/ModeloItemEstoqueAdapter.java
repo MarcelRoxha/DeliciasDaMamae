@@ -34,6 +34,8 @@ public class ModeloItemEstoqueAdapter extends FirestoreRecyclerAdapter<ModeloIte
         holder.valorFracionado.setText(model.getValorFracionadoItemEstoque());
         holder.custoItemPorReceita.setText(model.getCustoPorReceitaItemEstoque());
         holder.quantUsadaReceita.setText(model.getQuantidadeUtilizadaNasReceitas());
+        holder.quantTotalPorvVolumeItem.setText(model.getQuantidadeTotalItemEmEstoquePorVolume());
+        holder.quantTotalEmGramasItem.setText(model.getQuantidadeTotalItemEmEstoqueEmGramas());
 
     }
 
@@ -62,6 +64,8 @@ public class ModeloItemEstoqueAdapter extends FirestoreRecyclerAdapter<ModeloIte
         private TextView valorFracionado;
         private TextView custoItemPorReceita;
         private TextView quantUsadaReceita;
+        private TextView quantTotalPorvVolumeItem;
+        private TextView quantTotalEmGramasItem;
         private TextView idItem;
 
         public ModeloItemEstoqueViewHolder(@NonNull View itemView) {
@@ -72,8 +76,10 @@ public class ModeloItemEstoqueAdapter extends FirestoreRecyclerAdapter<ModeloIte
             ultimoValotItem = itemView.findViewById(R.id.text_valor_atual_item_estoque_adapter_id);
             quantEstoqueItem = itemView.findViewById(R.id.text_quant_total_estoque_adapter_id);
             valorFracionado = itemView.findViewById(R.id.text_valor_fracionado_adapter_id);
-            custoItemPorReceita = itemView.findViewById(R.id.text_valor_atual_receita_adapter_id);
+            custoItemPorReceita = itemView.findViewById(R.id.texto_quantidade_total_por_volume_item_em_estoque_id);
             quantUsadaReceita = itemView.findViewById(R.id.text_quant_usada_receita_adapter_id);
+            quantTotalPorvVolumeItem = itemView.findViewById(R.id.texto_total_por_volume_item_em_estoque_adapter_id);
+            quantTotalEmGramasItem = itemView.findViewById(R.id.texto_total_por_gramas_item_em_estoque_adapter_id);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

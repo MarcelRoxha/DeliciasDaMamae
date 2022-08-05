@@ -40,9 +40,9 @@ public class ModeloItemEstoqueDAO implements InterfaceModeloItemEstoqueDAO{
 
             Map<String, Object> item = new HashMap<>();
 
-            item.put("nomeItemEstoque",modeloItemEstoque.getNomeItemEstoque());
+            item.put("nomeItemEstoque",modeloItemEstoque.getNomeItemEstoque().trim());
             item.put("quantidadeTotalItemEstoque", modeloItemEstoque.getQuantidadeTotalItemEstoque());
-            item.put("quantidadePorPacoteItemEstoque", modeloItemEstoque.getQuantidadePorVolumeItemEstoque());
+            item.put("quantidadePorVolumeItemEstoque", modeloItemEstoque.getQuantidadePorVolumeItemEstoque());
             item.put("quantidadeUtilizadaNasReceitas", modeloItemEstoque.getQuantidadeUtilizadaNasReceitas());
 
 
@@ -52,6 +52,9 @@ public class ModeloItemEstoqueDAO implements InterfaceModeloItemEstoqueDAO{
             item.put("valorIndividualItemEstoque", modeloItemEstoque.getValorIndividualItemEstoque());
             item.put("valorFracionadoItemEstoque", modeloItemEstoque.getValorFracionadoItemEstoque());
             item.put("custoPorReceitaItemEstoque", modeloItemEstoque.getCustoPorReceitaItemEstoque());
+            item.put("quantidadeTotalItemEmEstoquePorVolume", modeloItemEstoque.getQuantidadeTotalItemEmEstoquePorVolume());
+            item.put("quantidadeTotalItemEmEstoqueEmGramas", modeloItemEstoque.getQuantidadeTotalItemEmEstoqueEmGramas());
+            item.put("custoTotalDoItemEmEstoque", modeloItemEstoque.getCustoTotalDoItemEmEstoque());
             item.put("versionEstoque", "Estoque_DeliciasDaMamae");
             referenceItemEstoque.add(item).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                 @Override
@@ -96,9 +99,9 @@ public class ModeloItemEstoqueDAO implements InterfaceModeloItemEstoqueDAO{
 
                 Map<String, Object> item = new HashMap<>();
 
-                item.put("nomeItemEstoque",modeloItemEstoque.getNomeItemEstoque());
+                item.put("nomeItemEstoque",modeloItemEstoque.getNomeItemEstoque().trim());
                 item.put("quantidadeTotalItemEstoque", modeloItemEstoque.getQuantidadeTotalItemEstoque());
-                item.put("quantidadePorPacoteItemEstoque", modeloItemEstoque.getQuantidadePorVolumeItemEstoque());
+                item.put("quantidadePorVolumeItemEstoque", modeloItemEstoque.getQuantidadePorVolumeItemEstoque());
                 item.put("quantidadeUtilizadaNasReceitas", modeloItemEstoque.getQuantidadeUtilizadaNasReceitas());
 
 
@@ -108,6 +111,9 @@ public class ModeloItemEstoqueDAO implements InterfaceModeloItemEstoqueDAO{
                 item.put("valorIndividualItemEstoque", modeloItemEstoque.getValorIndividualItemEstoque());
                 item.put("valorFracionadoItemEstoque", modeloItemEstoque.getValorFracionadoItemEstoque());
                 item.put("custoPorReceitaItemEstoque", modeloItemEstoque.getCustoPorReceitaItemEstoque());
+                item.put("quantidadeTotalItemEmEstoquePorVolume", modeloItemEstoque.getQuantidadeTotalItemEmEstoquePorVolume());
+                item.put("quantidadeTotalItemEmEstoqueEmGramas", modeloItemEstoque.getQuantidadeTotalItemEmEstoqueEmGramas());
+                item.put("custoTotalDoItemEmEstoque", modeloItemEstoque.getCustoTotalDoItemEmEstoque());
                 item.put("versionEstoque", "Estoque_DeliciasDaMamae");
 
                 referenceItemEstoque.document(KeyItemEstoque).update(item).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -115,6 +121,8 @@ public class ModeloItemEstoqueDAO implements InterfaceModeloItemEstoqueDAO{
                     public void onSuccess(Void unused) {
 
                         Toast.makeText(context, "Sucesso ao atualizar item estoque", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(context, EstoqueActivity.class);
+                        context.startActivity(intent);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
