@@ -76,4 +76,14 @@
         app:layout_constraintStart_toEndOf="@+id/textView13"
         app:layout_constraintTop_toTopOf="@+id/textView13" />
 
+    <TextView
+        android:id="@+id/texto_unidade_medida_ingrediente_cadastrado_em_estoque_adapter_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="3dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="@+id/text_quant_add_item_receita_id"
+        app:layout_constraintStart_toEndOf="@+id/text_quant_add_item_receita_id"
+        app:layout_constraintTop_toTopOf="@+id/text_quant_add_item_receita_id" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

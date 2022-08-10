@@ -183,4 +183,80 @@
         app:layout_constraintStart_toEndOf="@+id/textView13"
         app:layout_constraintTop_toBottomOf="@+id/textView12" />
 
+    <TextView
+        android:id="@+id/texto_unidade_medida_item_estoque_adapter_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="3dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="@+id/texto_quantidade_por_volume_item_em_estoque_adapter_id"
+        app:layout_constraintStart_toEndOf="@+id/texto_quantidade_por_volume_item_em_estoque_adapter_id"
+        app:layout_constraintTop_toTopOf="@+id/texto_quantidade_por_volume_item_em_estoque_adapter_id" />
+
+    <TextView
+        android:id="@+id/texto_unidade_medida_utilizada_receita_adapter_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="3dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="@+id/text_quant_usada_receita_adapter_id"
+        app:layout_constraintStart_toEndOf="@+id/text_quant_usada_receita_adapter_id"
+        app:layout_constraintTop_toTopOf="@+id/text_quant_usada_receita_adapter_id" />
+
+    <TextView
+        android:id="@+id/textView74"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="3dp"
+        android:text="Custo total dos itens em estoque"
+        android:textColor="@color/rosa"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView13" />
+
+    <TextView
+        android:id="@+id/texto_custo_total_item_em_estoque_adapter_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="3dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="@+id/textView74"
+        app:layout_constraintStart_toEndOf="@+id/textView74"
+        app:layout_constraintTop_toTopOf="@+id/textView74" />
+
+    <TextView
+        android:id="@+id/textView76"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp"
+        android:text="quantidade por volume em estoque"
+        android:textColor="@color/rosa"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView74" />
+
+    <TextView
+        android:id="@+id/texto_quantidade_por_volume_item_em_estoque_adapter_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="3dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="@+id/textView76"
+        app:layout_constraintStart_toEndOf="@+id/textView76"
+        app:layout_constraintTop_toTopOf="@+id/textView76" />
+
+    <TextView
+        android:id="@+id/texto_unidade_medida_total_item_em_estoque_adapter_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="3dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="@+id/texto_total_por_volume_item_em_estoque_adapter_id"
+        app:layout_constraintStart_toEndOf="@+id/texto_total_por_volume_item_em_estoque_adapter_id"
+        app:layout_constraintTop_toTopOf="@+id/texto_total_por_volume_item_em_estoque_adapter_id" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

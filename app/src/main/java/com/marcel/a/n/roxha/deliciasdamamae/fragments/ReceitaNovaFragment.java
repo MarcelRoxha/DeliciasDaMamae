@@ -1,9 +1,11 @@
 package com.marcel.a.n.roxha.deliciasdamamae.fragments;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -13,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -31,13 +34,16 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.marcel.a.n.roxha.deliciasdamamae.R;
 import com.marcel.a.n.roxha.deliciasdamamae.activity.FinalizarReceitaActivity;
-import com.marcel.a.n.roxha.deliciasdamamae.activity.NovaReceitaActivity;
 import com.marcel.a.n.roxha.deliciasdamamae.adapter.IngredienteAdapter;
 import com.marcel.a.n.roxha.deliciasdamamae.adapter.IngredienteAdicionadoAdapter;
+import com.marcel.a.n.roxha.deliciasdamamae.adapter.IngredientesCadastradosEmEstoqueAdapter;
 import com.marcel.a.n.roxha.deliciasdamamae.adapter.ItemEstoqueAdapter;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
+import com.marcel.a.n.roxha.deliciasdamamae.helper.ModeloReceitaCadastradaDAO;
 import com.marcel.a.n.roxha.deliciasdamamae.model.IngredienteModel;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ItemEstoqueModel;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloIngredienteAdicionadoReceita;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloItemEstoque;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ReceitaModel;
 
 import java.util.ArrayList;
@@ -95,7 +101,7 @@ public class ReceitaNovaFragment extends Fragment {
 
     private RecyclerView recyclerViewListItensEstoque;
     private RecyclerView recyclerViewListItensAdicionados;
-    private TextInputEditText edit_nome_receita;
+    private TextInputEditText edit_nome_receita, input_editar_nome_receita_cadastrada;
     private TextView textValorIngredientes, textoIngredientesEstoque, textoIngredientesAdicionados;
     private TextView texto_tipo_producao;
     private Button botao_jaAdicioneiIngredientes, botao_salvar_nome_receita;
@@ -106,16 +112,21 @@ public class ReceitaNovaFragment extends Fragment {
 
     private ReceitaModel receitaModel = new ReceitaModel();
     private IngredienteModel ingrediente = new IngredienteModel();
+    private ReceitaModel receitaModelRecuperadaParaExibirValorTotalDeIngredientes = new ReceitaModel();
     private IngredienteAdapter adapterItem;
+    private IngredientesCadastradosEmEstoqueAdapter adapterIngredienteCadastradoEmEstoque;
     private IngredienteAdicionadoAdapter adapterItem_0;
 
     private List<Double> listValoresItensAdd = new ArrayList<>();
 
     private String nomeReceitaDigitado;
+    private final String NOME_COLLECTION_REFERENCIA_RECEITAS_CADASTRADAS = "RECEITA_CADASTRADA";
+    private final String NOME_COLLECTION_REFERENCIA_ITENS_EM_ESTOQUE = "ITEM_ESTOQUE";
+    private final String NOME_COLLECTION_REFERENCIA_INGREDIENTES_TEMP = "INGREDIENTES_TEMP_ADICIONADOS";
     private String idReceita;
 
     private final FirebaseFirestore db = ConfiguracaoFirebase.getFirestor();
-
+    ModeloReceitaCadastradaDAO receitaCadastradaDAO;
 
     private CollectionReference reference = db.collection("Receitas");
 
@@ -138,14 +149,13 @@ public class ReceitaNovaFragment extends Fragment {
 
         texto_tipo_producao = view.findViewById(R.id.texto_tipo_producao_id);
 
-
-
-
         textValorIngredientes = view.findViewById(R.id.valor_id);
         textValorIngredientes.setVisibility(View.GONE);
         botao_salvar_nome_receita = view.findViewById(R.id.botao_salvar_nome_receita_fragment_id);
-        edit_nome_receita = view.findViewById(R.id.edit_fragment_nome_receita_id);
+        /*edit_nome_receita = view.findViewById(R.id.edit_fragment_nome_receita_id);
+        edit_nome_receita.setVisibility(View.VISIBLE);*/
         botao_jaAdicioneiIngredientes = view.findViewById(R.id.btProximo_fragment_receita_nova_id);
+
         botao_jaAdicioneiIngredientes.setVisibility(View.GONE);
 
         textoIngredientesEstoque = view.findViewById(R.id.textView24);
@@ -161,20 +171,46 @@ public class ReceitaNovaFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
+                AlertDialog.Builder alertSalvarNomeReceita = new AlertDialog.Builder(getActivity());
+                alertSalvarNomeReceita.setTitle("SALVAR NOME DA RECEITA");
+                alertSalvarNomeReceita.setMessage("Atenção, o nome cadastrado deve ser único, por tanto não será possível salvar o mesmo nome duas vezes");
+                EditText editNomeReceitaCadastrando = new EditText(getActivity());
+                alertSalvarNomeReceita.setCancelable(false);
+                alertSalvarNomeReceita.setView(editNomeReceitaCadastrando);
 
-                nomeReceitaDigitado = edit_nome_receita.getText().toString();
+                alertSalvarNomeReceita.setPositiveButton("CADASTRA NOME", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        if(editNomeReceitaCadastrando.getText().toString().isEmpty()){
+                            Toast.makeText(getActivity(), "Favor insira um nome", Toast.LENGTH_SHORT).show();
+                        }else{
+                            nomeReceitaDigitado = editNomeReceitaCadastrando.getText().toString().trim();
+
+                            verificarDuplicidadeNomeReceita(nomeReceitaDigitado);
+                        }
+
+
+                    }
+                }).setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+
+                alertSalvarNomeReceita.create();
+                alertSalvarNomeReceita.show();
+              /*  nomeReceitaDigitado = edit_nome_receita.getText().toString().trim();
                 if (!nomeReceitaDigitado.isEmpty()) {
 
-                        verificarDuplicidadeNomeReceita(nomeReceitaDigitado);
-                        texto_tipo_producao.setText("RECEITA COMPLETA");
-                        texto_tipo_producao.setVisibility(View.VISIBLE);
 
-                        contReceitaCompleta = 1;
- }else {
+
+                     }else {
                     Toast.makeText(getActivity(), "Favor insira o nome da Receita", Toast.LENGTH_SHORT).show();
 
                 }
-
+*/
             }
         });
 
@@ -182,78 +218,83 @@ public class ReceitaNovaFragment extends Fragment {
         botao_jaAdicioneiIngredientes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                System.out.println("Pssou pelo alert inicio");
+                String valorDosIngredientesAdicionados = textValorIngredientes.getText().toString().trim();
+                System.out.println("valorDosIngredientes: " + valorDosIngredientesAdicionados);
+                if(valorDosIngredientesAdicionados.equals("0.0") || valorDosIngredientesAdicionados.equals("0")){
+                    System.out.println("entrou na condição zero ingredientes");
+                    AlertDialog.Builder alertZeroIngredientes = new AlertDialog.Builder(getActivity());
+                    alertZeroIngredientes.setTitle("INGREDIENTES 0");
+                    alertZeroIngredientes.setMessage("Atenção, para cadastrar a receita "+ nomeReceitaDigitado +" é necessário acrescentar ao menos 1 ingrediente, insira os ingrediente(s) e tente novamente");
+                    alertZeroIngredientes.setCancelable(false);
 
-                if(contItem > 0){
+                    alertZeroIngredientes.setNeutralButton("OK,ENTENDI", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Toast.makeText(getActivity(), "Insira os ingredientes para continuar", Toast.LENGTH_SHORT).show();
+                        }
+                    });
 
+                    alertZeroIngredientes.create();
+                    alertZeroIngredientes.show();
 
-
-                Intent intent = new Intent(getActivity(), FinalizarReceitaActivity.class);
-                intent.putExtra("idReceita", idReceita);
-                intent.putExtra("nameReceita", nomeReceitaDigitado);
-
-                if(contReceitaCompleta == 1){
-                    intent.putExtra("tipoProducao", "1");
-
-                }
-                startActivity(intent);
                 }else{
-                    Toast.makeText(getActivity(), "Favor, insira os ingredientes necessarios", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getActivity(), FinalizarReceitaActivity.class);
+                    intent.putExtra("idReceita", idReceita);
+                    intent.putExtra("nameReceita", nomeReceitaDigitado);
+                    startActivity(intent);
                 }
             }
         });
-
-
-
         return view;
-
-
-
     }
 
    public void carregarListaItemEstoqueDate(){
 
-        Query query = FirebaseFirestore.getInstance().collection("Item_Estoque").orderBy("nameItem", Query.Direction.ASCENDING);
+        Query query = FirebaseFirestore.getInstance().collection(NOME_COLLECTION_REFERENCIA_ITENS_EM_ESTOQUE).orderBy("nomeItemEstoque", Query.Direction.ASCENDING);
 
 
 
-        FirestoreRecyclerOptions<ItemEstoqueModel> options = new FirestoreRecyclerOptions.Builder<ItemEstoqueModel>()
-                .setQuery(query, ItemEstoqueModel.class)
+        FirestoreRecyclerOptions<ModeloItemEstoque> options = new FirestoreRecyclerOptions.Builder<ModeloItemEstoque>()
+                .setQuery(query, ModeloItemEstoque.class)
                 .build();
 
-        adapterItem = new IngredienteAdapter(options);
+       adapterIngredienteCadastradoEmEstoque = new IngredientesCadastradosEmEstoqueAdapter(options);
 
        recyclerViewListItensEstoque.setHasFixedSize(true);
        recyclerViewListItensEstoque.setLayoutManager(new LinearLayoutManager(getActivity()));
-       recyclerViewListItensEstoque.setAdapter(adapterItem);
+       recyclerViewListItensEstoque.setAdapter(adapterIngredienteCadastradoEmEstoque);
        recyclerViewListItensEstoque.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayout.VERTICAL));
 
-        adapterItem.setOnItemClickListerner(new IngredienteAdapter.OnItemClickLisener() {
+       adapterIngredienteCadastradoEmEstoque.setOnItemClickListerner(new IngredientesCadastradosEmEstoqueAdapter.OnItemClickLisener() {
             @Override
             public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
 
 
 
-                    ItemEstoqueModel itemEstoqueModel = documentSnapshot.toObject(ItemEstoqueModel.class);
+                    ModeloItemEstoque modeloItemEstoque = documentSnapshot.toObject(ModeloItemEstoque.class);
 
-                    assert itemEstoqueModel != null;
+                    assert modeloItemEstoque != null;
 
-                    String nomeItemAdd = itemEstoqueModel.getNameItem();
-                    String valorItemAdd = itemEstoqueModel.getValorItemPorReceita();
-                    String quantItemAdd = itemEstoqueModel.getQuantUsadaReceita();
-
-
-                    if(contReceitaCompleta == 1){
-                        adicionarIngredienteReceitaCompleta(nomeReceitaDigitado, nomeItemAdd, valorItemAdd, quantItemAdd);
-
-                    }else if (contMassa == 1){
-
-                        adicionarIngredienteMassa(nomeReceitaDigitado, nomeItemAdd, valorItemAdd, quantItemAdd);
-                    }else  if (contConbertura == 1){
-
-                        adicionarIngredienteCobertura(nomeReceitaDigitado, nomeItemAdd, valorItemAdd, quantItemAdd);
-                    }
+                    String nomeItemAdd = modeloItemEstoque.getNomeItemEstoque();
+                    String valorItemAdd = modeloItemEstoque.getCustoPorReceitaItemEstoque();
+                    String quantItemAdd = modeloItemEstoque.getQuantidadeUtilizadaNasReceitas();
+                    String unidadeMedidaUtilizadaReceita = modeloItemEstoque.getUnidadeMedidaUtilizadoNasReceitas();
 
 
+                ModeloIngredienteAdicionadoReceita modeloIngredienteAdicionadoReceita = new ModeloIngredienteAdicionadoReceita();
+                modeloIngredienteAdicionadoReceita.setIdReferenciaItemEmEstoque(documentSnapshot.getId());
+                modeloIngredienteAdicionadoReceita.setNomeIngredienteAdicionadoReceita(nomeItemAdd);
+                modeloIngredienteAdicionadoReceita.setQuantidadeUtilizadaReceita(quantItemAdd);
+                modeloIngredienteAdicionadoReceita.setCustoIngredientePorReceita(valorItemAdd);
+                modeloIngredienteAdicionadoReceita.setUnidadeMedidaUsadaReceita(unidadeMedidaUtilizadaReceita);
+                receitaCadastradaDAO = new ModeloReceitaCadastradaDAO(getActivity());
+                receitaCadastradaDAO.adicionarIngredienteDaReceitaCadastrando(textValorIngredientes, nomeReceitaDigitado, modeloIngredienteAdicionadoReceita);
+                String idRecuperado = receitaCadastradaDAO.getRetorneIdReceitaCadastrando();
+                contItem = 1;
+                atualizarValorTotalIngredientesAdicionados(nomeReceitaDigitado);
+
+                   // adicionarIngredienteReceitaEmCadastramento(nomeReceitaDigitado, documentSnapshot.getId(), nomeItemAdd, valorItemAdd, quantItemAdd);
 
 
                 }
@@ -265,169 +306,55 @@ public class ReceitaNovaFragment extends Fragment {
 
     }
 
-    private  void adicionarIngredienteReceitaCompleta(String nomeReceita, String nomeItemAdicionado, String valorItemAdicionado, String quantItemAdicionado){
+    private void atualizarValorTotalIngredientesAdicionados(String nomeReceita) {
 
-        FirebaseFirestore.getInstance().collection("Receitas_completas").whereEqualTo("nomeReceita", nomeReceita).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        receitaModelRecuperadaParaExibirValorTotalDeIngredientes = new ReceitaModel();
+        System.out.println("Passou pelo atualizar valor total");
+        System.out.println("nome recuperado: " + nomeReceita);
+        FirebaseFirestore.getInstance().collection(NOME_COLLECTION_REFERENCIA_RECEITAS_CADASTRADAS).whereEqualTo("nomeReceita",nomeReceita.trim())
+                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
 
                 List<DocumentSnapshot> snapshotList = queryDocumentSnapshots.getDocuments();
-
-
-                List<String> listaReceita = new ArrayList<>();
-
+                System.out.println("Passou pelo queryDocumentSnapshots");
                 for (DocumentSnapshot snapshot : snapshotList){
-
                     idReceita = snapshot.getId();
+                    FirebaseFirestore.getInstance().collection(NOME_COLLECTION_REFERENCIA_RECEITAS_CADASTRADAS).document(idReceita)
+                            .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
 
+                            receitaModelRecuperadaParaExibirValorTotalDeIngredientes = documentSnapshot.toObject(ReceitaModel.class);
+                            receitaModelRecuperadaParaExibirValorTotalDeIngredientes.getValoresIngredientes();
+
+                            if(receitaModelRecuperadaParaExibirValorTotalDeIngredientes.getValoresIngredientes().equals("INICIANDO")){
+                                atualizarValorTotalIngredientesAdicionados(nomeReceita);
+                                carregarListaItensAdicionados();
+                                adapterItem_0.startListening();
+                            }else if(contItem < 4){
+                                System.out.println("valorTotalTecuperado no for: " +  receitaModelRecuperadaParaExibirValorTotalDeIngredientes.getValoresIngredientes());
+                                textValorIngredientes.setText(receitaModelRecuperadaParaExibirValorTotalDeIngredientes.getValoresIngredientes());
+                                contItem++;
+                                atualizarValorTotalIngredientesAdicionados(nomeReceita);
+
+                            }/*else{
+                                textValorIngredientes.setText(receitaModelRecuperadaParaExibirValorTotalDeIngredientes.getValoresIngredientes());
+                                atualizarValorTotalIngredientesAdicionados(nomeReceita);
+
+                            }*/
+
+
+
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
+                        }
+                    });
                 }
 
-                CollectionReference reference = db.collection("Receitas_completas").document(idReceita).collection(nomeReceitaDigitado);
-
-                Map<String, Object> ingredietenAdicionadoReceita = new HashMap<>();
-                ingredietenAdicionadoReceita.put("nameItem", nomeItemAdicionado);
-                ingredietenAdicionadoReceita.put("valorItemPorReceita", valorItemAdicionado);
-                ingredietenAdicionadoReceita.put("quantUsadaReceita", quantItemAdicionado);
-
-                reference.add(ingredietenAdicionadoReceita).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-
-                        valorConvert = Double.parseDouble(valorItemAdicionado);
-                        listValoresItensAdd.add(valorConvert);
-                        contItem++ ;
-
-                        if (contItem == 1){
-                            carregarListaItensAdicionados();
-                            adapterItem_0.startListening();
-                        }
-                        setValorReceitaSalvo();
-                        textValorIngredientes.setText("Valores adicionados R$: " + setValorReceitaSalvo());
-
-
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-
-                    }
-                });
-
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-
-            }
-        });
-
-    }
-
-    private  void adicionarIngredienteMassa(String nomeReceita, String nomeItemAdicionado, String valorItemAdicionado, String quantItemAdicionado){
-
-        FirebaseFirestore.getInstance().collection("Massas").whereEqualTo("nomeReceita", nomeReceita).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-
-                List<DocumentSnapshot> snapshotList = queryDocumentSnapshots.getDocuments();
-
-
-                List<String> listaReceita = new ArrayList<>();
-
-                for (DocumentSnapshot snapshot : snapshotList){
-
-                    idReceita = snapshot.getId();
-
-                }
-
-                CollectionReference reference = db.collection("Massas").document(idReceita).collection(nomeReceitaDigitado);
-
-                Map<String, Object> ingredietenAdicionadoReceita = new HashMap<>();
-                ingredietenAdicionadoReceita.put("nameItem", nomeItemAdicionado);
-                ingredietenAdicionadoReceita.put("valorItemPorReceita", valorItemAdicionado);
-                ingredietenAdicionadoReceita.put("quantUsadaReceita", quantItemAdicionado);
-
-                reference.add(ingredietenAdicionadoReceita).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-
-                        valorConvert = Double.parseDouble(valorItemAdicionado);
-                        listValoresItensAdd.add(valorConvert);
-                        contItem++ ;
-
-                        if (contItem == 1){
-                            carregarListaItensAdicionados();
-                            adapterItem_0.startListening();
-                        }
-                        setValorReceitaSalvo();
-                        textValorIngredientes.setText("Valores adicionados R$: " + setValorReceitaSalvo());
-
-
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-
-                    }
-                });
-
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-
-            }
-        });
-
-    }
-
-    private  void adicionarIngredienteCobertura(String nomeReceita, String nomeItemAdicionado, String valorItemAdicionado, String quantItemAdicionado){
-
-        FirebaseFirestore.getInstance().collection("Coberturas").whereEqualTo("nomeReceita", nomeReceita).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-
-                List<DocumentSnapshot> snapshotList = queryDocumentSnapshots.getDocuments();
-
-
-                List<String> listaReceita = new ArrayList<>();
-
-                for (DocumentSnapshot snapshot : snapshotList){
-
-                    idReceita = snapshot.getId();
-
-                }
-
-                CollectionReference reference = db.collection("Coberturas").document(idReceita).collection(nomeReceitaDigitado);
-
-                Map<String, Object> ingredietenAdicionadoReceita = new HashMap<>();
-                ingredietenAdicionadoReceita.put("nameItem", nomeItemAdicionado);
-                ingredietenAdicionadoReceita.put("valorItemPorReceita", valorItemAdicionado);
-                ingredietenAdicionadoReceita.put("quantUsadaReceita", quantItemAdicionado);
-
-                reference.add(ingredietenAdicionadoReceita).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-
-                        valorConvert = Double.parseDouble(valorItemAdicionado);
-                        listValoresItensAdd.add(valorConvert);
-                        contItem++ ;
-
-                        if (contItem == 1){
-                            carregarListaItensAdicionados();
-                            adapterItem_0.startListening();
-                        }
-                        setValorReceitaSalvo();
-                        textValorIngredientes.setText("Valores adicionados R$: " + setValorReceitaSalvo());
-
-
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-
-                    }
-                });
 
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -441,45 +368,15 @@ public class ReceitaNovaFragment extends Fragment {
 
     public void carregarListaItensAdicionados(){
 
+        Query queryReceitaCompleta = FirebaseFirestore.getInstance().collection(NOME_COLLECTION_REFERENCIA_RECEITAS_CADASTRADAS).document(idReceita).collection("INGREDIENTES_ADICIONADOS")
+                .orderBy("nomeIngredienteAdicionadoReceita", Query.Direction.ASCENDING);
 
-        if(contReceitaCompleta == 1){
-
-            Query queryReceitaCompleta = FirebaseFirestore.getInstance().collection("Receitas_completas").document(idReceita).collection(nomeReceitaDigitado)
-                    .orderBy("nameItem", Query.Direction.ASCENDING);
-
-            FirestoreRecyclerOptions<ItemEstoqueModel> optionsReceitaCompleta = new FirestoreRecyclerOptions.Builder<ItemEstoqueModel>()
-                    .setQuery(queryReceitaCompleta, ItemEstoqueModel.class)
-                    .build();
+        FirestoreRecyclerOptions<ModeloIngredienteAdicionadoReceita> optionsReceitaCompleta = new FirestoreRecyclerOptions.Builder<ModeloIngredienteAdicionadoReceita>()
+                .setQuery(queryReceitaCompleta, ModeloIngredienteAdicionadoReceita.class)
+                .build();
 
 
-            adapterItem_0 = new IngredienteAdicionadoAdapter(optionsReceitaCompleta);
-
-        }else if (contMassa == 1){
-
-            Query queryMassa = FirebaseFirestore.getInstance().collection("Massas").document(idReceita).collection(nomeReceitaDigitado)
-                    .orderBy("nameItem", Query.Direction.ASCENDING);
-
-            FirestoreRecyclerOptions<ItemEstoqueModel> optionsMassa = new FirestoreRecyclerOptions.Builder<ItemEstoqueModel>()
-                    .setQuery(queryMassa, ItemEstoqueModel.class)
-                    .build();
-
-
-            adapterItem_0 = new IngredienteAdicionadoAdapter(optionsMassa);
-
-        }else  if (contConbertura == 1){
-
-            Query queryCobertura = FirebaseFirestore.getInstance().collection("Coberturas").document(idReceita).collection(nomeReceitaDigitado)
-                    .orderBy("nameItem", Query.Direction.ASCENDING);
-
-            FirestoreRecyclerOptions<ItemEstoqueModel> optionsCobertura = new FirestoreRecyclerOptions.Builder<ItemEstoqueModel>()
-                    .setQuery(queryCobertura, ItemEstoqueModel.class)
-                    .build();
-
-
-            adapterItem_0 = new IngredienteAdicionadoAdapter(optionsCobertura);
-
-        }
-
+        adapterItem_0 = new IngredienteAdicionadoAdapter(optionsReceitaCompleta);
 
 
         recyclerViewListItensAdicionados.setHasFixedSize(true);
@@ -490,31 +387,30 @@ public class ReceitaNovaFragment extends Fragment {
         adapterItem_0.setOnItemClickListerner(new ItemEstoqueAdapter.OnItemClickLisener() {
             @Override
             public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
-                adapterItem_0.deletarItemIndividual(position);
-                listValoresItensAdd.remove(valorConvert);
-                adapterItem_0.deletarItemIndividual(position);
+
+                ModeloIngredienteAdicionadoReceita modeloIngredienteAdicionadoReceita = documentSnapshot.toObject(ModeloIngredienteAdicionadoReceita.class);
+
+                assert modeloIngredienteAdicionadoReceita != null;
+
+                String idIngredienteAdicionado = documentSnapshot.getId();
+                String valorItemAdd = modeloIngredienteAdicionadoReceita.getCustoIngredientePorReceita();
+                receitaCadastradaDAO.removerIngredienteDaReceitaCadastrando(idReceita, idIngredienteAdicionado,valorItemAdd);
+                contItem = 1;
+                atualizarValorTotalIngredientesAdicionados(nomeReceitaDigitado);
+
             }
         });
-
-
-
-
     }
-
 
 
     public void verificarDuplicidadeNomeReceita(String nomeDigit) {
 
-
-       FirebaseFirestore.getInstance().collection("Receitas_completas").whereEqualTo("nomeReceita", nomeDigit)
+       FirebaseFirestore.getInstance().collection(NOME_COLLECTION_REFERENCIA_RECEITAS_CADASTRADAS).whereEqualTo("nomeReceita", nomeDigit)
                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
            @Override
            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-
                String verificarDupIdReceita = "";
                List<DocumentSnapshot> snapshotList = queryDocumentSnapshots.getDocuments();
-
-
                List<String> listaReceita = new ArrayList<>();
 
                for (DocumentSnapshot snapshot : snapshotList) {
@@ -523,16 +419,34 @@ public class ReceitaNovaFragment extends Fragment {
                }
 
                if (listaReceita.size() > 0) {
-                   Toast.makeText(getActivity(), "Receita já existe, favor insira outro nome", Toast.LENGTH_SHORT).show();
-                   edit_nome_receita.setText("");
+                   AlertDialog.Builder alertDuplicidadeEmReceita = new AlertDialog.Builder(getActivity());
+                   alertDuplicidadeEmReceita.setTitle("NOME JÁ EXISTE");
+                   alertDuplicidadeEmReceita.setMessage("Verificamos que já existe uma receita com o nome: " + nomeDigit + "\n" +
+                           "O nome da receita cadastrada precisa ser único, digite aqui um nome único para sua receita e tente novamente.");
+                   EditText editNomeDigitadoJaExistente = new EditText(getActivity());
+                   alertDuplicidadeEmReceita.setView(editNomeDigitadoJaExistente);
+                   alertDuplicidadeEmReceita.setCancelable(false);
+                   editNomeDigitadoJaExistente.setText(nomeDigit);
+
+                   alertDuplicidadeEmReceita.setNeutralButton("CONFIRMAR NOVO NOME", new DialogInterface.OnClickListener() {
+                       @Override
+                       public void onClick(DialogInterface dialog, int which) {
+
+                           String nomeDigitadoNovamente = editNomeDigitadoJaExistente.getText().toString();
+                           verificarDuplicidadeNomeReceita(nomeDigitadoNovamente);
+                       }
+                   });
+                   alertDuplicidadeEmReceita.create();
+                   alertDuplicidadeEmReceita.show();
+
                }else {
 
 
+                   ReceitaModel receitaModelIniciandoCadastro = new ReceitaModel();
+                   receitaCadastradaDAO = new ModeloReceitaCadastradaDAO(getActivity());
+                   receitaModelIniciandoCadastro.setNomeReceita(nomeDigit);
+                   receitaCadastradaDAO.iniciarCadastroReceitaCadastrando(receitaModelIniciandoCadastro);
 
-                   ReceitaModel receitaModel = new ReceitaModel();
-                   receitaModel.setIdReceita(verificarDupIdReceita);
-                   receitaModel.setNomeReceita(nomeDigit);
-                   receitaModel.salvarReceita();
 
                    textoIngredientesEstoque.setVisibility(View.VISIBLE);
                    textoIngredientesAdicionados.setVisibility(View.VISIBLE);
@@ -540,37 +454,26 @@ public class ReceitaNovaFragment extends Fragment {
                    recyclerViewListItensAdicionados.setVisibility(View.VISIBLE);
                    botao_salvar_nome_receita.setVisibility(View.GONE);
                    textValorIngredientes.setVisibility(View.VISIBLE);
+                   textValorIngredientes.setText("0");
                    botao_jaAdicioneiIngredientes.setVisibility(View.VISIBLE);
-
+                   texto_tipo_producao.setVisibility(View.VISIBLE);
+                   texto_tipo_producao.setText(nomeDigit);
                    carregarListaItemEstoqueDate();
-                   adapterItem.startListening();
-
+                   adapterIngredienteCadastradoEmEstoque.startListening();
                }
-
            }
-
-
        }).addOnFailureListener(new OnFailureListener() {
            @Override
            public void onFailure(@NonNull Exception e) {
-
            }
        });
-
    }
-    public String setValorReceitaSalvo (){
 
-        double valorAdd = 0;
-        double resultado = 0;
-        for (Double list : listValoresItensAdd){
-            resultado += valorAdd + list;
-        }
+    @Override
+    public void onStop() {
+        super.onStop();
 
-        String valor = String.format("%.2f", resultado);
-        return valor;
+
 
     }
-
-
-
 }

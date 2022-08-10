@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-     android:layout_height="match_parent"
-     android:layout_width="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="visible">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -13,13 +13,15 @@
         android:layout_height="wrap_content"
         tools:context=".fragments.ReceitaNovaFragment">
 
+
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayout10"
+            android:id="@+id/caixa_edit_nome_receita_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/texto_tipo_producao_id">
@@ -36,27 +38,28 @@
             android:id="@+id/botao_salvar_nome_receita_fragment_id"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="32dp"
             android:layout_weight="1"
             android:background="@drawable/btn"
-            android:text="@string/texto_botao_salvar_nome_da_receita"
+            android:text="@string/texto_cadastrar_nome_receita_cadastrando"
             android:textColor="@color/white"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@+id/textInputLayout10"
-            app:layout_constraintStart_toStartOf="@+id/textInputLayout10"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayout10" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/textView24"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:fontFamily="@font/bungee_shade"
             android:text="@string/texto_tela_receita_nova_ingredientes_em_estoque_no_momento"
             android:textColor="@color/rosa"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/botao_salvar_nome_receita_fragment_id" />
+            app:layout_constraintTop_toBottomOf="@+id/texto_tipo_producao_id" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_fragment_itens_estoque_id"
@@ -126,7 +129,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="6dp"
             android:layout_marginEnd="16dp"
             android:fontFamily="@font/bungee_shade"
             android:text="@string/texto_fragment_nova_receita"
@@ -135,7 +138,7 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/botao_salvar_nome_receita_fragment_id" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

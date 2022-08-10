@@ -31,7 +31,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.marcel.a.n.roxha.deliciasdamamae.R;
 import com.marcel.a.n.roxha.deliciasdamamae.adapter.IngredienteAdicionadoAdapter;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
+import com.marcel.a.n.roxha.deliciasdamamae.helper.ModeloReceitaCadastradaDAO;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ItemEstoqueModel;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloIngredienteAdicionadoReceita;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloItemEstoque;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ReceitaModel;
 
 import java.security.Key;
@@ -52,7 +55,8 @@ public class FinalizarReceitaActivity extends AppCompatActivity {
     List<Double> listaIngredientes = new ArrayList<>();
 
     private FirebaseFirestore db = ConfiguracaoFirebase.getFirestor();
-    private CollectionReference referenceReceitaCompleta = db.collection("Receitas_completas");
+    private final String NOME_COLLECTION_REFERENCIA_RECEITAS_CADASTRADAS = "RECEITA_CADASTRADA";
+    private CollectionReference referenceReceitaCompleta = db.collection(NOME_COLLECTION_REFERENCIA_RECEITAS_CADASTRADAS);
     private CollectionReference referenceMassa = db.collection("Massas");
     private CollectionReference referenceCobertura = db.collection("Coberturas");
 
@@ -61,6 +65,7 @@ public class FinalizarReceitaActivity extends AppCompatActivity {
     private String idReceita;
     private String nameKeyReceita;
     private String idIngredientes;
+
 
     private String porceosReceita;
     private String porcentReceita;
@@ -75,6 +80,11 @@ public class FinalizarReceitaActivity extends AppCompatActivity {
     private double porcentConvert = 0;
     private Button botao_calcular_receita, botao_finalizar_receita;
     private String textoTotalReceita;
+
+    private String valorTotalIngredientesRecuperadoDaReceitaFinalizandoString;
+    private String valorTotalDaReceitaFinalizandoString;
+
+
 
 
 
@@ -91,9 +101,6 @@ public class FinalizarReceitaActivity extends AppCompatActivity {
 
         nameKeyReceita = getIntent().getStringExtra("nameReceita");
         idReceita = getIntent().getStringExtra("idReceita");
-        contTipoProducao = getIntent().getStringExtra("tipoProducao");
-
-        Toast.makeText(this, "tipo de produção recebida" + contTipoProducao, Toast.LENGTH_SHORT).show();
 
         edit_porcentagem_acrescentada = findViewById(R.id.edit_porcentagem_acrescentada_id);
         edit_porcoes_receita = findViewById(R.id.edit_quant_porcoes_receita_id);
@@ -113,9 +120,8 @@ public class FinalizarReceitaActivity extends AppCompatActivity {
         botao_calcular_receita = findViewById(R.id.bt_calcular_receita_id);
         botao_finalizar_receita = findViewById(R.id.bt_finalizar_receita_id);
 
-        carregarListaItensAdicionados();
-       // setValor();
-
+       // carregarListaItensAdicionados();
+        recuperarvaloresDaReceitaCadastrando(idReceita);
         botao_finalizar_receita.setVisibility(View.GONE);
         botao_calcular_receita.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,12 +135,12 @@ public class FinalizarReceitaActivity extends AppCompatActivity {
                     if(count < 1 ) {
                         setValor();
                         double resultado = 0;
-                        valorIngredientesConvert = Double.parseDouble(valorIngredientes);
+                        valorIngredientesConvert = Double.parseDouble(valorTotalIngredientesRecuperadoDaReceitaFinalizandoString);
                         porcentConvert = Double.parseDouble(porcentReceita);
 
                         resultado = (valorIngredientesConvert * porcentConvert / 100 ) + valorIngredientesConvert ;
 
-                         textoTotalReceita = String.format("%.2f", resultado);
+                        textoTotalReceita = String.format("%.2f", resultado);
 
                         valoresIngredientes.setVisibility(View.VISIBLE);
                         String textoTotalIngredientes = String.format("%.2f", valorIngredientesConvert);
@@ -172,10 +178,16 @@ public class FinalizarReceitaActivity extends AppCompatActivity {
 
                 if(!porcentReceita.isEmpty() && !porceosReceita.isEmpty()){
 
-                        atualizarReceita();
-                    Intent intent = new Intent(FinalizarReceitaActivity.this, ProducaoActivity.class);
-                    startActivity(intent);
-                    finish();
+                    ReceitaModel receitaModelFinalizadaAtualizarNoSistema = new ReceitaModel();
+                    ModeloReceitaCadastradaDAO modeloReceitaCadastradaDAOFinalizandoReceita = new ModeloReceitaCadastradaDAO(FinalizarReceitaActivity.this);
+                    receitaModelFinalizadaAtualizarNoSistema.setIdReceita(idReceita);
+                    receitaModelFinalizadaAtualizarNoSistema.setNomeReceita(nameKeyReceita);
+                    receitaModelFinalizadaAtualizarNoSistema.setQuantRendimentoReceita(porceosReceita);
+                    receitaModelFinalizadaAtualizarNoSistema.setPorcentagemServico(porcentReceita);
+                    receitaModelFinalizadaAtualizarNoSistema.setValorTotalReceita(textoTotalReceita);
+                    receitaModelFinalizadaAtualizarNoSistema.setValoresIngredientes(valorTotalIngredientesRecuperadoDaReceitaFinalizandoString);
+
+                    modeloReceitaCadastradaDAOFinalizandoReceita.finalizarCadastroDaReceitaCadastrando(receitaModelFinalizadaAtualizarNoSistema);
 
 
                 }else{
@@ -195,47 +207,43 @@ public class FinalizarReceitaActivity extends AppCompatActivity {
 
     }
 
+    private void recuperarvaloresDaReceitaCadastrando(String idReceita) {
+
+
+        referenceReceitaCompleta.document(idReceita).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                ReceitaModel receitaModelTempRecuperada = new ReceitaModel();
+
+                ReceitaModel receitaModelFinalizandoCadastro = documentSnapshot.toObject(ReceitaModel.class);
+
+                valorTotalIngredientesRecuperadoDaReceitaFinalizandoString = receitaModelFinalizandoCadastro.getValoresIngredientes();
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+
+
+    }
+
     public void carregarListaIngredientesAdicionados(){
 
-        int tipoProducao = Integer.parseInt(contTipoProducao);
 
-        if (tipoProducao == 1){
+        Query queryReceitaCompleta = referenceReceitaCompleta.document(idReceita)
+                .collection("INGREDIENTES_ADICIONADOS")
+                .orderBy("nomeIngredienteAdicionadoReceita", Query.Direction.ASCENDING);
 
-            Query queryReceitaCompleta = referenceReceitaCompleta.document(idReceita).collection(nameKeyReceita).orderBy("nameItem", Query.Direction.ASCENDING);
-
-            FirestoreRecyclerOptions<ItemEstoqueModel> options = new FirestoreRecyclerOptions.Builder<ItemEstoqueModel>()
-                    .setQuery(queryReceitaCompleta, ItemEstoqueModel.class)
-                    .build();
-
-
-            adicionadoAdapter = new IngredienteAdicionadoAdapter(options);
+        FirestoreRecyclerOptions<ModeloIngredienteAdicionadoReceita> options = new FirestoreRecyclerOptions.Builder<ModeloIngredienteAdicionadoReceita>()
+                .setQuery(queryReceitaCompleta, ModeloIngredienteAdicionadoReceita.class)
+                .build();
 
 
-        }else if (tipoProducao == 2){
-
-            Query queryMassa = referenceMassa.document(idReceita).collection(nameKeyReceita).orderBy("nameItem", Query.Direction.ASCENDING);
-
-            FirestoreRecyclerOptions<ItemEstoqueModel> options = new FirestoreRecyclerOptions.Builder<ItemEstoqueModel>()
-                    .setQuery(queryMassa, ItemEstoqueModel.class)
-                    .build();
-
-
-            adicionadoAdapter = new IngredienteAdicionadoAdapter(options);
-
-        }else if (tipoProducao == 3){
-
-            Query queryCobertura = referenceCobertura.document(idReceita).collection(nameKeyReceita).orderBy("nameItem", Query.Direction.ASCENDING);
-
-            FirestoreRecyclerOptions<ItemEstoqueModel> options = new FirestoreRecyclerOptions.Builder<ItemEstoqueModel>()
-                    .setQuery(queryCobertura, ItemEstoqueModel.class)
-                    .build();
-
-
-            adicionadoAdapter = new IngredienteAdicionadoAdapter(options);
-
-        }
-
-
+        adicionadoAdapter = new IngredienteAdicionadoAdapter(options);
 
 
         recyclerViewLista_ingrediente_adicionados.setHasFixedSize(true);
@@ -244,7 +252,7 @@ public class FinalizarReceitaActivity extends AppCompatActivity {
         recyclerViewLista_ingrediente_adicionados.addItemDecoration(new DividerItemDecoration(this, LinearLayout.VERTICAL));
     }
 
-    public void carregarListaItensAdicionados(){
+  /*  public void carregarListaItensAdicionados(){
 
 
         int tipoProducao = Integer.parseInt(contTipoProducao);
@@ -517,7 +525,7 @@ public class FinalizarReceitaActivity extends AppCompatActivity {
 
 
     }
-
+*/
 public String setValor(){
 
 for (Double list : listaIngredientes){

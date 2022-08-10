@@ -39,6 +39,8 @@ import com.marcel.a.n.roxha.deliciasdamamae.adapter.ItemEstoqueAdapter;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
 import com.marcel.a.n.roxha.deliciasdamamae.model.IngredienteModel;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ItemEstoqueModel;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloIngredienteAdicionadoReceita;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloItemEstoque;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ReceitaModel;
 
 import java.util.ArrayList;
@@ -231,8 +233,8 @@ public class NovaReceitaActivity extends AppCompatActivity {
         Query query = FirebaseFirestore.getInstance().collection("Receitas").document(idReceita).collection(receitaKey)
         .orderBy("nameItem", Query.Direction.ASCENDING);
 
-        FirestoreRecyclerOptions<ItemEstoqueModel> options = new FirestoreRecyclerOptions.Builder<ItemEstoqueModel>()
-                .setQuery(query, ItemEstoqueModel.class)
+        FirestoreRecyclerOptions<ModeloIngredienteAdicionadoReceita> options = new FirestoreRecyclerOptions.Builder<ModeloIngredienteAdicionadoReceita>()
+                .setQuery(query, ModeloIngredienteAdicionadoReceita.class)
                 .build();
 
 

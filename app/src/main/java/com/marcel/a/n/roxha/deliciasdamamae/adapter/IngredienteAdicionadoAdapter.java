@@ -14,22 +14,25 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.marcel.a.n.roxha.deliciasdamamae.R;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ItemEstoqueModel;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloIngredienteAdicionadoReceita;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloItemEstoque;
 
-public class IngredienteAdicionadoAdapter extends FirestoreRecyclerAdapter<ItemEstoqueModel, IngredienteAdicionadoAdapter.IngredienteAdicionadoViewHolder> {
+public class IngredienteAdicionadoAdapter extends FirestoreRecyclerAdapter<ModeloIngredienteAdicionadoReceita, IngredienteAdicionadoAdapter.IngredienteAdicionadoViewHolder> {
 
     private ItemEstoqueAdapter.OnItemClickLisener listener;
 
-    public IngredienteAdicionadoAdapter(@NonNull FirestoreRecyclerOptions<ItemEstoqueModel> options) {
+    public IngredienteAdicionadoAdapter(@NonNull FirestoreRecyclerOptions<ModeloIngredienteAdicionadoReceita> options) {
 
         super(options);
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull IngredienteAdicionadoViewHolder holder, int position, @NonNull ItemEstoqueModel model) {
+    protected void onBindViewHolder(@NonNull IngredienteAdicionadoViewHolder holder, int position, @NonNull ModeloIngredienteAdicionadoReceita model) {
 
-        holder.nomeIngrediente.setText(model.getNameItem());
-        holder.quantIngrediente.setText(model.getQuantUsadaReceita());
-        holder.custoIngrediente.setText(model.getValorItemPorReceita());
+        holder.nomeIngrediente.setText(model.getNomeIngredienteAdicionadoReceita());
+        holder.quantIngrediente.setText(model.getQuantidadeUtilizadaReceita());
+        holder.custoIngrediente.setText(model.getCustoIngredientePorReceita());
+        holder.unidadeMedidaUsadaReceita.setText(model.getUnidadeMedidaUsadaReceita());
 
     }
 
@@ -54,6 +57,7 @@ public class IngredienteAdicionadoAdapter extends FirestoreRecyclerAdapter<ItemE
         TextView nomeIngrediente;
         TextView custoIngrediente;
         TextView quantIngrediente;
+        TextView unidadeMedidaUsadaReceita;
 
 
         public IngredienteAdicionadoViewHolder(@NonNull View itemView) {
@@ -62,6 +66,7 @@ public class IngredienteAdicionadoAdapter extends FirestoreRecyclerAdapter<ItemE
             nomeIngrediente = itemView.findViewById(R.id.text_nome_ingrediente_adicionado_adapter_id);
             quantIngrediente = itemView.findViewById(R.id.text_quant_add_item_receita_id);
             custoIngrediente = itemView.findViewById(R.id.text_custo_item_add_receita_id);
+            unidadeMedidaUsadaReceita = itemView.findViewById(R.id.texto_unidade_medida_usada_na_receita_cadastrada_id);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

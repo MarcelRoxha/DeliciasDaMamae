@@ -58,7 +58,7 @@ public class ReceitaModel implements Serializable {
     }
 
     public void setNomeReceita(String nomeReceita) {
-        this.nomeReceita = nomeReceita;
+        this.nomeReceita = nomeReceita.trim();
     }
 
     public String getValorTotalReceita() {

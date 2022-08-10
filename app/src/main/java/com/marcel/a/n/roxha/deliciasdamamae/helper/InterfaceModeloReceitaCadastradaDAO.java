@@ -1,0 +1,18 @@
+package com.marcel.a.n.roxha.deliciasdamamae.helper;
+
+import android.view.View;
+
+import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloIngredienteAdicionadoReceita;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ReceitaModel;
+
+public interface InterfaceModeloReceitaCadastradaDAO {
+
+    public boolean iniciarCadastroReceitaCadastrando(ReceitaModel receitaModel);
+    public boolean finalizarCadastroDaReceitaCadastrando(ReceitaModel receitaModel);
+    public boolean adicionarIngredienteDaReceitaCadastrando(View view, String nomeReceitaCadastrando, ModeloIngredienteAdicionadoReceita modeloIngredienteAdicionadoReceita);
+    public boolean removerIngredienteDaReceitaCadastrando (String idReceita, String idIngrediente, String custoIngredienteNaReceita);
+    public boolean editarReceitaCadastrada(ReceitaModel receitaModel);
+    public boolean deletarReceitaCadastrada(ReceitaModel receitaModel);
+
+
+}

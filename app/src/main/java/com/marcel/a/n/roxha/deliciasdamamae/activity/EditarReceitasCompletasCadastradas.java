@@ -36,6 +36,8 @@ import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
 import com.marcel.a.n.roxha.deliciasdamamae.model.BolosModel;
 import com.marcel.a.n.roxha.deliciasdamamae.model.CalcularValorIngredienteAdicionadoReceitaCompletaCadastrada;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ItemEstoqueModel;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloIngredienteAdicionadoReceita;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloItemEstoque;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ReceitaModel;
 
 import java.util.ArrayList;
@@ -140,8 +142,8 @@ public class EditarReceitasCompletasCadastradas extends AppCompatActivity {
 
                 Query queryReceitaCompleta = referenceReceitaCompleta.document(idReceitaCompletaCadastradaparaEditar).collection(nomeReceitaCompletaCadastradaparaEditar).orderBy("nameItem", Query.Direction.ASCENDING);
 
-                FirestoreRecyclerOptions<ItemEstoqueModel> options = new FirestoreRecyclerOptions.Builder<ItemEstoqueModel>()
-                        .setQuery(queryReceitaCompleta, ItemEstoqueModel.class)
+                FirestoreRecyclerOptions<ModeloIngredienteAdicionadoReceita> options = new FirestoreRecyclerOptions.Builder<ModeloIngredienteAdicionadoReceita>()
+                        .setQuery(queryReceitaCompleta, ModeloIngredienteAdicionadoReceita.class)
                         .build();
 
                 adicionadoAdapter = new IngredienteAdicionadoAdapter(options);

@@ -93,6 +93,7 @@
     <string name="texto_radion_button_cobertura">COBERTURA</string>
     <string name="texto_radion_button_receita_completa">RECEITA COMPLETA</string>
     <string name="texto_botao_salvar_nome_da_receita">SALVAR NOME DA RECEITA</string>
+    <string name="texto_cadastrar_nome_receita_cadastrando">DIGITAR NOME</string>
     <string name="texto_tela_receita_nova_ingredientes_em_estoque_no_momento">Ingredientes em estoque no momento</string>
     <string name="texto_tela_receita_nova_ingredientes_adicionados_na_receita">Ingredientes adicionados na receita</string>
     <string name="texto_botao_pronto_j_adicionei_os_ingredientes">PRONTO, JÁ ADICIONEI OS INGREDIENTES</string>

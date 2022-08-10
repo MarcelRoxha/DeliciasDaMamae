@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -44,6 +45,7 @@ public class EstoqueActivity extends AppCompatActivity {
     private Button botao_adiciona_item_estoque;
     private RecyclerView recyclerView;
     private ItemEstoqueAdapter adapter;
+    private TextView valor_total_de_itens_cadastrados_em_estoque;
 
     private ModeloItemEstoqueAdapter modeloItemEstoqueAdapter;
 
@@ -53,6 +55,7 @@ public class EstoqueActivity extends AppCompatActivity {
     private String chaveSeg = "DeliciasDaMamae";
 
     private ItemEstoqueModel itemSelecionado;
+    private int contador = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +72,7 @@ public class EstoqueActivity extends AppCompatActivity {
 
 
         botao_adiciona_item_estoque = findViewById(R.id.bt_add_item_estoque_id);
+
 
 
         botao_adiciona_item_estoque.setOnClickListener(new View.OnClickListener() {
@@ -89,6 +93,8 @@ public class EstoqueActivity extends AppCompatActivity {
     }
 
     public void carregarListaItensEstoque(){
+
+        carregarQuantidadeTotalDeItensCadastradosEmEstoque();
 
         Query query = itemEstoqueRef.orderBy("nomeItemEstoque", Query.Direction.ASCENDING);
 
@@ -134,7 +140,7 @@ public class EstoqueActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialogInterface, int i) {
 
                 modeloItemEstoqueAdapter.deletarItemIndividual(position);
-
+                carregarQuantidadeTotalDeItensCadastradosEmEstoque();
                 Toast.makeText(EstoqueActivity.this, "Item excluido permanentemente", Toast.LENGTH_SHORT).show();
 
 
@@ -157,13 +163,53 @@ public class EstoqueActivity extends AppCompatActivity {
 });
 
 
+    /*    if(contador == 0){
+            valor_total_de_itens_cadastrados_em_estoque.setText("Algo deu errado \n tente novamente");
+        }else{
+
+        }*/
+
+
+
 
     }
+
+
+    public void carregarQuantidadeTotalDeItensCadastradosEmEstoque(){
+        valor_total_de_itens_cadastrados_em_estoque = findViewById(R.id.texto_total_itens_cadastrados_em_estoque_id);
+
+        FirebaseFirestore.getInstance().collection("ITEM_ESTOQUE")
+                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                contador = 0;
+                List<DocumentSnapshot> listaDeItensCadastradosNoBanco = queryDocumentSnapshots.getDocuments();
+
+                for(DocumentSnapshot listaRecebida: listaDeItensCadastradosNoBanco){
+                    contador++;
+                }
+                String valorConvert = String.valueOf(contador);
+
+                valor_total_de_itens_cadastrados_em_estoque.setText(valorConvert);
+
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+    }
+
+
+
 
     @Override
     protected void onStart() {
         super.onStart();
         carregarListaItensEstoque();
+        carregarQuantidadeTotalDeItensCadastradosEmEstoque();
         modeloItemEstoqueAdapter.startListening();
 
     }
@@ -217,6 +263,7 @@ public class EstoqueActivity extends AppCompatActivity {
                     ItemEstoqueDAO itemEstoqueDAO = new ItemEstoqueDAO(EstoqueActivity.this);
                     itemEstoqueDAO.listaDefault();
                     Toast.makeText(EstoqueActivity.this, "Lista iniciada com valores padrão", Toast.LENGTH_SHORT).show();
+                    carregarQuantidadeTotalDeItensCadastradosEmEstoque();
                 }else {
                     Toast.makeText(EstoqueActivity.this, "Chave de segurança incorreta", Toast.LENGTH_SHORT).show();
                 }
@@ -252,6 +299,7 @@ public class EstoqueActivity extends AppCompatActivity {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
                                                     Toast.makeText(EstoqueActivity.this, "Lista iniciada vazia", Toast.LENGTH_SHORT).show();
+                                                    carregarQuantidadeTotalDeItensCadastradosEmEstoque();
                                                 }
                                             }).addOnFailureListener(new OnFailureListener() {
                                         @Override
