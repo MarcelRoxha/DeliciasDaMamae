@@ -6,26 +6,15 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/texto_nome_ingrediente_receita_completa_cadastradas_editar_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="@string/textViewNomeAdapter"
-        android:textColor="@color/rosa"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
         android:id="@+id/textView65"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
         android:text="@string/textViewQuantPorReceitaAdapter"
         android:textColor="@color/rosa"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/textInputLayout20"
-        app:layout_constraintTop_toBottomOf="@+id/texto_nome_ingrediente_receita_completa_cadastradas_editar_id" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout20"
@@ -40,14 +29,16 @@
             android:id="@+id/edit_quant_usada_receita_cadastrada_completa_alert_editar_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="hint" />
+            android:hint="Quantidade utilizada na Receita" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/botao_calcular_nova_quant_usada_receita_completa_cadasrada_alert_editar_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button"
+        android:text="@string/text_botao_calcular_receita"
+        android:textColor="@color/branco_neve"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/textInputLayout20"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textInputLayout20"

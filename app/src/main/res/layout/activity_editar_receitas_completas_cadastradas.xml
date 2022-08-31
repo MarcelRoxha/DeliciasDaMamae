@@ -20,6 +20,7 @@
             android:fontFamily="@font/bungee_shade"
             android:text="@string/textView_nomeReceita"
             android:textColor="@color/rosa"
+            android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -30,7 +31,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="32dp"
             android:text="@string/text_quanto_rende_receita_editar"
             android:textColor="@color/rosa"
             android:textSize="12sp"
@@ -38,14 +38,14 @@
             app:layout_constraintEnd_toStartOf="@+id/nome_receita_completa_cadastrada_editar_id"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nome_receita_completa_cadastrada_editar_id" />
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout10" />
 
         <TextView
             android:id="@+id/textView62"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="8dp"
             android:text="@string/text_porcentagem_acrescimo_receita_completa_editar"
             android:textColor="@color/rosa"
             android:textSize="12sp"
@@ -55,44 +55,44 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout18"
-            android:layout_width="244dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="32dp"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="@+id/textInputLayout10"
+            app:layout_constraintStart_toStartOf="@+id/textView61"
             app:layout_constraintTop_toBottomOf="@+id/textView61">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/input_editar_porcoes_por_fornada_receita_completa_id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="hint" />
+                android:hint="Ex: 3" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout19"
-            android:layout_width="244dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="32dp"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="@+id/textView62"
+            app:layout_constraintStart_toStartOf="@+id/textView62"
             app:layout_constraintTop_toBottomOf="@+id/textView62">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/input_editar_porcentagem_acrescimo_receita_completa_id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="hint" />
+                android:hint="Ex: 50" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:id="@+id/textView57"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="8dp"
             android:text="@string/text_ingredientes_adicionados_receita_completa_editar"
             android:textColor="@color/rosa"
-            android:textSize="12sp"
+            android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="@+id/recyclerView_ingredientes_adicionados_receita_completa_editar_id"
             app:layout_constraintStart_toStartOf="@+id/recyclerView_ingredientes_adicionados_receita_completa_editar_id"
@@ -105,7 +105,6 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
-            android:background="@drawable/background_adapter_ingrediente_adicionado_fundo"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView57" />
@@ -114,10 +113,10 @@
             android:id="@+id/textView59"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="8dp"
             android:text="@string/text_ingredientes_estoque_receita_completa_editar"
             android:textColor="@color/rosa"
-            android:textSize="12sp"
+            android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="@+id/recyclerView_ingredientes_estoque_id"
             app:layout_constraintStart_toStartOf="@+id/recyclerView_ingredientes_estoque_id"
@@ -130,7 +129,9 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
             android:background="@drawable/brackground_adapter_ingrediente_fundo"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView59" />
@@ -138,23 +139,23 @@
         <Button
             android:id="@+id/botao_salvar_alteracoes_receita_completa_cadastrada_id"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="32dp"
             android:layout_marginEnd="16dp"
             android:background="@drawable/btn"
             android:text="SALVAR ALTERAÇÕES"
             android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@+id/textInputLayout19"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/recyclerView_ingredientes_estoque_id" />
+            app:layout_constraintStart_toEndOf="@+id/textInputLayout10"
+            app:layout_constraintTop_toTopOf="@+id/textInputLayout10" />
 
         <TextView
             android:id="@+id/textView63"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="8dp"
             android:text="@string/textView_valorTotalReceita"
             android:textColor="@color/rosa"
             android:textSize="16sp"
@@ -167,7 +168,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="8dp"
             android:text="@string/textView_valorTotalIngredientesReceita"
             android:textColor="@color/rosa"
             android:textSize="16sp"
@@ -198,5 +199,33 @@
             app:layout_constraintBottom_toBottomOf="@+id/texto_total_ingredientes"
             app:layout_constraintStart_toEndOf="@+id/texto_total_ingredientes"
             app:layout_constraintTop_toTopOf="@+id/texto_total_ingredientes" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout10"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView75">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editar_nome_receita_cadastrada_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Nome da Receita" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/textView75"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Nome Cadastrado da Receita"
+            android:textColor="@color/rosa"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/textInputLayout10"
+            app:layout_constraintTop_toBottomOf="@+id/nome_receita_completa_cadastrada_editar_id" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

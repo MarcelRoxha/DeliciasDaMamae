@@ -94,7 +94,7 @@ public class ReceitasProntasFragment extends Fragment {
 
     public void carregarListaReceitasCompletasCadastradas(){
 
-        Query query = FirebaseFirestore.getInstance().collection("Receitas_completas").orderBy("nomeReceita", Query.Direction.ASCENDING);
+        Query query = FirebaseFirestore.getInstance().collection("RECEITA_CADASTRADA").orderBy("nomeReceita", Query.Direction.ASCENDING);
 
         FirestoreRecyclerOptions<ReceitaModel> options = new FirestoreRecyclerOptions.Builder<ReceitaModel>()
                 .setQuery(query, ReceitaModel.class)
@@ -105,8 +105,6 @@ public class ReceitasProntasFragment extends Fragment {
         recyclerView_Receitas_completas_cadastradas.setHasFixedSize(true);
         recyclerView_Receitas_completas_cadastradas.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView_Receitas_completas_cadastradas.setAdapter(adapterReceitaCompleta);
-        //recyclerView_Receitas_completas_cadastradas.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
-        System.out.println("Clicado no item da receita completa");
 
         adapterReceitaCompleta.setOnItemClickListerner(new ReceitasProntasAdapter.OnItemClickLisener() {
             @Override
@@ -114,12 +112,8 @@ public class ReceitasProntasFragment extends Fragment {
 
 
                 Intent intent = new Intent(getActivity(), EditarReceitasCompletasCadastradas.class);
-                intent.putExtra("idReceita", documentSnapshot.getId().toString());
-                intent.putExtra("idReceita", documentSnapshot.getId().toString());
+                intent.putExtra("idReceita", documentSnapshot.getId());
                 startActivity(intent);
-
-
-
             }
         });
     }

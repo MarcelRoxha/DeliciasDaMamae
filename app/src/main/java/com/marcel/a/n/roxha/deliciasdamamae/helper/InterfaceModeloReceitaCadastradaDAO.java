@@ -9,7 +9,9 @@ public interface InterfaceModeloReceitaCadastradaDAO {
 
     public boolean iniciarCadastroReceitaCadastrando(ReceitaModel receitaModel);
     public boolean finalizarCadastroDaReceitaCadastrando(ReceitaModel receitaModel);
-    public boolean adicionarIngredienteDaReceitaCadastrando(View view, String nomeReceitaCadastrando, ModeloIngredienteAdicionadoReceita modeloIngredienteAdicionadoReceita);
+    public boolean adicionarIngredienteDaReceitaCadastrando(String nomeReceitaCadastrando, ModeloIngredienteAdicionadoReceita modeloIngredienteAdicionadoReceita);
+    public boolean editarIngredienteAdicionadoNaReceita(String idReceitaEditando,String valorAntigoDoIngredienteAdicionadoNaReceitaAntes,String idIngredienteEditando, ModeloIngredienteAdicionadoReceita modeloIngredienteAdicionadoReceita);
+
     public boolean removerIngredienteDaReceitaCadastrando (String idReceita, String idIngrediente, String custoIngredienteNaReceita);
     public boolean editarReceitaCadastrada(ReceitaModel receitaModel);
     public boolean deletarReceitaCadastrada(ReceitaModel receitaModel);

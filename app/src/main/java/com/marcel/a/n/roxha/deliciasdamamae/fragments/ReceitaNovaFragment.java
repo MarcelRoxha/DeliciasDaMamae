@@ -289,7 +289,7 @@ public class ReceitaNovaFragment extends Fragment {
                 modeloIngredienteAdicionadoReceita.setCustoIngredientePorReceita(valorItemAdd);
                 modeloIngredienteAdicionadoReceita.setUnidadeMedidaUsadaReceita(unidadeMedidaUtilizadaReceita);
                 receitaCadastradaDAO = new ModeloReceitaCadastradaDAO(getActivity());
-                receitaCadastradaDAO.adicionarIngredienteDaReceitaCadastrando(textValorIngredientes, nomeReceitaDigitado, modeloIngredienteAdicionadoReceita);
+                receitaCadastradaDAO.adicionarIngredienteDaReceitaCadastrando(nomeReceitaDigitado, modeloIngredienteAdicionadoReceita);
                 String idRecuperado = receitaCadastradaDAO.getRetorneIdReceitaCadastrando();
                 contItem = 1;
                 atualizarValorTotalIngredientesAdicionados(nomeReceitaDigitado);

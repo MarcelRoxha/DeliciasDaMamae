@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -22,6 +23,7 @@ import com.marcel.a.n.roxha.deliciasdamamae.activity.ProducaoActivity;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
 import com.marcel.a.n.roxha.deliciasdamamae.fragments.ReceitaNovaFragment;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloIngredienteAdicionadoReceita;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloItemEstoque;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ReceitaModel;
 
 import java.io.Serializable;
@@ -35,13 +37,17 @@ public class ModeloReceitaCadastradaDAO implements InterfaceModeloReceitaCadastr
     private FirebaseFirestore firestoreReceitaCadastrada = ConfiguracaoFirebase.getFirestor();
     private final String COLLECTION_RECEITA_CADASTRADA = "RECEITA_CADASTRADA";
     private final String COLLECTION_INGREDIENTES_ADICIONADOS = "INGREDIENTES_ADICIONADOS";
-    private CollectionReference referenceReceitaCadastrada = firestoreReceitaCadastrada.collection(COLLECTION_RECEITA_CADASTRADA);
+    private final String COLLECTION_ITEM_ESTOQUE = "ITEM_ESTOQUE";
+    private CollectionReference referenceReceitaCadastrada ;
+    private CollectionReference referenceItemEstoque ;
     public String idReceita;
     public TextView textValorIngredientes;
     private Context context;
 
     public ModeloReceitaCadastradaDAO(Context context){
         this.context = context;
+        referenceReceitaCadastrada = firestoreReceitaCadastrada.collection(COLLECTION_RECEITA_CADASTRADA);
+        referenceItemEstoque = firestoreReceitaCadastrada.collection(COLLECTION_ITEM_ESTOQUE);
 
     }
 
@@ -118,7 +124,7 @@ public class ModeloReceitaCadastradaDAO implements InterfaceModeloReceitaCadastr
     }
 
     @Override
-    public boolean adicionarIngredienteDaReceitaCadastrando(View view, String nomeReceitaCadastrando, ModeloIngredienteAdicionadoReceita modeloIngredienteAdicionadoReceita) {
+    public boolean adicionarIngredienteDaReceitaCadastrando(String nomeReceitaCadastrando, ModeloIngredienteAdicionadoReceita modeloIngredienteAdicionadoReceita) {
 
         try{
 
@@ -131,7 +137,7 @@ public class ModeloReceitaCadastradaDAO implements InterfaceModeloReceitaCadastr
 
                         for (DocumentSnapshot snapshot : snapshotList){
                             idReceita = snapshot.getId();
-                            somarCustoIngredienteAdicionadoNaReceita(view, idReceita, modeloIngredienteAdicionadoReceita.getCustoIngredientePorReceita());
+                            somarCustoIngredienteAdicionadoNaReceita(idReceita, modeloIngredienteAdicionadoReceita.getCustoIngredientePorReceita());
                         }
                         CollectionReference referenciaIngredientesAdicionados = referenceReceitaCadastrada.document(idReceita)
                                 .collection(COLLECTION_INGREDIENTES_ADICIONADOS);
@@ -171,6 +177,368 @@ public class ModeloReceitaCadastradaDAO implements InterfaceModeloReceitaCadastr
 
         return false;
     }
+
+
+    public void adicionarIngredienteNaReceitaJaCadastrada(String idReceita, ModeloIngredienteAdicionadoReceita modeloIngredienteAdicionadoReceita){
+
+
+        referenceReceitaCadastrada.document(idReceita).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                ReceitaModel receitaModelCadastradaRecuperada = documentSnapshot.toObject(ReceitaModel.class);
+                String idReceitaRecuperada = receitaModelCadastradaRecuperada.getIdReceita();
+                String nomeReceitaRecuperada = receitaModelCadastradaRecuperada.getNomeReceita();
+                String porcentagemReceitaRecuperada = receitaModelCadastradaRecuperada.getPorcentagemServico();
+                String valorTotalIngredientesReceitaRecuperada = receitaModelCadastradaRecuperada.getValoresIngredientes().replace(",", ".");
+                String valorTotalReceitaRecuperada = receitaModelCadastradaRecuperada.getValorTotalReceita().replace(",", ".");
+                String quantoRendeCadaFornadaReceitaRecuperada = receitaModelCadastradaRecuperada.getQuantRendimentoReceita();
+
+                CollectionReference referenciaIngredientesAdicionados = referenceReceitaCadastrada.document(idReceita)
+                        .collection(COLLECTION_INGREDIENTES_ADICIONADOS);
+
+                Map<String, Object> ingredienteAdicionadoNaReceita = new HashMap<>();
+                ingredienteAdicionadoNaReceita.put("idReferenciaItemEmEstoque", modeloIngredienteAdicionadoReceita.getIdReferenciaItemEmEstoque());
+                ingredienteAdicionadoNaReceita.put("nomeIngredienteAdicionadoReceita", modeloIngredienteAdicionadoReceita.getNomeIngredienteAdicionadoReceita());
+                ingredienteAdicionadoNaReceita.put("custoIngredientePorReceita", modeloIngredienteAdicionadoReceita.getCustoIngredientePorReceita());
+                ingredienteAdicionadoNaReceita.put("quantidadeUtilizadaReceita", modeloIngredienteAdicionadoReceita.getQuantidadeUtilizadaReceita());
+                ingredienteAdicionadoNaReceita.put("unidadeMedidaUsadaReceita", modeloIngredienteAdicionadoReceita.getUnidadeMedidaUsadaReceita());
+
+                referenciaIngredientesAdicionados.add(ingredienteAdicionadoNaReceita).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+
+                        double valorTotalIngredientesConvertido = Double.parseDouble(valorTotalIngredientesReceitaRecuperada);
+                        double porcentagemRecuperadaDaReceitaConvertido = Double.parseDouble(porcentagemReceitaRecuperada);
+
+                        double valorDoIngredienteAdicionado = Double.parseDouble(modeloIngredienteAdicionadoReceita.getCustoIngredientePorReceita().replace(",", "."));
+
+                        double novoValorDosIngredientesConvertido = valorTotalIngredientesConvertido + valorDoIngredienteAdicionado;
+
+
+                        double valorDaPorcentagemDaReceitaConvertido = (novoValorDosIngredientesConvertido * porcentagemRecuperadaDaReceitaConvertido) / 100;
+                        double novoValorTotalDaReceitaConvertido = novoValorDosIngredientesConvertido + valorDaPorcentagemDaReceitaConvertido;
+
+                        String novoValorDoTotalDeIngredientesAdicionados = String.valueOf(novoValorDosIngredientesConvertido);
+                        String novoValorTotalDaReceitaCadastrada = String.valueOf(novoValorTotalDaReceitaConvertido);
+
+
+                        ReceitaModel receitaModelAtualizadaComOsNovosValores = new ReceitaModel();
+                        receitaModelAtualizadaComOsNovosValores.setIdReceita(idReceitaRecuperada);
+                        receitaModelAtualizadaComOsNovosValores.setNomeReceita(nomeReceitaRecuperada);
+                        receitaModelAtualizadaComOsNovosValores.setQuantRendimentoReceita(quantoRendeCadaFornadaReceitaRecuperada);
+                        receitaModelAtualizadaComOsNovosValores.setPorcentagemServico(porcentagemReceitaRecuperada);
+                        receitaModelAtualizadaComOsNovosValores.setValorTotalReceita(novoValorTotalDaReceitaCadastrada);
+                        receitaModelAtualizadaComOsNovosValores.setValoresIngredientes(novoValorDoTotalDeIngredientesAdicionados);
+
+                        Map<String, Object> receitaComNovosValores = new HashMap<>();
+                        receitaComNovosValores.put("idReceita",receitaModelAtualizadaComOsNovosValores.getIdReceita());
+                        receitaComNovosValores.put("nomeReceita",receitaModelAtualizadaComOsNovosValores.getNomeReceita());
+                        receitaComNovosValores.put("valorTotalReceita",receitaModelAtualizadaComOsNovosValores.getValorTotalReceita());
+                        receitaComNovosValores.put("valoresIngredientes",receitaModelAtualizadaComOsNovosValores.getValoresIngredientes());
+                        receitaComNovosValores.put("quantRendimentoReceita",receitaModelAtualizadaComOsNovosValores.getQuantRendimentoReceita());
+                        receitaComNovosValores.put("porcentagemServico",receitaModelAtualizadaComOsNovosValores.getPorcentagemServico());
+
+
+
+
+                        referenceReceitaCadastrada.document(idReceitaRecuperada).update(receitaComNovosValores).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                Toast.makeText(context, "Receita teve os valores atualizados", Toast.LENGTH_SHORT).show();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+
+                            }
+                        });
+
+
+
+                        Toast.makeText(context, "Ingrediente " + modeloIngredienteAdicionadoReceita.getNomeIngredienteAdicionadoReceita().toUpperCase() + " adicionado com sucesso!", Toast.LENGTH_SHORT).show();
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                });
+
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+
+
+    }
+
+
+
+
+    @Override
+    public boolean editarIngredienteAdicionadoNaReceita(String idReceitaEditando, String valorParaSubtrair, String idIngredienteEditando, ModeloIngredienteAdicionadoReceita modeloIngredienteAdicionadoReceita) {
+
+        try{
+
+            referenceItemEstoque.document(idIngredienteEditando).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                    ModeloItemEstoque itemEstoqueCadastradoRecuperadoParaPegarValorAntigoDoIngredienteNaReceita = documentSnapshot.toObject(ModeloItemEstoque.class);
+
+                    double valorDoItemEstoqueCadastradoParaSubtrairConvertido = Double.parseDouble(itemEstoqueCadastradoRecuperadoParaPegarValorAntigoDoIngredienteNaReceita.getCustoPorReceitaItemEstoque().replace(",", "."));
+
+                    referenceReceitaCadastrada.document(idReceitaEditando).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                            ReceitaModel receitaModelRecuperadaParaSubtrairValorDoIngrediente = documentSnapshot.toObject(ReceitaModel.class);
+                            String idReceitaCadastradaRecuperada = receitaModelRecuperadaParaSubtrairValorDoIngrediente.getIdReceita();
+                            String nomeReceitaCadastradaRecuperada = receitaModelRecuperadaParaSubtrairValorDoIngrediente.getNomeReceita();
+                            String porcentagemDeServicoReceitaCadastrada = receitaModelRecuperadaParaSubtrairValorDoIngrediente.getPorcentagemServico();
+                            String quantidadeQueRendePorFornadaReceitaCadastrada = receitaModelRecuperadaParaSubtrairValorDoIngrediente.getQuantRendimentoReceita();
+
+
+
+                            double porcentagemDaReceitaQueEstaEditandoConvertido = Double.parseDouble(receitaModelRecuperadaParaSubtrairValorDoIngrediente.getPorcentagemServico().replace(",", "."));
+
+
+
+                            double valorTotalDosIngredientesNaReceitaQueEstaEditando = Double.parseDouble(receitaModelRecuperadaParaSubtrairValorDoIngrediente.getValoresIngredientes().replace(",", "."));
+                            double valorDoIngredienteEditadoConvertido = Double.parseDouble(modeloIngredienteAdicionadoReceita.getCustoIngredientePorReceita().replace(",", "."));
+                            double resultadoDaSubtracaoDosValoresDoIngredienteERNoTotalDeIngredientesNaReceita = valorTotalDosIngredientesNaReceitaQueEstaEditando - valorDoItemEstoqueCadastradoParaSubtrairConvertido;
+
+                            double novoValorDoTotalDeIngredientesReceita = resultadoDaSubtracaoDosValoresDoIngredienteERNoTotalDeIngredientesNaReceita + valorDoIngredienteEditadoConvertido;
+
+                            if(novoValorDoTotalDeIngredientesReceita > 0){
+                                double resultadoValorTotalDaReceitaCadastradaRecuperadaConvertido = (novoValorDoTotalDeIngredientesReceita * porcentagemDaReceitaQueEstaEditandoConvertido) / 100;
+
+                                String novoValorTotalDaReceitaQueEstouEditando = String.valueOf(resultadoValorTotalDaReceitaCadastradaRecuperadaConvertido);
+                                String novoValorDoTotalDosIngredientesAdicionadosNaReceita = String.valueOf(novoValorDoTotalDeIngredientesReceita);
+
+                                ReceitaModel receitaModelComOsValoresAlterados = new ReceitaModel();
+                                receitaModelComOsValoresAlterados.setIdReceita(idReceitaCadastradaRecuperada);
+                                receitaModelComOsValoresAlterados.setNomeReceita(nomeReceitaCadastradaRecuperada);
+                                receitaModelComOsValoresAlterados.setPorcentagemServico(porcentagemDeServicoReceitaCadastrada);
+                                receitaModelComOsValoresAlterados.setQuantRendimentoReceita(quantidadeQueRendePorFornadaReceitaCadastrada);
+                                receitaModelComOsValoresAlterados.setValorTotalReceita(novoValorTotalDaReceitaQueEstouEditando);
+                                receitaModelComOsValoresAlterados.setValoresIngredientes(novoValorDoTotalDosIngredientesAdicionadosNaReceita);
+
+                                Map<String, Object> receitaInicializadaAtualizandoId = new HashMap<>();
+                                receitaInicializadaAtualizandoId.put("idReceita",receitaModelComOsValoresAlterados.getIdReceita());
+                                receitaInicializadaAtualizandoId.put("nomeReceita",receitaModelComOsValoresAlterados.getNomeReceita());
+                                receitaInicializadaAtualizandoId.put("valorTotalReceita",receitaModelComOsValoresAlterados.getValorTotalReceita());
+                                receitaInicializadaAtualizandoId.put("valoresIngredientes",receitaModelComOsValoresAlterados.getValoresIngredientes());
+                                receitaInicializadaAtualizandoId.put("quantRendimentoReceita",receitaModelComOsValoresAlterados.getQuantRendimentoReceita());
+                                receitaInicializadaAtualizandoId.put("porcentagemServico",receitaModelComOsValoresAlterados.getPorcentagemServico());
+
+                                referenceReceitaCadastrada.document(receitaModelComOsValoresAlterados.getIdReceita()).update(receitaInicializadaAtualizandoId).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void unused) {
+
+                                        Toast.makeText(context, "Valor da Receita " + receitaModelComOsValoresAlterados.getNomeReceita().toUpperCase() + "atualizado com sucesso", Toast.LENGTH_SHORT).show();
+
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+
+                                    }
+                                });
+
+                            }
+
+
+
+
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
+                        }
+                    });
+
+
+
+
+
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+
+                }
+            });
+
+
+/*
+
+
+
+
+            FirebaseFirestore firestoreItemEstoqueCadastrado = ConfiguracaoFirebase.getFirestor();
+            Task<DocumentSnapshot> documentReferenceItemEstoqueCadastrado = firestoreItemEstoqueCadastrado.collection("ITEM_ESTOQUE")
+                    .document(modeloIngredienteAdicionadoReceita.getIdReferenciaItemEmEstoque())
+                    .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+
+
+
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
+                        }
+                    });
+
+
+*/
+
+
+
+                    DocumentReference referenciaIngredientesEditados = referenceReceitaCadastrada.document(idReceitaEditando)
+                            .collection(COLLECTION_INGREDIENTES_ADICIONADOS).document(idIngredienteEditando);
+
+                    Map<String, Object> ingredienteEditadoNaReceita = new HashMap<>();
+                    ingredienteEditadoNaReceita.put("idReferenciaItemEmEstoque", modeloIngredienteAdicionadoReceita.getIdReferenciaItemEmEstoque());
+                    ingredienteEditadoNaReceita.put("nomeIngredienteAdicionadoReceita", modeloIngredienteAdicionadoReceita.getNomeIngredienteAdicionadoReceita());
+                    ingredienteEditadoNaReceita.put("custoIngredientePorReceita", modeloIngredienteAdicionadoReceita.getCustoIngredientePorReceita());
+                    ingredienteEditadoNaReceita.put("quantidadeUtilizadaReceita", modeloIngredienteAdicionadoReceita.getQuantidadeUtilizadaReceita());
+                    ingredienteEditadoNaReceita.put("unidadeMedidaUsadaReceita", modeloIngredienteAdicionadoReceita.getUnidadeMedidaUsadaReceita());
+
+                    referenciaIngredientesEditados.update(ingredienteEditadoNaReceita).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
+                        }
+                    });
+
+
+        }catch (Exception e){
+            System.out.println("Error ----------------------------------> :" + e.getMessage());
+        }
+
+
+
+
+        return false;
+    }
+
+    public void editarValorDoIngredienteEditadoNaReceitaJaCadastrada(String idReceita, String valorIngredienteSubtrair, String valorIngredienteSomar){
+
+        String valorIngredienteNovo = valorIngredienteSomar.replace(",", ".");
+        String valorIngredienteAntigo = valorIngredienteSubtrair.replace(",", ".");
+
+        System.out.println("valorIngredienteNovo:---------------------------------------------------------------" + valorIngredienteNovo);
+        System.out.println("valorIngredienteAntigo:---------------------------------------------------------------" + valorIngredienteAntigo);
+
+
+        referenceReceitaCadastrada.document(idReceita).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                ReceitaModel receitaModelEditarValorDaReceitaEdititandoValorDoIngrediente = documentSnapshot.toObject(ReceitaModel.class);
+
+                String custoTotalIngredienteRecuperado = receitaModelEditarValorDaReceitaEdititandoValorDoIngrediente.getValoresIngredientes();
+                String valorTotalReceitaRecuperado = receitaModelEditarValorDaReceitaEdititandoValorDoIngrediente.getValorTotalReceita().replace(",", ".");
+                System.out.println("Entrou no addOnSucessListener---------------------------------------------------------------");
+
+
+
+                double custoTotalIngredienteRecuperadoConvertido = Double.parseDouble(custoTotalIngredienteRecuperado);
+                double valorTotalReceitaRecuperadoConvertido = Double.parseDouble(valorTotalReceitaRecuperado);
+                double valorIngredienteEditadoConvertido = Double.parseDouble(valorIngredienteNovo);
+                double valorIngredienteAntigoConvertido = Double.parseDouble(valorIngredienteAntigo);
+
+                double resultadoSubtracaoCustoTotalIngredientes = custoTotalIngredienteRecuperadoConvertido - valorIngredienteAntigoConvertido;
+                double resultadoSubtracao2CustoTotalReceita = valorTotalReceitaRecuperadoConvertido - valorIngredienteAntigoConvertido;
+
+                double resultadoSomaCustoTotalIngredientes = resultadoSubtracaoCustoTotalIngredientes + valorIngredienteEditadoConvertido;
+                double resultadoSomaCustoTotalReceita = resultadoSubtracao2CustoTotalReceita + valorIngredienteEditadoConvertido;
+
+
+
+
+                if (resultadoSomaCustoTotalIngredientes > 0 && resultadoSomaCustoTotalReceita > 0){
+
+                    String idReceitaCadastrada = receitaModelEditarValorDaReceitaEdititandoValorDoIngrediente.getIdReceita();
+                    String nomeReceitaCadastrada = receitaModelEditarValorDaReceitaEdititandoValorDoIngrediente.getNomeReceita();
+                    String porcentagemReceitaCadastrada = receitaModelEditarValorDaReceitaEdititandoValorDoIngrediente.getPorcentagemServico();
+                    String quantidadeRendimentoPorFornada = receitaModelEditarValorDaReceitaEdititandoValorDoIngrediente.getQuantRendimentoReceita();
+                    String novoValorTotalIngredientesNaReceitaCadastrada = String.valueOf(resultadoSomaCustoTotalIngredientes);
+                    String novoValorTotalReceitaCadastrada = String.valueOf(resultadoSomaCustoTotalReceita);
+
+
+                    ReceitaModel receitaComNovosValoresDeIngredientesETotal = new ReceitaModel();
+
+                    receitaComNovosValoresDeIngredientesETotal.setIdReceita(idReceitaCadastrada);
+                    receitaComNovosValoresDeIngredientesETotal.setNomeReceita(nomeReceitaCadastrada);
+                    receitaComNovosValoresDeIngredientesETotal.setPorcentagemServico(porcentagemReceitaCadastrada);
+                    receitaComNovosValoresDeIngredientesETotal.setQuantRendimentoReceita(quantidadeRendimentoPorFornada);
+                    receitaComNovosValoresDeIngredientesETotal.setValoresIngredientes(novoValorTotalIngredientesNaReceitaCadastrada);
+                    receitaComNovosValoresDeIngredientesETotal.setValorTotalReceita(novoValorTotalReceitaCadastrada);
+
+                    try{
+                        Map<String, Object> receitaCadastradaParaEditar = new HashMap<>();
+                        receitaCadastradaParaEditar.put("idReceita",receitaComNovosValoresDeIngredientesETotal.getIdReceita());
+                        receitaCadastradaParaEditar.put("nomeReceita",receitaComNovosValoresDeIngredientesETotal.getNomeReceita());
+                        receitaCadastradaParaEditar.put("valorTotalReceita",receitaComNovosValoresDeIngredientesETotal.getValorTotalReceita());
+                        receitaCadastradaParaEditar.put("valoresIngredientes",receitaComNovosValoresDeIngredientesETotal.getValoresIngredientes());
+                        receitaCadastradaParaEditar.put("quantRendimentoReceita",receitaComNovosValoresDeIngredientesETotal.getQuantRendimentoReceita());
+                        receitaCadastradaParaEditar.put("porcentagemServico",receitaComNovosValoresDeIngredientesETotal.getPorcentagemServico());
+
+                        referenceReceitaCadastrada.document(receitaComNovosValoresDeIngredientesETotal.getIdReceita()).update(receitaCadastradaParaEditar).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                Toast.makeText(context, "Atualizou com sucesso a nova receita...", Toast.LENGTH_SHORT).show();
+
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+
+                            }
+                        });
+
+
+                    }catch (Exception e){
+                        System.out.println("Exception e ReceitaCadastradaDAO" + e.getMessage());
+
+                    }
+
+
+
+                }
+
+
+
+
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+    }
+
 
     @Override
     public boolean removerIngredienteDaReceitaCadastrando(String idReceita, String idIngrediente, String custoIngredienteNaReceita) {
@@ -229,7 +597,7 @@ public class ModeloReceitaCadastradaDAO implements InterfaceModeloReceitaCadastr
     }
 
 
-    private void somarCustoIngredienteAdicionadoNaReceita(View view, String idReceita, String custoIngredientePorReceita) {
+    private void somarCustoIngredienteAdicionadoNaReceita(String idReceita, String custoIngredientePorReceita) {
         System.out.println("Passou pelo somar custo ingrediente");
         double custoIngredienteConvert = Double.parseDouble(custoIngredientePorReceita.replace(",", "."));
         System.out.println("custoIngredienteConvert: " + custoIngredienteConvert);
@@ -357,6 +725,8 @@ public class ModeloReceitaCadastradaDAO implements InterfaceModeloReceitaCadastr
     }
 
     private void somarValorDoIngredienteNoTotalDeIngredientesNaReceita(String id, ReceitaModel receitaModel){
+
+
         try{
             Map<String, Object> receitaInicializadaAtualizandoId = new HashMap<>();
             receitaInicializadaAtualizandoId.put("idReceita",id);
@@ -369,6 +739,7 @@ public class ModeloReceitaCadastradaDAO implements InterfaceModeloReceitaCadastr
             this.referenceReceitaCadastrada.document(id).update(receitaInicializadaAtualizandoId).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void unused) {
+                    Toast.makeText(context, "Valor da receita atualizado com sucesso", Toast.LENGTH_SHORT).show();
 
                 }
             }).addOnFailureListener(new OnFailureListener() {
