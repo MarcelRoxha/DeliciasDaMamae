@@ -1,8 +1,11 @@
 package com.marcel.a.n.roxha.deliciasdamamae.fragments;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -14,6 +17,10 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -22,6 +29,7 @@ import com.marcel.a.n.roxha.deliciasdamamae.activity.EditarReceitasCompletasCada
 import com.marcel.a.n.roxha.deliciasdamamae.activity.FinalizarReceitaActivity;
 import com.marcel.a.n.roxha.deliciasdamamae.activity.NovaReceitaActivity;
 import com.marcel.a.n.roxha.deliciasdamamae.adapter.ReceitasProntasAdapter;
+import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ReceitaModel;
 
 /**
@@ -72,8 +80,11 @@ public class ReceitasProntasFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
+    private final String COLLECTION_RECEITAS_CADASTRADAS = "RECEITA_CADASTRADA";
 
     private RecyclerView recyclerView_Receitas_completas_cadastradas;
+    private FirebaseFirestore firestoreReceitasCadastradas = ConfiguracaoFirebase.getFirestor();
+    private CollectionReference collectionReferenceReceitasCadastradas = firestoreReceitasCadastradas.collection(COLLECTION_RECEITAS_CADASTRADAS);
 
 
     private ReceitasProntasAdapter adapterReceitaCompleta;
@@ -111,9 +122,48 @@ public class ReceitasProntasFragment extends Fragment {
             public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
 
 
-                Intent intent = new Intent(getActivity(), EditarReceitasCompletasCadastradas.class);
-                intent.putExtra("idReceita", documentSnapshot.getId());
-                startActivity(intent);
+                ReceitaModel receitaModel = documentSnapshot.toObject(ReceitaModel.class);
+
+                String nomeCasoDelete = receitaModel.getNomeReceita();
+
+
+                AlertDialog.Builder alertEditarOuDeletar = new AlertDialog.Builder(getContext());
+
+                alertEditarOuDeletar.setTitle("EDITAR OU DELETAR?");
+                alertEditarOuDeletar.setMessage("O que deseja fazer, Editar ou Deletar?");
+                alertEditarOuDeletar.setPositiveButton("EDITAR", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+
+                        Intent intent = new Intent(getActivity(), EditarReceitasCompletasCadastradas.class);
+                        intent.putExtra("idReceita", documentSnapshot.getId());
+                        startActivity(intent);
+
+                    }
+                }).setNegativeButton("DELETAR", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                       collectionReferenceReceitasCadastradas.document(documentSnapshot.getId()).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                           @Override
+                           public void onSuccess(Void unused) {
+                               Toast.makeText(getContext(), "Receita " + nomeCasoDelete + " deletada com sucesso!", Toast.LENGTH_SHORT).show();
+
+                           }
+                       }).addOnFailureListener(new OnFailureListener() {
+                           @Override
+                           public void onFailure(@NonNull Exception e) {
+
+                           }
+                       });
+
+                    }
+                });
+                alertEditarOuDeletar.create();
+                alertEditarOuDeletar.show();
+
+
             }
         });
     }

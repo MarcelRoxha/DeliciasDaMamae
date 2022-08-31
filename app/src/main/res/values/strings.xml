@@ -78,6 +78,7 @@
     <string name="text_botao_finalizar_receita">FINALIZAR</string>
     <string name="text_valor_total_receita">Valor total da receita R$:</string>
     <string name="text_rendimento_receita_adapter">Rendimento por  fornada:</string>
+    <string name="text_porcentagem_receita_adapter">Porcentagem de Serviço:</string>
     <string name="text_rendimento_adapter">Rendimento por fornada</string>
     <string name="fragment_nome_receita_edit">Digite o nome da sua receita</string>
     <string name="porceoes_receita">Digite quanto rendeu essa receita</string>

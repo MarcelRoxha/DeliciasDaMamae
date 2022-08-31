@@ -28,6 +28,8 @@ public class ReceitasProntasAdapter extends FirestoreRecyclerAdapter<ReceitaMode
         holder.nomeReceita.setText(model.getNomeReceita());
         holder.valorTotalReceita.setText(model.getValorTotalReceita());
         holder.rendimento.setText(model.getQuantRendimentoReceita());
+        holder.porcentagem.setText(model.getPorcentagemServico());
+        holder.valorTotalIngredientes.setText(model.getValoresIngredientes());
 
     }
 
@@ -46,6 +48,8 @@ public class ReceitasProntasAdapter extends FirestoreRecyclerAdapter<ReceitaMode
         TextView nomeReceita;
         TextView valorTotalReceita;
         TextView rendimento;
+        TextView porcentagem;
+        TextView valorTotalIngredientes;
 
         public ReceitasProntasViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -53,6 +57,8 @@ public class ReceitasProntasAdapter extends FirestoreRecyclerAdapter<ReceitaMode
             nomeReceita = itemView.findViewById(R.id.text_nome_receita_pronta_adapter_id);
             valorTotalReceita = itemView.findViewById(R.id.text_valor_total_receita_pronta_adapter_id);
             rendimento = itemView.findViewById(R.id.text_rendimento_por_fornada_receita_pronta_adapter_id);
+            porcentagem = itemView.findViewById(R.id.texto_porcentagem_receita_cadastrada_adapter_id);
+            valorTotalIngredientes = itemView.findViewById(R.id.texto_valor_total_ingredientes_adicionados_na_receita_adapter_id);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
