@@ -27,10 +27,10 @@ public class BolosConfecionadosAdapter extends FirestoreRecyclerAdapter<BolosMod
     @Override
     protected void onBindViewHolder(@NonNull BolosConfecionadoViewHolder holder, int position, @NonNull BolosModel model) {
 
-        holder.nomeBolo.setText(model.getNomeBolo());
+     /*   holder.nomeBolo.setText(model.getNomeBolo());
         holder.custo.setText(model.getCustoBolo());
         holder.valorVenda.setText(model.getValorVenda());
-
+*/
     }
 
     @NonNull

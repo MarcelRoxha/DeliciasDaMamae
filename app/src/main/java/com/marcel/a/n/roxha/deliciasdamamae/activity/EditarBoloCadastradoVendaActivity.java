@@ -115,12 +115,14 @@ public class EditarBoloCadastradoVendaActivity extends AppCompatActivity {
         referenceBoloCadastrado.document(boloId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
+/*
 
                 BolosModel bolosModel = documentSnapshot.toObject(BolosModel.class);
                 nomeBolo = bolosModel.getNomeBolo();
                 precoBolo = bolosModel.getValorVenda();
                 custoBolo = bolosModel.getCustoBolo();
                 enderecoSalvoFoto = bolosModel.getEnderecoFoto();
+*/
 
 
                     Glide.with(getApplicationContext()).load(enderecoSalvoFoto).into(imagem_bolo_cadastrado_venda);
@@ -263,7 +265,7 @@ public class EditarBoloCadastradoVendaActivity extends AppCompatActivity {
         } else {
 
             BolosModel boloAtualizar = new BolosModel();
-            boloAtualizar.setNomeBolo(nomeAtualiza);
+          /*  boloAtualizar.setNomeBolo(nomeAtualiza);
             boloAtualizar.setValorVenda(precoAtualiza);
             boloAtualizar.setCustoBolo(custoAtualiza);
             boloAtualizar.setEnderecoFoto(enderecoSalvoFoto);
@@ -275,9 +277,9 @@ public class EditarBoloCadastradoVendaActivity extends AppCompatActivity {
             boloAtualizado.put("custoBolo", boloAtualizar.getCustoBolo());
             boloAtualizado.put("verificaCameraGaleria", verificaGaleriaCamera);
             boloAtualizado.put("enderecoFoto", boloAtualizar.getEnderecoFoto());
-            boloAtualizado.put("quantBoloVenda", "1");
+            boloAtualizado.put("quantBoloVenda", "1");*/
 
-            referenceBoloCadastrado.document(boloId).update(boloAtualizado).addOnSuccessListener(new OnSuccessListener<Void>() {
+       /*     referenceBoloCadastrado.document(boloId).update(boloAtualizado).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
                     Toast.makeText(EditarBoloCadastradoVendaActivity.this, "Bolo Atualizado com sucesso", Toast.LENGTH_SHORT).show();
@@ -290,7 +292,7 @@ public class EditarBoloCadastradoVendaActivity extends AppCompatActivity {
                 public void onFailure(@NonNull Exception e) {
                     Toast.makeText(EditarBoloCadastradoVendaActivity.this, "Não foi possível atualizar", Toast.LENGTH_SHORT).show();
                 }
-            });
+            });*/
 
 
         }

@@ -42,7 +42,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -50,9 +49,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.marcel.a.n.roxha.deliciasdamamae.R;
-import com.marcel.a.n.roxha.deliciasdamamae.activity.BolosActivity;
 import com.marcel.a.n.roxha.deliciasdamamae.adapter.ReceitasBolosAdapter;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
+import com.marcel.a.n.roxha.deliciasdamamae.helper.ModeloBoloCadastradoParaVendaDAO;
 import com.marcel.a.n.roxha.deliciasdamamae.model.BolosModel;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ReceitaModel;
 
@@ -60,8 +59,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -128,6 +125,15 @@ public class ConfeccionarBoloFragment extends Fragment {
     private TextView textValorSuge;
     private TextView textValorSugeAdd;
     private TextView textInfo;
+    private TextView textValorVendaIfoodBolo;
+    private TextView textValorVendaBoleriaBolo;
+    private TextView textPorcentagemAdicionadoVendaBolo;
+    private TextView textPorcentagemAdicionadoPorContaDoIfood;
+    private TextView textInfoPorcentagemAdicionadaPorContaDoIfood;
+    private TextView textInfoPorcentagemLucro;
+    private TextView textLucroDigitadoPeloUsuarioNoAlert;
+    private TextView textValorSugeridoVendaIfood;
+    private TextView textoValorDeVendaNaLoja;
     private ImageView imagemBoloCadastrado;
     private Uri imageUri;
 
@@ -140,28 +146,44 @@ public class ConfeccionarBoloFragment extends Fragment {
     private static final int REQUEST_CODE_PERMISSIONS = 1;
 
     private TextInputEditText editValorVendaBolo;
+    private TextInputEditText editValorVendaBoloIfood;
+    private TextInputEditText editValorCadastradoParaVendasNoIfood;
     private ReceitasBolosAdapter adapter;
 
     private RecyclerView recyclerViewListaReceitasProntas;
 
     private String valorSugerido;
+    private String porcentagemDeLucroAdicionado;
+    private String valorSugeridoDeVendaDoIfood;
+    private String valorDeVendaComAPorcentagemdoIfoodAdicionado;
+    private String porcentagemAdicionadoPorContaDoIfood;
     private String nomeReceita;
-    private String custoReceita;
+    private String valorTotalReceita;
     private String quantRendimentoReceita;
     private String currentImagePath = null;
     private String valorVendaDigitado;
     private String enderecoSalvoFoto;
     private double porcentConvert;
+    private double porcentIfoodConvert;
     private double custoConvert;
+    private double custoIfoodConvert;
     private double resultado;
+    private double resultadoIfood;
     private int verificaGaleriaCamera;
+    private int quantidadeQueRendeACadaFornadaConvertido;
 
     private static final int REQUEST_CODE_CAMERA = 101;
     private static final int REQUEST_CODE_GALERIA = 100;
 
     private ReceitaModel receitaRecuperada = new ReceitaModel();
+    private BolosModel boloCadastroFinaliza = new BolosModel();
+
+    private BolosModel bolosModelPreperParaCadastro = new BolosModel();
+
+    private ModeloBoloCadastradoParaVendaDAO modeloBoloCadastradoParaVendaDAO;
 
     private Button botaoSalvarBoloVendas;
+    private Button botaParaEditarPorcentagensDeLucroEIfood;
 
     private FirebaseFirestore db = ConfiguracaoFirebase.getFirestor();
 
@@ -181,6 +203,7 @@ public class ConfeccionarBoloFragment extends Fragment {
 
         botaoSalvarBoloVendas = view.findViewById(R.id.botao_salvar_receita_venda_id);
         editValorVendaBolo = view.findViewById(R.id.edit_preco_venda_bolo_id);
+        editValorCadastradoParaVendasNoIfood = view.findViewById(R.id.input_valor_cadastrado_venda_no_ifood_id);
 
         textoNome = view.findViewById(R.id.textView18);
         textoNomeAdd = view.findViewById(R.id.textoNome);
@@ -189,21 +212,42 @@ public class ConfeccionarBoloFragment extends Fragment {
         textoRendi = view.findViewById(R.id.textView22);
         textoRendiAdd = view.findViewById(R.id.textoRendimentoReceitaBolo);
         textValorSuge = view.findViewById(R.id.textView23);
-        textValorSugeAdd = view.findViewById(R.id.textoValorSugerido);
+        textValorVendaBoleriaBolo = view.findViewById(R.id.textoValorSugerido);
         textInfo = view.findViewById(R.id.textView26);
+        textPorcentagemAdicionadoVendaBolo = view.findViewById(R.id.textView80);
+        textValorVendaIfoodBolo = view.findViewById(R.id.texto_valor_sugerido_venda_porcentagem_ifood);
+        botaParaEditarPorcentagensDeLucroEIfood = view.findViewById(R.id.botao_para_editar_porcentagem_lucro_e_ifood);
+
+        textValorSugeridoVendaIfood = view.findViewById(R.id.textView89);
+
+
+        textInfoPorcentagemLucro = view.findViewById(R.id.textView85);
+        textLucroDigitadoPeloUsuarioNoAlert = view.findViewById(R.id.texto_porcentagem_lucro_bolo_cadastrando);
+
+
+        textoValorDeVendaNaLoja = view.findViewById(R.id.textView77);
+
+
+
+        textInfoPorcentagemAdicionadaPorContaDoIfood = view.findViewById(R.id.textView87);
+        textPorcentagemAdicionadoPorContaDoIfood = view.findViewById(R.id.texto_porcentagem_adicionado_ifood);
 
 
         imagemBoloCadastrado.setVisibility(View.GONE);
         textoCustoTotalBolo.setVisibility(View.GONE);
-        ;
+
         textoValorSugeridoVenda.setVisibility(View.GONE);
 
         textoQuantRendeFornada.setVisibility(View.GONE);
-        ;
+
         textInfo.setVisibility(View.GONE);
-        ;
+
+        textValorSugeridoVendaIfood.setVisibility(View.GONE);
+
+
 
         botaoSalvarBoloVendas.setVisibility(View.GONE);
+        botaParaEditarPorcentagensDeLucroEIfood.setVisibility(View.GONE);
         editValorVendaBolo.setVisibility(View.GONE);
         textoNomeBolo.setVisibility(View.GONE);
         textoNome.setVisibility(View.GONE);
@@ -213,7 +257,22 @@ public class ConfeccionarBoloFragment extends Fragment {
         textoRendi.setVisibility(View.GONE);
         textoRendiAdd.setVisibility(View.GONE);
         textValorSuge.setVisibility(View.GONE);
-        textValorSugeAdd.setVisibility(View.GONE);
+       // textValorSugeAdd.setVisibility(View.GONE);
+        textPorcentagemAdicionadoVendaBolo.setVisibility(View.GONE);
+        textValorVendaIfoodBolo.setVisibility(View.GONE);
+        textValorVendaBoleriaBolo.setVisibility(View.GONE);
+        editValorCadastradoParaVendasNoIfood.setVisibility(View.GONE);
+       // editValorVendaBoloIfood.setVisibility(View.GONE);
+
+
+
+        textInfoPorcentagemLucro.setVisibility(View.GONE);
+        textLucroDigitadoPeloUsuarioNoAlert.setVisibility(View.GONE);
+        textoValorDeVendaNaLoja.setVisibility(View.GONE);
+
+
+        textInfoPorcentagemAdicionadaPorContaDoIfood.setVisibility(View.GONE);
+        textPorcentagemAdicionadoPorContaDoIfood.setVisibility(View.GONE);
 
 
         storageRef = storageReference.getReference();
@@ -223,10 +282,11 @@ public class ConfeccionarBoloFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                String valorDigitado = editValorVendaBolo.getText().toString();
+                String valorDigitado = editValorVendaBolo.getText().toString().replace(",", ".");
+                String valorDigitadoIfood = editValorCadastradoParaVendasNoIfood.getText().toString().replace(",", ".");
 
-                if (valorDigitado.isEmpty()) {
-                    Toast.makeText(getActivity(), "Favor insira o valor que será vendido o bolo", Toast.LENGTH_SHORT).show();
+                if (valorDigitado.isEmpty() || valorDigitadoIfood.isEmpty()) {
+                    Toast.makeText(getActivity(), "Favor insira o valor que será vendido o bolo na boleria e no ifood e tente novamente", Toast.LENGTH_SHORT).show();
                 } else {
 
                     String nome;
@@ -239,49 +299,37 @@ public class ConfeccionarBoloFragment extends Fragment {
                     quant = receitaRecuperada.getQuantRendimentoReceita();
 
 
-                    BolosModel boloSalvar = new BolosModel();
+                    boloCadastroFinaliza = new BolosModel();
+                    modeloBoloCadastradoParaVendaDAO = new ModeloBoloCadastradoParaVendaDAO(getActivity());
 
-                    boloSalvar.setNomeBolo(nome);
-                    boloSalvar.setCustoBolo(custo);
-                    boloSalvar.setQuantBoloVenda(quant);
-                    boloSalvar.setValorVenda(valorDigitado);
-                    boloSalvar.setEnderecoFoto(enderecoSalvoFoto);
-                    boloSalvar.setVerificaCameraGaleria(verificaGaleriaCamera);
-
-
-                    FirebaseFirestore db = ConfiguracaoFirebase.getFirestor();
-                    CollectionReference reference = db.collection("Bolos_Cadastrados_venda");
-
-                    Map<String, Object> boloConfec = new HashMap<>();
-
-                    boloConfec.put("nomeBolo", boloSalvar.getNomeBolo());
-                    boloConfec.put("custoBolo", boloSalvar.getCustoBolo());
-                    boloConfec.put("quantBoloVenda", "1");
-                    boloConfec.put("valorVenda", boloSalvar.getValorVenda());
-                    boloConfec.put("enderecoFoto", boloSalvar.getEnderecoFoto());
-                    boloConfec.put("verificaCameraGaleria", boloSalvar.getVerificaCameraGaleria());
+                    boloCadastroFinaliza.setNomeBoloCadastrado(bolosModelPreperParaCadastro.getNomeBoloCadastrado());
+                    boloCadastroFinaliza.setCustoTotalDaReceitaDoBolo(bolosModelPreperParaCadastro.getCustoTotalDaReceitaDoBolo());
+                    boloCadastroFinaliza.setValorCadastradoParaVendasNaBoleria(valorDigitado);
+                    boloCadastroFinaliza.setValorCadastradoParaVendasNoIfood(valorDigitadoIfood);
+                    boloCadastroFinaliza.setPorcentagemAdicionadoPorContaDoIfood(bolosModelPreperParaCadastro.getPorcentagemAdicionadoPorContaDoIfood());
+                    boloCadastroFinaliza.setPorcentagemAdicionadoPorContaDoLucro(bolosModelPreperParaCadastro.getPorcentagemAdicionadoPorContaDoLucro());
+                    boloCadastroFinaliza.setValorSugeridoParaVendasNoIfoodComAcrescimoDaPorcentagem(bolosModelPreperParaCadastro.getValorSugeridoParaVendasNoIfoodComAcrescimoDaPorcentagem());
+                    boloCadastroFinaliza.setValorSugeridoParaVendasNaBoleriaComAcrescimoDoLucro(bolosModelPreperParaCadastro.getValorSugeridoParaVendasNaBoleriaComAcrescimoDoLucro());
+                    boloCadastroFinaliza.setEnderecoFoto(bolosModelPreperParaCadastro.getEnderecoFoto());
+                    boloCadastroFinaliza.setValorQueOBoloRealmenteFoiVendido(bolosModelPreperParaCadastro.getValorQueOBoloRealmenteFoiVendido());
+                    boloCadastroFinaliza.setVerificaCameraGaleria(bolosModelPreperParaCadastro.getVerificaCameraGaleria());
 
 
 
-
-                    reference.add(boloConfec).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                        @Override
-                        public void onSuccess(DocumentReference documentReference) {
-
-                            Toast.makeText(getActivity(), "Sucesso ao salvar bolo para venda", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(getActivity(), BolosActivity.class);
-                            startActivity(intent);
-
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-
-                        }
-                    });
+                    modeloBoloCadastradoParaVendaDAO.cadastrarBoloParaVenda(boloCadastroFinaliza);
 
 
                 }
+
+            }
+        });
+
+        botaParaEditarPorcentagensDeLucroEIfood.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                carregarAlertEditarPorcent();
+
 
             }
         });
@@ -293,7 +341,7 @@ public class ConfeccionarBoloFragment extends Fragment {
     private void carregarListaReceitasProntas() {
 
         FirebaseFirestore db = ConfiguracaoFirebase.getFirestor();
-        CollectionReference reference = db.collection("Receitas_completas");
+        CollectionReference reference = db.collection("RECEITA_CADASTRADA");
 
         Query query = reference.orderBy("nomeReceita", Query.Direction.ASCENDING);
 
@@ -318,11 +366,11 @@ public class ConfeccionarBoloFragment extends Fragment {
 
 
                 nomeReceita = receitaSelecionada.getNomeReceita();
-                custoReceita = receitaSelecionada.getValorTotalReceita();
+                valorTotalReceita = receitaSelecionada.getValorTotalReceita();
                 quantRendimentoReceita = receitaSelecionada.getQuantRendimentoReceita();
 
                 receitaRecuperada.setNomeReceita(nomeReceita);
-                receitaRecuperada.setValorTotalReceita(custoReceita);
+                receitaRecuperada.setValorTotalReceita(valorTotalReceita);
                 receitaRecuperada.setQuantRendimentoReceita(quantRendimentoReceita);
 
                 carregarAlertFoto();
@@ -382,33 +430,53 @@ public class ConfeccionarBoloFragment extends Fragment {
         startActivityForResult(Intent.createChooser(intent, "Selecionar Foto"), REQUEST_CODE_GALERIA);
     }
 
-    public void carregarAlertPorcent() {
-
-
+    public void carregarAlertEditarPorcent(){
         AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
-        dialog.setTitle("INFORME % DE LUCRO DA RECEITA");
-        dialog.setMessage("informe o minimo de % de lucro que deseja obter na venda desse bolo");
-        dialog.setCancelable(false);
-        EditText texPorcentDig = new EditText(getActivity());
+        dialog.setTitle("EDITANDO");
+        View viewLayout = getLayoutInflater().inflate(R.layout.alerta_para_adicionar_porcentagens_do_ifood, null);
+        EditText texNomeBoloCadastrando = viewLayout.findViewById(R.id.edit_alert_nome_bolo_cadastrando_id);
+        EditText texPorcentDig = viewLayout.findViewById(R.id.edit_porcentagem_de_lucro_receita_id);
+        EditText texPorcentagemIfood = viewLayout.findViewById(R.id.edit_porcentagem_de_acrescimo_do_ifood_id);
+
         dialog.setView(texPorcentDig);
+        dialog.setView(texNomeBoloCadastrando);
+        dialog.setView(texPorcentagemIfood);
+
+        texNomeBoloCadastrando.setText(bolosModelPreperParaCadastro.getNomeBoloCadastrado());
 
         dialog.setPositiveButton("CONFIRMAR", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
                 String porct = texPorcentDig.getText().toString();
+                String porctIfood = texPorcentagemIfood.getText().toString();
 
 
-                if (!porct.isEmpty()) {
+                if (!porct.isEmpty() && !porctIfood.isEmpty()) {
 
 
-                    calcularValorSugerido(custoReceita, porct);
+                    calcularValorSugerido(valorTotalReceita, porct);
+                    calcularValorSugeridoIfood(valorTotalReceita, porctIfood, porct);
+
 
                     textoNomeBolo.setVisibility(View.GONE);
                     textoCustoTotalBolo.setVisibility(View.GONE);
                     textoQuantRendeFornada.setVisibility(View.GONE);
                     recyclerViewListaReceitasProntas.setVisibility(View.GONE);
 
+                    bolosModelPreperParaCadastro = new BolosModel();
+
+                    bolosModelPreperParaCadastro.setNomeBoloCadastrado(texNomeBoloCadastrando.getText().toString());
+                    bolosModelPreperParaCadastro.setCustoTotalDaReceitaDoBolo(valorTotalReceita);
+                    bolosModelPreperParaCadastro.setValorCadastradoParaVendasNaBoleria("PREPER");
+                    bolosModelPreperParaCadastro.setValorCadastradoParaVendasNoIfood("PREPER");
+                    bolosModelPreperParaCadastro.setPorcentagemAdicionadoPorContaDoIfood(porctIfood);
+                    bolosModelPreperParaCadastro.setPorcentagemAdicionadoPorContaDoLucro(porct);
+                    bolosModelPreperParaCadastro.setValorSugeridoParaVendasNoIfoodComAcrescimoDaPorcentagem(valorSugeridoDeVendaDoIfood);
+                    bolosModelPreperParaCadastro.setValorSugeridoParaVendasNaBoleriaComAcrescimoDoLucro(valorSugerido);
+                    bolosModelPreperParaCadastro.setEnderecoFoto(enderecoSalvoFoto);
+                    bolosModelPreperParaCadastro.setValorQueOBoloRealmenteFoiVendido("CADASTRO");
+                    bolosModelPreperParaCadastro.setVerificaCameraGaleria(verificaGaleriaCamera);
 
                     imagemBoloCadastrado.setVisibility(View.VISIBLE);
                     textoNome.setVisibility(View.VISIBLE);
@@ -418,23 +486,46 @@ public class ConfeccionarBoloFragment extends Fragment {
                     textoRendi.setVisibility(View.VISIBLE);
                     textoRendiAdd.setVisibility(View.VISIBLE);
                     textValorSuge.setVisibility(View.VISIBLE);
-                    textValorSugeAdd.setVisibility(View.VISIBLE);
+
+                    textPorcentagemAdicionadoVendaBolo.setVisibility(View.VISIBLE);
+                    textValorVendaIfoodBolo.setVisibility(View.VISIBLE);
+                    textValorVendaBoleriaBolo.setVisibility(View.VISIBLE);
+
+                    textValorSugeridoVendaIfood.setVisibility(View.VISIBLE);
+                    textoValorDeVendaNaLoja.setVisibility(View.VISIBLE);
+
+
+
+                    textInfoPorcentagemLucro.setVisibility(View.VISIBLE);
+                    textLucroDigitadoPeloUsuarioNoAlert.setVisibility(View.VISIBLE);
+
+                    textPorcentagemAdicionadoPorContaDoIfood.setVisibility(View.VISIBLE);
+                    textInfoPorcentagemAdicionadaPorContaDoIfood.setVisibility(View.VISIBLE);
+
+
+                    textLucroDigitadoPeloUsuarioNoAlert.setText(porct);
+                    textPorcentagemAdicionadoPorContaDoIfood.setText(porctIfood);
+
+                    textValorVendaIfoodBolo.setText(valorSugeridoDeVendaDoIfood);
 
 
                     textoNomeAdd.setText(nomeReceita);
-                    textCustoAdd.setText(custoReceita);
+                    textCustoAdd.setText(valorTotalReceita);
                     textoRendiAdd.setText(quantRendimentoReceita);
-                    textValorSugeAdd.setText(valorSugerido);
+
+                    textValorVendaBoleriaBolo.setText(valorSugerido);
 
 
                     textInfo.setVisibility(View.VISIBLE);
                     editValorVendaBolo.setVisibility(View.VISIBLE);
+                    editValorCadastradoParaVendasNoIfood.setVisibility(View.VISIBLE);
                     botaoSalvarBoloVendas.setVisibility(View.VISIBLE);
+                    botaParaEditarPorcentagensDeLucroEIfood.setVisibility(View.VISIBLE);
 
 
                 } else {
 
-                    Toast.makeText(getActivity(), "É necessário informar a % de lucro", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "É necessário informar a % de lucro e de acrescimo do ifoods", Toast.LENGTH_SHORT).show();
                 }
 
 
@@ -446,6 +537,124 @@ public class ConfeccionarBoloFragment extends Fragment {
             }
         });
 
+        dialog.setView(viewLayout);
+        dialog.create();
+        dialog.show();
+
+    }
+
+    public void carregarAlertPorcent() {
+
+
+        AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
+        View viewLayout = getLayoutInflater().inflate(R.layout.alerta_para_adicionar_porcentagens_do_ifood, null);
+        EditText texNomeBoloCadastrando = viewLayout.findViewById(R.id.edit_alert_nome_bolo_cadastrando_id);
+        EditText texPorcentDig = viewLayout.findViewById(R.id.edit_porcentagem_de_lucro_receita_id);
+        EditText texPorcentagemIfood = viewLayout.findViewById(R.id.edit_porcentagem_de_acrescimo_do_ifood_id);
+
+        dialog.setView(texPorcentDig);
+        dialog.setView(texNomeBoloCadastrando);
+        dialog.setView(texPorcentagemIfood);
+
+        texNomeBoloCadastrando.setText(nomeReceita);
+
+        dialog.setPositiveButton("CONFIRMAR", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                String porct = texPorcentDig.getText().toString();
+                String porctIfood = texPorcentagemIfood.getText().toString();
+
+
+                if (!porct.isEmpty() && !porctIfood.isEmpty()) {
+
+
+                    calcularValorSugerido(valorTotalReceita, porct);
+                    calcularValorSugeridoIfood(valorTotalReceita, porctIfood, porct);
+
+
+                    textoNomeBolo.setVisibility(View.GONE);
+                    textoCustoTotalBolo.setVisibility(View.GONE);
+                    textoQuantRendeFornada.setVisibility(View.GONE);
+                    recyclerViewListaReceitasProntas.setVisibility(View.GONE);
+
+                     bolosModelPreperParaCadastro = new BolosModel();
+
+                    bolosModelPreperParaCadastro.setNomeBoloCadastrado(texNomeBoloCadastrando.getText().toString());
+                    bolosModelPreperParaCadastro.setCustoTotalDaReceitaDoBolo(valorTotalReceita);
+                    bolosModelPreperParaCadastro.setValorCadastradoParaVendasNaBoleria("PREPER");
+                    bolosModelPreperParaCadastro.setValorCadastradoParaVendasNoIfood("PREPER");
+                    bolosModelPreperParaCadastro.setPorcentagemAdicionadoPorContaDoIfood(porctIfood);
+                    bolosModelPreperParaCadastro.setPorcentagemAdicionadoPorContaDoLucro(porct);
+                    bolosModelPreperParaCadastro.setValorSugeridoParaVendasNoIfoodComAcrescimoDaPorcentagem(valorSugeridoDeVendaDoIfood);
+                    bolosModelPreperParaCadastro.setValorSugeridoParaVendasNaBoleriaComAcrescimoDoLucro(valorSugerido);
+                    bolosModelPreperParaCadastro.setEnderecoFoto(enderecoSalvoFoto);
+                    bolosModelPreperParaCadastro.setValorQueOBoloRealmenteFoiVendido("CADASTRO");
+                    bolosModelPreperParaCadastro.setVerificaCameraGaleria(verificaGaleriaCamera);
+
+
+
+
+                    imagemBoloCadastrado.setVisibility(View.VISIBLE);
+                    textoNome.setVisibility(View.VISIBLE);
+                    textoNomeAdd.setVisibility(View.VISIBLE);
+                    textCusto.setVisibility(View.VISIBLE);
+                    textCustoAdd.setVisibility(View.VISIBLE);
+                    textoRendi.setVisibility(View.VISIBLE);
+                    textoRendiAdd.setVisibility(View.VISIBLE);
+                    textValorSuge.setVisibility(View.VISIBLE);
+
+                    textPorcentagemAdicionadoVendaBolo.setVisibility(View.VISIBLE);
+                    textValorVendaIfoodBolo.setVisibility(View.VISIBLE);
+                    textValorVendaBoleriaBolo.setVisibility(View.VISIBLE);
+
+                    textValorSugeridoVendaIfood.setVisibility(View.VISIBLE);
+                    textoValorDeVendaNaLoja.setVisibility(View.VISIBLE);
+
+
+
+                    textInfoPorcentagemLucro.setVisibility(View.VISIBLE);
+                    textLucroDigitadoPeloUsuarioNoAlert.setVisibility(View.VISIBLE);
+
+                    textPorcentagemAdicionadoPorContaDoIfood.setVisibility(View.VISIBLE);
+                    textInfoPorcentagemAdicionadaPorContaDoIfood.setVisibility(View.VISIBLE);
+
+
+                    textLucroDigitadoPeloUsuarioNoAlert.setText(bolosModelPreperParaCadastro.getPorcentagemAdicionadoPorContaDoLucro());
+                    textPorcentagemAdicionadoPorContaDoIfood.setText(bolosModelPreperParaCadastro.getPorcentagemAdicionadoPorContaDoIfood());
+
+                    textValorVendaIfoodBolo.setText(valorSugeridoDeVendaDoIfood);
+
+
+                    textoNomeAdd.setText(bolosModelPreperParaCadastro.getNomeBoloCadastrado());
+                    textCustoAdd.setText(bolosModelPreperParaCadastro.getCustoTotalDaReceitaDoBolo());
+                    textoRendiAdd.setText(quantRendimentoReceita);
+
+                    textValorVendaBoleriaBolo.setText(valorSugerido);
+
+
+                    textInfo.setVisibility(View.VISIBLE);
+                    editValorVendaBolo.setVisibility(View.VISIBLE);
+                    editValorCadastradoParaVendasNoIfood.setVisibility(View.VISIBLE);
+                    botaoSalvarBoloVendas.setVisibility(View.VISIBLE);
+                    botaParaEditarPorcentagensDeLucroEIfood.setVisibility(View.VISIBLE);
+
+
+                } else {
+
+                    Toast.makeText(getActivity(), "É necessário informar a % de lucro e de acrescimo do ifoods", Toast.LENGTH_SHORT).show();
+                }
+
+
+            }
+        }).setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+
+        dialog.setView(viewLayout);
         dialog.create();
         dialog.show();
 
@@ -455,21 +664,41 @@ public class ConfeccionarBoloFragment extends Fragment {
 
         String custoFormatado = custo.replace(",", ".");
         String porncetFormatado = porcDi.replace(",", ".");
+        String quantidadeRendimentoFornada = quantRendimentoReceita;
 
 
         custoConvert = Double.parseDouble(custoFormatado);
         porcentConvert = Double.parseDouble(porncetFormatado);
+        quantidadeQueRendeACadaFornadaConvertido = Integer.parseInt(quantidadeRendimentoFornada);
 
-        resultado = (custoConvert * porcentConvert) / 100 + custoConvert;
+        double dividindoQuantidades = custoConvert /quantidadeQueRendeACadaFornadaConvertido ;
+
+
+        resultado = ((dividindoQuantidades * porcentConvert) / 100) + dividindoQuantidades;
 
         String totalVend = String.valueOf(resultado);
-/*
-        textoNomeBolo.setText(receitaRecuperada.getNomeReceita());
-        textoCustoTotalBolo.setText("Custo total do bolo foi: "+receitaRecuperada.getValorTotalReceita());
-        textoQuantRendeFornada.setText("Essa receita rende: "+ receitaRecuperada.getQuantRendimentoReceita() + " Bolos");*/
-
         valorSugerido = String.format("%.2f", resultado);
 
+    }
+
+    public void calcularValorSugeridoIfood(String custo, String porcDi, String porcentagemDeLucro) {
+
+        String custoFormatado = custo.replace(",", ".");
+        String porncetFormatado = porcDi.replace(",", ".");
+        String porncetLucroFormatado = porcentagemDeLucro.replace(",", ".");
+        String quantidadeRendimentoFornada = quantRendimentoReceita;
+
+        custoIfoodConvert = Double.parseDouble(custoFormatado);
+        porcentIfoodConvert = Double.parseDouble(porncetFormatado);
+        quantidadeQueRendeACadaFornadaConvertido = Integer.parseInt(quantidadeRendimentoFornada);
+        double porcentagemLucroConvertido = Double.parseDouble(porncetLucroFormatado);
+        double dividindoQuantidades = custoIfoodConvert /quantidadeQueRendeACadaFornadaConvertido ;
+
+        double resultadoDoLucroAdicionado = ((dividindoQuantidades * porcentagemLucroConvertido) / 100) + dividindoQuantidades;
+        resultadoIfood = ((dividindoQuantidades * porcentIfoodConvert) / 100) + resultadoDoLucroAdicionado;
+
+        String totalVendIfood = String.valueOf(resultadoIfood);
+        valorSugeridoDeVendaDoIfood = String.format("%.2f", resultadoIfood);
 
     }
 

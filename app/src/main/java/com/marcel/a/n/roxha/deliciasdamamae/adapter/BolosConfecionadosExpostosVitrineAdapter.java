@@ -28,11 +28,13 @@ public class BolosConfecionadosExpostosVitrineAdapter extends FirestoreRecyclerA
 
     @Override
     protected void onBindViewHolder(@NonNull BolosConfeccionadosExpoVitrineViewHolder holder, int position, @NonNull BolosModel model) {
+/*
 
         holder.nomeBoloExpoVitrineAdapter.setText(model.getNomeBolo());
         holder.precoBoloExpoVitrineAdapter.setText(model.getValorVenda());
         holder.quantVendaBoloExpoVitrineAdapter.setText(model.getQuantBoloVenda());
 
+*/
 
     }
 

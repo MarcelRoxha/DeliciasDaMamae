@@ -117,7 +117,7 @@ public class BolosParaVendaFragment extends Fragment {
 
                 if(boloClicado != null){
                     AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-                    alert.setTitle(boloClicado.getNomeBolo());
+                  /*  alert.setTitle(boloClicado.getNomeBolo());*/
                     alert.setMessage("Deseja realmente editar esse item?");
                     alert.setCancelable(false);
 
@@ -126,14 +126,14 @@ public class BolosParaVendaFragment extends Fragment {
                         public void onClick(DialogInterface dialogInterface, int i) {
 
 
-                            String id = documentSnapshot.getId();
+                          /*  String id = documentSnapshot.getId();
                             String nomeBoloClicado = boloClicado.getNomeBolo();
                             String custoBoloClicado = boloClicado.getCustoBolo();
                             String precoBoloClicado = boloClicado.getValorVenda();
                             String enderecoFotoBoloClicado = boloClicado.getEnderecoFoto();
-
+*/
                             Intent intent = new Intent(getActivity(), EditarBoloCadastradoVendaActivity.class);
-                            intent.putExtra("boloKey", id);
+                           // intent.putExtra("boloKey", id);
                            /* intent.putExtra("nomeboloKey", nomeBoloClicado);
                             intent.putExtra("preoboloKey", precoBoloClicado);
                             intent.putExtra("custoboloKey", custoBoloClicado);

@@ -164,6 +164,7 @@ public class AdicionarBoloVitrineActivity2 extends AppCompatActivity {
             @Override
             public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
 
+/*
 
                 BolosModel boloAdd = documentSnapshot.toObject(BolosModel.class);
                 String nomeBoloAdd = boloAdd.getNomeBolo();
@@ -171,12 +172,15 @@ public class AdicionarBoloVitrineActivity2 extends AppCompatActivity {
                 String enderecoFoto = boloAdd.getEnderecoFoto();
                 int verificaFoto = boloAdd.getVerificaCameraGaleria();
                 String custoRecuperado = boloAdd.getCustoBolo();
+*/
 
+/*
 
                 double valorConvert = Double.parseDouble(valorVenda);
 
 
                 carregarAlertDialogQuantBolosAdd(nomeBoloAdd, enderecoFoto, valorConvert, custoRecuperado);
+*/
 
             }
         });

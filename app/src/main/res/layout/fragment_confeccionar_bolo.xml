@@ -71,13 +71,11 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout7"
-            android:layout_width="match_parent"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textView77"
             app:layout_constraintTop_toBottomOf="@+id/textView26">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -95,30 +93,31 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
             android:layout_weight="1"
             android:background="@drawable/btn"
-            android:text="SALVAR RECEITA PRONTA PARA VENDAS"
+            android:text="CADASTRAR BOLO"
             android:textColor="@color/white"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/botao_para_editar_porcentagem_lucro_e_ifood"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayout7" />
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout23" />
 
         <TextView
             android:id="@+id/textView26"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="32dp"
             android:layout_marginEnd="16dp"
             android:text="Confira as informações acima, e se estiverem corretas, informe o valor que será vendido o bolo e depois salve o bolo para vendas futuras "
             android:textColor="@color/rosa"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView23" />
+            app:layout_constraintTop_toBottomOf="@+id/textView89" />
 
         <TextView
             android:id="@+id/textView18"
@@ -138,7 +137,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:text="nome"
+            android:text="@string/nome"
             app:layout_constraintBottom_toBottomOf="@+id/textView18"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -226,6 +225,123 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewValorSugeridoVenda_id"
             app:srcCompat="@drawable/ic_logo" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout23"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="@+id/textInputLayout7"
+            app:layout_constraintStart_toStartOf="@+id/textInputLayout7"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout7">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/input_valor_cadastrado_venda_no_ifood_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Porcentagem adicionada devido ao Ifood"
+                android:inputType="numberDecimal" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/textView77"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Valor de venda na Boleria"
+            android:textColor="@color/rosa"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/textInputLayout7"
+            app:layout_constraintStart_toStartOf="@+id/textView26"
+            app:layout_constraintTop_toTopOf="@+id/textInputLayout7" />
+
+        <TextView
+            android:id="@+id/textView80"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Valor de venda no Ifood"
+            android:textColor="@color/rosa"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/textInputLayout23"
+            app:layout_constraintStart_toStartOf="@+id/textView77"
+            app:layout_constraintTop_toTopOf="@+id/textInputLayout23" />
+
+        <TextView
+            android:id="@+id/textView85"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Porcentagem de Lucro da Receita"
+            android:textColor="@color/rosa"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/textView23"
+            app:layout_constraintTop_toBottomOf="@+id/textView23" />
+
+        <TextView
+            android:id="@+id/texto_porcentagem_lucro_bolo_cadastrando"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="TextView"
+            app:layout_constraintBottom_toBottomOf="@+id/textView85"
+            app:layout_constraintStart_toEndOf="@+id/textView85"
+            app:layout_constraintTop_toTopOf="@+id/textView85" />
+
+        <TextView
+            android:id="@+id/textView87"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Porcentagem Adicionado do Ifood"
+            android:textColor="@color/rosa"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/textView85"
+            app:layout_constraintTop_toBottomOf="@+id/textView85" />
+
+        <TextView
+            android:id="@+id/texto_porcentagem_adicionado_ifood"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="TextView"
+            app:layout_constraintStart_toEndOf="@+id/textView87"
+            app:layout_constraintTop_toTopOf="@+id/textView87" />
+
+        <TextView
+            android:id="@+id/textView89"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Valor sugerido para venda no ifood R$"
+            android:textColor="@color/rosa"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/textView87"
+            app:layout_constraintTop_toBottomOf="@+id/textView87" />
+
+        <TextView
+            android:id="@+id/texto_valor_sugerido_venda_porcentagem_ifood"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="TextView"
+            app:layout_constraintStart_toEndOf="@+id/textView89"
+            app:layout_constraintTop_toTopOf="@+id/textView89" />
+
+        <Button
+            android:id="@+id/botao_para_editar_porcentagem_lucro_e_ifood"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/btn"
+            android:text="EDITAR PORCENTAGENS"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/botao_salvar_receita_venda_id"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout23" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

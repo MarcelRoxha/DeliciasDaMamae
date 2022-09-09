@@ -31,13 +31,13 @@ public class BolosCadastradosVendaAddVitrineAdapter extends FirestoreRecyclerAda
     @Override
     protected void onBindViewHolder(@NonNull BolosCadastradosVendaAddVitrineViewHolder holder, int position, @NonNull BolosModel model) {
 
-        holder.textoNome.setText(model.getNomeBolo());
+      /*  holder.textoNome.setText(model.getNomeBolo());
         holder.textoPreco.setText(model.getValorVenda());
         holder.textoCusto.setText(model.getCustoBolo());
 
            Glide.with(context).load(model.getEnderecoFoto()).into(holder.imageViewBoloCadastradoVendaAddVitrine);
 
-
+*/
 
     }
 
