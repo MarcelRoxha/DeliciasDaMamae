@@ -17,6 +17,7 @@ import java.util.Map;
 public class BolosModel implements Serializable {
 
     private String idBoloCadastrado;
+    private String idReferenciaReceitaCadastrada;
     private String nomeBoloCadastrado;
     private String custoTotalDaReceitaDoBolo;
     private String valorCadastradoParaVendasNaBoleria;
@@ -39,6 +40,13 @@ public class BolosModel implements Serializable {
 
     public void setIdBoloCadastrado(String idBoloCadastrado) {
         this.idBoloCadastrado = idBoloCadastrado;
+    }
+    public String getIdReferenciaReceitaCadastrada() {
+        return idReferenciaReceitaCadastrada;
+    }
+
+    public void setIdReferenciaReceitaCadastrada(String idReferenciaReceitaCadastrada) {
+        this.idReferenciaReceitaCadastrada = idReferenciaReceitaCadastrada;
     }
 
     public String getNomeBoloCadastrado() {
@@ -130,5 +138,24 @@ public class BolosModel implements Serializable {
 
     public void setVerificaCameraGaleria(int verificaCameraGaleria) {
         this.verificaCameraGaleria = verificaCameraGaleria;
+    }
+
+    @Override
+    public String toString() {
+        return "BolosModel{" +
+                "idBoloCadastrado='" + idBoloCadastrado + '\'' +
+                ", idReferenciaReceitaCadastrada='" + idReferenciaReceitaCadastrada + '\'' +
+                ", nomeBoloCadastrado='" + nomeBoloCadastrado + '\'' +
+                ", custoTotalDaReceitaDoBolo='" + custoTotalDaReceitaDoBolo + '\'' +
+                ", valorCadastradoParaVendasNaBoleria='" + valorCadastradoParaVendasNaBoleria + '\'' +
+                ", valorCadastradoParaVendasNoIfood='" + valorCadastradoParaVendasNoIfood + '\'' +
+                ", porcentagemAdicionadoPorContaDoIfood='" + porcentagemAdicionadoPorContaDoIfood + '\'' +
+                ", porcentagemAdicionadoPorContaDoLucro='" + porcentagemAdicionadoPorContaDoLucro + '\'' +
+                ", valorSugeridoParaVendasNoIfoodComAcrescimoDaPorcentagem='" + valorSugeridoParaVendasNoIfoodComAcrescimoDaPorcentagem + '\'' +
+                ", valorSugeridoParaVendasNaBoleriaComAcrescimoDoLucro='" + valorSugeridoParaVendasNaBoleriaComAcrescimoDoLucro + '\'' +
+                ", enderecoFoto='" + enderecoFoto + '\'' +
+                ", valorQueOBoloRealmenteFoiVendido='" + valorQueOBoloRealmenteFoiVendido + '\'' +
+                ", verificaCameraGaleria=" + verificaCameraGaleria +
+                '}';
     }
 }

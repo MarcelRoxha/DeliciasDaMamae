@@ -40,6 +40,7 @@ public class ModeloBoloCadastradoParaVendaDAO implements InterfaceModeloBoloCada
                 Map<String, Object> boloCadastrando = new HashMap<>();
                 boloCadastrando.put("idBoloCadastrado","N/D");
                 boloCadastrando.put("nomeBoloCadastrado", bolosModel.getNomeBoloCadastrado());
+                boloCadastrando.put("idReferenciaReceitaCadastrada", bolosModel.getIdReferenciaReceitaCadastrada());
                 boloCadastrando.put("custoTotalDaReceitaDoBolo", bolosModel.getCustoTotalDaReceitaDoBolo());
                 boloCadastrando.put("valorCadastradoParaVendasNaBoleria", bolosModel.getValorCadastradoParaVendasNaBoleria());
                 boloCadastrando.put("valorCadastradoParaVendasNoIfood", bolosModel.getValorCadastradoParaVendasNoIfood());
@@ -58,6 +59,7 @@ public class ModeloBoloCadastradoParaVendaDAO implements InterfaceModeloBoloCada
                         BolosModel bolosModelAtualizarId = new BolosModel();
 
                         bolosModelAtualizarId.setIdBoloCadastrado(documentReference.getId());
+                        bolosModelAtualizarId.setIdReferenciaReceitaCadastrada(bolosModel.getIdReferenciaReceitaCadastrada());
                         bolosModelAtualizarId.setNomeBoloCadastrado(bolosModel.getNomeBoloCadastrado());
                         bolosModelAtualizarId.setCustoTotalDaReceitaDoBolo(bolosModel.getCustoTotalDaReceitaDoBolo());
                         bolosModelAtualizarId.setValorCadastradoParaVendasNaBoleria(bolosModel.getValorCadastradoParaVendasNaBoleria());
@@ -106,6 +108,7 @@ public class ModeloBoloCadastradoParaVendaDAO implements InterfaceModeloBoloCada
             Map<String, Object> boloComIdAtualizado = new HashMap<>();
             boloComIdAtualizado.put("idBoloCadastrado",boloParaAtualizarOId.getIdBoloCadastrado());
             boloComIdAtualizado.put("nomeBoloCadastrado", boloParaAtualizarOId.getNomeBoloCadastrado());
+            boloComIdAtualizado.put("idReferenciaReceitaCadastrada", boloParaAtualizarOId.getIdReferenciaReceitaCadastrada());
             boloComIdAtualizado.put("custoTotalDaReceitaDoBolo", boloParaAtualizarOId.getCustoTotalDaReceitaDoBolo());
             boloComIdAtualizado.put("valorCadastradoParaVendasNaBoleria", boloParaAtualizarOId.getValorCadastradoParaVendasNaBoleria());
             boloComIdAtualizado.put("valorCadastradoParaVendasNoIfood", boloParaAtualizarOId.getValorCadastradoParaVendasNoIfood());

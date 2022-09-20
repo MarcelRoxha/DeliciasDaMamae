@@ -157,7 +157,9 @@ public class ConfeccionarBoloFragment extends Fragment {
     private String valorSugeridoDeVendaDoIfood;
     private String valorDeVendaComAPorcentagemdoIfoodAdicionado;
     private String porcentagemAdicionadoPorContaDoIfood;
+    private String idReferenciaReceitaCadastrada;
     private String nomeReceita;
+    private String nomeParaCadastroParaVendas;
     private String valorTotalReceita;
     private String quantRendimentoReceita;
     private String currentImagePath = null;
@@ -289,20 +291,13 @@ public class ConfeccionarBoloFragment extends Fragment {
                     Toast.makeText(getActivity(), "Favor insira o valor que será vendido o bolo na boleria e no ifood e tente novamente", Toast.LENGTH_SHORT).show();
                 } else {
 
-                    String nome;
-                    String custo;
-                    String quant;
-
-
-                    nome = receitaRecuperada.getNomeReceita();
-                    custo = receitaRecuperada.getValorTotalReceita();
-                    quant = receitaRecuperada.getQuantRendimentoReceita();
 
 
                     boloCadastroFinaliza = new BolosModel();
                     modeloBoloCadastradoParaVendaDAO = new ModeloBoloCadastradoParaVendaDAO(getActivity());
 
                     boloCadastroFinaliza.setNomeBoloCadastrado(bolosModelPreperParaCadastro.getNomeBoloCadastrado());
+                    boloCadastroFinaliza.setIdReferenciaReceitaCadastrada(bolosModelPreperParaCadastro.getIdReferenciaReceitaCadastrada());
                     boloCadastroFinaliza.setCustoTotalDaReceitaDoBolo(bolosModelPreperParaCadastro.getCustoTotalDaReceitaDoBolo());
                     boloCadastroFinaliza.setValorCadastradoParaVendasNaBoleria(valorDigitado);
                     boloCadastroFinaliza.setValorCadastradoParaVendasNoIfood(valorDigitadoIfood);
@@ -313,8 +308,8 @@ public class ConfeccionarBoloFragment extends Fragment {
                     boloCadastroFinaliza.setEnderecoFoto(bolosModelPreperParaCadastro.getEnderecoFoto());
                     boloCadastroFinaliza.setValorQueOBoloRealmenteFoiVendido(bolosModelPreperParaCadastro.getValorQueOBoloRealmenteFoiVendido());
                     boloCadastroFinaliza.setVerificaCameraGaleria(bolosModelPreperParaCadastro.getVerificaCameraGaleria());
-
-
+                    System.out.println("---------------CLICOU NO SALVAR BOLO-------------------- \n " + boloCadastroFinaliza.toString());
+                    System.out.println("---------------CLICOU NO SALVAR BOLO BOLO PREPER-------------------- \n " + bolosModelPreperParaCadastro.toString());
 
                     modeloBoloCadastradoParaVendaDAO.cadastrarBoloParaVenda(boloCadastroFinaliza);
 
@@ -364,7 +359,7 @@ public class ConfeccionarBoloFragment extends Fragment {
 
                 assert receitaSelecionada != null;
 
-
+                idReferenciaReceitaCadastrada = receitaSelecionada.getIdReceita();
                 nomeReceita = receitaSelecionada.getNomeReceita();
                 valorTotalReceita = receitaSelecionada.getValorTotalReceita();
                 quantRendimentoReceita = receitaSelecionada.getQuantRendimentoReceita();
@@ -372,7 +367,7 @@ public class ConfeccionarBoloFragment extends Fragment {
                 receitaRecuperada.setNomeReceita(nomeReceita);
                 receitaRecuperada.setValorTotalReceita(valorTotalReceita);
                 receitaRecuperada.setQuantRendimentoReceita(quantRendimentoReceita);
-
+                System.out.println("cliquei na receita -------------------------------------------- \n idRecuperado: " + idReferenciaReceitaCadastrada + "\n nome recuperado: " + nomeReceita);
                 carregarAlertFoto();
 
             }
@@ -452,13 +447,13 @@ public class ConfeccionarBoloFragment extends Fragment {
                 String porctIfood = texPorcentagemIfood.getText().toString();
 
 
-                if (!porct.isEmpty() && !porctIfood.isEmpty()) {
+                if (!porct.isEmpty() && !porctIfood.isEmpty() && !texNomeBoloCadastrando.getText().toString().isEmpty() ) {
 
 
                     calcularValorSugerido(valorTotalReceita, porct);
                     calcularValorSugeridoIfood(valorTotalReceita, porctIfood, porct);
 
-
+                    nomeParaCadastroParaVendas = texNomeBoloCadastrando.getText().toString();
                     textoNomeBolo.setVisibility(View.GONE);
                     textoCustoTotalBolo.setVisibility(View.GONE);
                     textoQuantRendeFornada.setVisibility(View.GONE);
@@ -466,12 +461,13 @@ public class ConfeccionarBoloFragment extends Fragment {
 
                     bolosModelPreperParaCadastro = new BolosModel();
 
-                    bolosModelPreperParaCadastro.setNomeBoloCadastrado(texNomeBoloCadastrando.getText().toString());
+                    bolosModelPreperParaCadastro.setNomeBoloCadastrado(nomeParaCadastroParaVendas);
+                    bolosModelPreperParaCadastro.setIdReferenciaReceitaCadastrada(idReferenciaReceitaCadastrada);
                     bolosModelPreperParaCadastro.setCustoTotalDaReceitaDoBolo(valorTotalReceita);
                     bolosModelPreperParaCadastro.setValorCadastradoParaVendasNaBoleria("PREPER");
                     bolosModelPreperParaCadastro.setValorCadastradoParaVendasNoIfood("PREPER");
-                    bolosModelPreperParaCadastro.setPorcentagemAdicionadoPorContaDoIfood(porctIfood);
-                    bolosModelPreperParaCadastro.setPorcentagemAdicionadoPorContaDoLucro(porct);
+                    bolosModelPreperParaCadastro.setPorcentagemAdicionadoPorContaDoIfood(texPorcentagemIfood.getText().toString());
+                    bolosModelPreperParaCadastro.setPorcentagemAdicionadoPorContaDoLucro(texPorcentDig.getText().toString());
                     bolosModelPreperParaCadastro.setValorSugeridoParaVendasNoIfoodComAcrescimoDaPorcentagem(valorSugeridoDeVendaDoIfood);
                     bolosModelPreperParaCadastro.setValorSugeridoParaVendasNaBoleriaComAcrescimoDoLucro(valorSugerido);
                     bolosModelPreperParaCadastro.setEnderecoFoto(enderecoSalvoFoto);
@@ -503,8 +499,8 @@ public class ConfeccionarBoloFragment extends Fragment {
                     textInfoPorcentagemAdicionadaPorContaDoIfood.setVisibility(View.VISIBLE);
 
 
-                    textLucroDigitadoPeloUsuarioNoAlert.setText(porct);
-                    textPorcentagemAdicionadoPorContaDoIfood.setText(porctIfood);
+                    textLucroDigitadoPeloUsuarioNoAlert.setText(texPorcentDig.getText().toString());
+                    textPorcentagemAdicionadoPorContaDoIfood.setText(texPorcentagemIfood.getText().toString());
 
                     textValorVendaIfoodBolo.setText(valorSugeridoDeVendaDoIfood);
 
@@ -521,7 +517,7 @@ public class ConfeccionarBoloFragment extends Fragment {
                     editValorCadastradoParaVendasNoIfood.setVisibility(View.VISIBLE);
                     botaoSalvarBoloVendas.setVisibility(View.VISIBLE);
                     botaParaEditarPorcentagensDeLucroEIfood.setVisibility(View.VISIBLE);
-
+        System.out.println("----------------PASSOU PELO EDITAR CADASTRO RECUPERADO--------------------- \n " + bolosModelPreperParaCadastro.toString());
 
                 } else {
 
@@ -545,6 +541,7 @@ public class ConfeccionarBoloFragment extends Fragment {
 
     public void carregarAlertPorcent() {
 
+        System.out.println("---------------ALERT PORCENTAGEM--------------------");
 
         AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
         View viewLayout = getLayoutInflater().inflate(R.layout.alerta_para_adicionar_porcentagens_do_ifood, null);
@@ -567,20 +564,21 @@ public class ConfeccionarBoloFragment extends Fragment {
 
 
                 if (!porct.isEmpty() && !porctIfood.isEmpty()) {
-
+                    System.out.println("---------------DENTRO DO IF QUANDO NÃO TEM PORCENTAGEM VAZIA--------------------");
 
                     calcularValorSugerido(valorTotalReceita, porct);
                     calcularValorSugeridoIfood(valorTotalReceita, porctIfood, porct);
-
+                    nomeParaCadastroParaVendas = texNomeBoloCadastrando.getText().toString();
 
                     textoNomeBolo.setVisibility(View.GONE);
                     textoCustoTotalBolo.setVisibility(View.GONE);
                     textoQuantRendeFornada.setVisibility(View.GONE);
                     recyclerViewListaReceitasProntas.setVisibility(View.GONE);
 
-                     bolosModelPreperParaCadastro = new BolosModel();
+                    bolosModelPreperParaCadastro = new BolosModel();
 
-                    bolosModelPreperParaCadastro.setNomeBoloCadastrado(texNomeBoloCadastrando.getText().toString());
+                    bolosModelPreperParaCadastro.setNomeBoloCadastrado(nomeParaCadastroParaVendas);
+                    bolosModelPreperParaCadastro.setIdReferenciaReceitaCadastrada(idReferenciaReceitaCadastrada);
                     bolosModelPreperParaCadastro.setCustoTotalDaReceitaDoBolo(valorTotalReceita);
                     bolosModelPreperParaCadastro.setValorCadastradoParaVendasNaBoleria("PREPER");
                     bolosModelPreperParaCadastro.setValorCadastradoParaVendasNoIfood("PREPER");
@@ -592,7 +590,7 @@ public class ConfeccionarBoloFragment extends Fragment {
                     bolosModelPreperParaCadastro.setValorQueOBoloRealmenteFoiVendido("CADASTRO");
                     bolosModelPreperParaCadastro.setVerificaCameraGaleria(verificaGaleriaCamera);
 
-
+                    System.out.println("---------------BOLO MODELO PREPARANDO-------------------- \n " + bolosModelPreperParaCadastro.toString());
 
 
                     imagemBoloCadastrado.setVisibility(View.VISIBLE);
