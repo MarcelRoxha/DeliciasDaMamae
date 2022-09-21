@@ -49,6 +49,7 @@
     <string name="botao_tela_nova_receita">NOVA RECEITA</string>
     <string name="botao_tela_receitas_feitas">RECEITAS FEITAS</string>
     <string name="edit_nome_receita">Digite o nome da receita:</string>
+    <string name="texto_editar_nome_cadastrado_para_vendas">NOME DO PRODUTO CADASTRADO:</string>
     <string name="botao_salvar_nome_receita">SALVAR NOME RECEITA</string>
     <string name="textViewInfoAddIngredienteReceita">Ingredientes em estoque: </string>
     <string name="textViewInfoIngredientesAdicionadosReceita">INGREDIENTES ADICIONADOS: </string>
@@ -86,6 +87,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="text_digite_valor_venda">Digite o valor de venda desse bolo</string>
+    <string name="texto_cadastrado_vendas_boleria">VALOR CADASTRADO PARA VENDAS NA BOLERIA R$:</string>
     <string name="texto_data_caixa">DATA:</string>
     <string name="texto_botao_iniciar_caixa">INICIAR DIA</string>
     <string name="texto_botao_encerrar_dia">ENCERRAR DIA</string>
@@ -120,7 +122,7 @@
     <string name="imagem_bolo_cadastrado_venda_add_vitrine_adapter">image_adapter</string>
     <string name="texto_nome_bolo_cadastrado_venda_add_vitrine">NOME:</string>
     <string name="texto_valor_venda_bolo_cadastrado_venda_add_vitrine">Valor venda R$:</string>
-    <string name="texto_custo_bolo_cadastrado_venda_add_vitrine">Custo:</string>
+    <string name="texto_custo_bolo_cadastrado_venda_add_vitrine">CUSTO TOTAL DA RECEITA R$:</string>
     <string name="texto_botao_trocar_foto_bolo_cadastrado_venda">TROCAR FOTO</string>
     <string name="texto_botao_atualizar_bolo_cadastrado_venda">Pronto, já fiz as atualizações necessárias!</string>
     <string name="texto_botao_excluir_bolo_cadastrado_venda">Excluir bolo cadastrado para venda, Permanente</string>

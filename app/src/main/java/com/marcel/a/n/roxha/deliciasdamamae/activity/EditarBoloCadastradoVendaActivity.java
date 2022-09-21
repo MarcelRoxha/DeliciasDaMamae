@@ -25,6 +25,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -58,9 +59,19 @@ public class EditarBoloCadastradoVendaActivity extends AppCompatActivity {
     // Componentes de tela
     private ImageView imagem_bolo_cadastrado_venda;
     private TextInputEditText edit_nome_bolo_cadastrado_venda;
-    private TextInputEditText edit_valor_venda_bolo_cadastrado_venda;
-    private TextInputEditText edit_custo_bolo_cadastrado_venda;
+    private TextInputEditText edit_valor_venda_bolo_cadastrado_venda_boleria;
+    private TextInputEditText edit_valor_venda_bolo_cadastrado_venda_ifood;
+
+
+    private TextView edit_custo_bolo_cadastrado_venda;
+    private TextView edit_porcentagem_cadastrada_lucro;
+    private TextView edit_porcentagem_cadastrada_do_ifood;
+    private TextView edit_valor_sugerido_venda_boleria;
+    private TextView edit_valor_sugerido_venda_ifood;
+
+
     private Button botao_atualizar_bolo_cadastrado_venda;
+    private Button botao_editar_porcentagens;
     private Button botao_excluir_bolo_cadastrado_venda;
     private Button botao_trocar_foto_bolo_cadastrado;
     private Uri imageUri;
@@ -68,7 +79,8 @@ public class EditarBoloCadastradoVendaActivity extends AppCompatActivity {
     //Banco de dados
 
     private FirebaseFirestore firebaseFirestore = ConfiguracaoFirebase.getFirestor();
-    private CollectionReference referenceBoloCadastrado = firebaseFirestore.collection("Bolos_Cadastrados_venda");
+    private final String COLLECTION_PRODUTOS_CADASTRADOS_PARA_ADICIONAR_PARA_VENDA = "BOLOS_CADASTRADOS_PARA_ADICIONAR_PARA_VENDA";
+    private CollectionReference referenciaProdutoCadastradoParaVendas = firebaseFirestore.collection(COLLECTION_PRODUTOS_CADASTRADOS_PARA_ADICIONAR_PARA_VENDA);
 
     //Final
 
@@ -82,9 +94,14 @@ public class EditarBoloCadastradoVendaActivity extends AppCompatActivity {
     private String currentPatch = null;
     private String enderecoSalvoFoto;
     private String fileName;
-    private String nomeBolo;
-    private String precoBolo;
-    private String custoBolo;
+    private String nomeCadastradoRecuperado;
+    private String valorVendaBoleriaCadastradoRecuperado;
+    private String custoTotalReceitaCadastradaRecuperado;
+    private String valorVendaIfoodCadastradoRecuperado;
+    private String porcentagemDeLucroCadastrado;
+    private String porcentagemPorContaDoIfood;
+    private String valorSugeridoParaVendasNaBoleria;
+    private String valorSugeridoParaVendasNoIfood;
     private String boloId;
     private int verificaGaleriaCamera;
 
@@ -104,25 +121,40 @@ public class EditarBoloCadastradoVendaActivity extends AppCompatActivity {
 
 
         imagem_bolo_cadastrado_venda = findViewById(R.id.foto_editar_bolo_cadastrado_venda_id);
+
+
         edit_nome_bolo_cadastrado_venda = findViewById(R.id.edit_nome_bolo_cadastrado_venda_id);
-        edit_valor_venda_bolo_cadastrado_venda = findViewById(R.id.edit_valor_venda_bolo_cadastrado_venda_id);
-        edit_custo_bolo_cadastrado_venda = findViewById(R.id.edit_custo_bolo_cadastrado_venda_id);
+        edit_valor_venda_bolo_cadastrado_venda_boleria = findViewById(R.id.edit_valor_venda_bolo_cadastrado_venda_id);
+        edit_valor_venda_bolo_cadastrado_venda_ifood = findViewById(R.id.edit_valor_venda_cadastrado_para_vendas_no_ifood_editando_id);
+
+
+        edit_custo_bolo_cadastrado_venda = findViewById(R.id.texto_custo_total_receita_cadastrado_do_produto_editando_id);
+        edit_porcentagem_cadastrada_lucro = findViewById(R.id.texto_porcentagem_cadastrada_de_lucro);
+        edit_porcentagem_cadastrada_do_ifood = findViewById(R.id.texto_porcentagem_cadastrada_do_ifood);
+        edit_valor_sugerido_venda_boleria = findViewById(R.id.texto_valor_sugerido_com_lucro);
+        edit_valor_sugerido_venda_ifood = findViewById(R.id.texto_valor_sugerido_com_porcentagem_ifood);
+
+
+        botao_editar_porcentagens = findViewById(R.id.botao_editar_porcentagens);
         botao_atualizar_bolo_cadastrado_venda = findViewById(R.id.botao_atualizar_bolo_cadastrado_venda_id);
         botao_excluir_bolo_cadastrado_venda = findViewById(R.id.botao_excluir_bolo_cadastrado_venda_id);
         botao_trocar_foto_bolo_cadastrado = findViewById(R.id.botao_trocar_foto_bolo_cadastrado_venda_id);
 
 
-        referenceBoloCadastrado.document(boloId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        referenciaProdutoCadastradoParaVendas.document(boloId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-/*
 
-                BolosModel bolosModel = documentSnapshot.toObject(BolosModel.class);
-                nomeBolo = bolosModel.getNomeBolo();
-                precoBolo = bolosModel.getValorVenda();
-                custoBolo = bolosModel.getCustoBolo();
-                enderecoSalvoFoto = bolosModel.getEnderecoFoto();
-*/
+                BolosModel bolosModelRecuperado = documentSnapshot.toObject(BolosModel.class);
+                nomeCadastradoRecuperado = bolosModelRecuperado.getNomeBoloCadastrado() ;
+                valorVendaBoleriaCadastradoRecuperado= bolosModelRecuperado.getValorCadastradoParaVendasNaBoleria() ;
+                custoTotalReceitaCadastradaRecuperado= bolosModelRecuperado.getCustoTotalDaReceitaDoBolo() ;
+                valorVendaIfoodCadastradoRecuperado= bolosModelRecuperado.getValorCadastradoParaVendasNoIfood() ;
+                porcentagemDeLucroCadastrado= bolosModelRecuperado.getPorcentagemAdicionadoPorContaDoLucro() ;
+                porcentagemPorContaDoIfood= bolosModelRecuperado.getPorcentagemAdicionadoPorContaDoIfood() ;
+                valorSugeridoParaVendasNaBoleria= bolosModelRecuperado.getValorSugeridoParaVendasNaBoleriaComAcrescimoDoLucro() ;
+                valorSugeridoParaVendasNoIfood= bolosModelRecuperado.getValorSugeridoParaVendasNoIfoodComAcrescimoDaPorcentagem() ;
+                enderecoSalvoFoto = bolosModelRecuperado.getEnderecoFoto();
 
 
                     Glide.with(getApplicationContext()).load(enderecoSalvoFoto).into(imagem_bolo_cadastrado_venda);
@@ -130,9 +162,15 @@ public class EditarBoloCadastradoVendaActivity extends AppCompatActivity {
 
 
 
-                edit_nome_bolo_cadastrado_venda.setText(nomeBolo);
-                edit_valor_venda_bolo_cadastrado_venda.setText(precoBolo);
-                edit_custo_bolo_cadastrado_venda.setText(custoBolo);
+                edit_nome_bolo_cadastrado_venda.setText(nomeCadastradoRecuperado);
+                edit_valor_venda_bolo_cadastrado_venda_boleria.setText(valorVendaBoleriaCadastradoRecuperado);
+                edit_valor_venda_bolo_cadastrado_venda_ifood.setText(valorVendaIfoodCadastradoRecuperado);
+                edit_porcentagem_cadastrada_lucro.setText(porcentagemDeLucroCadastrado + " %");
+                edit_porcentagem_cadastrada_do_ifood.setText(porcentagemPorContaDoIfood  + " %");
+                edit_valor_sugerido_venda_boleria.setText(valorSugeridoParaVendasNaBoleria);
+                edit_valor_sugerido_venda_ifood.setText(valorSugeridoParaVendasNoIfood);
+                edit_custo_bolo_cadastrado_venda.setText(custoTotalReceitaCadastradaRecuperado);
+
 
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -181,7 +219,7 @@ public class EditarBoloCadastradoVendaActivity extends AppCompatActivity {
 
         AlertDialog.Builder alertaDeletar = new AlertDialog.Builder(EditarBoloCadastradoVendaActivity.this);
         alertaDeletar.setTitle("ATENÇÃO");
-        alertaDeletar.setMessage("Você está prestes a excluir o, " + nomeBolo + ", permanentemente. Deseja continuar?");
+        alertaDeletar.setMessage("Você está prestes a excluir o, " + nomeCadastradoRecuperado + ", permanentemente. Deseja continuar?");
         alertaDeletar.setPositiveButton("SIM", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -200,7 +238,7 @@ public class EditarBoloCadastradoVendaActivity extends AppCompatActivity {
                         if (!chaveDigitada.isEmpty() && chaveDigitada.contains(CHAVE_SEGURANCA)) {
 
 
-                            referenceBoloCadastrado.document(boloId).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            referenciaProdutoCadastradoParaVendas.document(boloId).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     Toast.makeText(EditarBoloCadastradoVendaActivity.this, "Exclusão feita", Toast.LENGTH_SHORT).show();
@@ -246,10 +284,10 @@ public class EditarBoloCadastradoVendaActivity extends AppCompatActivity {
     private void atualizarBolo() {
 
         String nomeAtualiza = edit_nome_bolo_cadastrado_venda.getText().toString();
-        String precoAtualiza = edit_valor_venda_bolo_cadastrado_venda.getText().toString();
+        String precoAtualiza = edit_valor_venda_bolo_cadastrado_venda_boleria.getText().toString();
         String custoAtualiza = edit_custo_bolo_cadastrado_venda.getText().toString();
 
-        if (edit_valor_venda_bolo_cadastrado_venda.getText().toString().isEmpty() && edit_valor_venda_bolo_cadastrado_venda.getText().toString().isEmpty()
+        if (edit_valor_venda_bolo_cadastrado_venda_boleria.getText().toString().isEmpty() && edit_valor_venda_bolo_cadastrado_venda_boleria.getText().toString().isEmpty()
                 && edit_custo_bolo_cadastrado_venda.getText().toString().isEmpty()) {
 
             AlertDialog.Builder alerta = new AlertDialog.Builder(getApplicationContext());
@@ -355,7 +393,7 @@ public class EditarBoloCadastradoVendaActivity extends AppCompatActivity {
 
         if (verificaGaleriaCamera == 1) {
 
-            StorageReference reference = FirebaseStorage.getInstance().getReference().child("fotosSalvas").child(fileName + "_" + nomeBolo + ".jpeg");
+            StorageReference reference = FirebaseStorage.getInstance().getReference().child("fotosSalvas").child(fileName + "_" + nomeCadastradoRecuperado + ".jpeg");
             UploadTask uploadTask = reference.putBytes(image);
             uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
@@ -393,7 +431,7 @@ public class EditarBoloCadastradoVendaActivity extends AppCompatActivity {
 
             if (imageUri != null) {
 
-                StorageReference reference = FirebaseStorage.getInstance().getReference().child("fotosSalvas").child(fileName + "_" + nomeBolo + ".jpeg");
+                StorageReference reference = FirebaseStorage.getInstance().getReference().child("fotosSalvas").child(fileName + "_" + nomeCadastradoRecuperado + ".jpeg");
 
                 reference.putFile(imageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                     @Override

@@ -436,8 +436,10 @@ public class ConfeccionarBoloFragment extends Fragment {
         dialog.setView(texPorcentDig);
         dialog.setView(texNomeBoloCadastrando);
         dialog.setView(texPorcentagemIfood);
+        String nomeTemporario = nomeParaCadastroParaVendas;
+        texNomeBoloCadastrando.setText("");
+        texNomeBoloCadastrando.setText(nomeTemporario);
 
-        texNomeBoloCadastrando.setText(bolosModelPreperParaCadastro.getNomeBoloCadastrado());
 
         dialog.setPositiveButton("CONFIRMAR", new DialogInterface.OnClickListener() {
             @Override
@@ -474,6 +476,8 @@ public class ConfeccionarBoloFragment extends Fragment {
                     bolosModelPreperParaCadastro.setValorQueOBoloRealmenteFoiVendido("CADASTRO");
                     bolosModelPreperParaCadastro.setVerificaCameraGaleria(verificaGaleriaCamera);
 
+                    System.out.println("-------------------------VALOR RECUPERADO DA CAIXA DE TEXTO------------------------- : \n" + texNomeBoloCadastrando.getText().toString());
+
                     imagemBoloCadastrado.setVisibility(View.VISIBLE);
                     textoNome.setVisibility(View.VISIBLE);
                     textoNomeAdd.setVisibility(View.VISIBLE);
@@ -505,7 +509,7 @@ public class ConfeccionarBoloFragment extends Fragment {
                     textValorVendaIfoodBolo.setText(valorSugeridoDeVendaDoIfood);
 
 
-                    textoNomeAdd.setText(nomeReceita);
+                    textoNomeAdd.setText(nomeParaCadastroParaVendas);
                     textCustoAdd.setText(valorTotalReceita);
                     textoRendiAdd.setText(quantRendimentoReceita);
 
