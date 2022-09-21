@@ -118,7 +118,7 @@ public class BolosParaVendaFragment extends Fragment {
                 if(boloClicado != null){
                     AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
                   /*  alert.setTitle(boloClicado.getNomeBolo());*/
-                    alert.setMessage("Deseja realmente editar esse item?");
+                    alert.setMessage("Deseja realmente fazer alguma ação com esse item?");
                     alert.setCancelable(false);
 
                     alert.setPositiveButton("SIM", new DialogInterface.OnClickListener() {
