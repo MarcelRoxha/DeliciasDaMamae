@@ -77,7 +77,8 @@ public class BolosParaVendaFragment extends Fragment {
 
     private RecyclerView recyclerViewListBolosConfeccionados;
     private FirebaseFirestore db = ConfiguracaoFirebase.getFirestor();
-    private CollectionReference reference = db.collection("Bolos_Cadastrados_venda");
+    private final String COLLECTION_PRODUTOS_CADASTRADOS_PARA_ADICIONAR_PARA_VENDA = "BOLOS_CADASTRADOS_PARA_ADICIONAR_PARA_VENDA";
+    private CollectionReference reference = db.collection(COLLECTION_PRODUTOS_CADASTRADOS_PARA_ADICIONAR_PARA_VENDA);
 
     private BolosConfecionadosAdapter adapter;
 
@@ -97,14 +98,14 @@ public class BolosParaVendaFragment extends Fragment {
 
     public void carregarListaBolosConfecionados(){
 
-        Query query = reference.orderBy("nomeBolo", Query.Direction.ASCENDING);
+        Query query = reference.orderBy("nomeBoloCadastrado", Query.Direction.ASCENDING);
 
 
         FirestoreRecyclerOptions<BolosModel> options = new FirestoreRecyclerOptions.Builder<BolosModel>()
                 .setQuery(query, BolosModel.class)
                 .build();
 
-        adapter = new BolosConfecionadosAdapter(options);
+        adapter = new BolosConfecionadosAdapter(options, getContext());
         recyclerViewListBolosConfeccionados.setHasFixedSize(true);
         recyclerViewListBolosConfeccionados.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerViewListBolosConfeccionados.setAdapter(adapter);
