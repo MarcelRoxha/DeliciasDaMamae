@@ -697,7 +697,7 @@ public class ConfeccionarBoloFragment extends Fragment {
         double dividindoQuantidades = custoIfoodConvert /quantidadeQueRendeACadaFornadaConvertido ;
 
         double resultadoDoLucroAdicionado = ((dividindoQuantidades * porcentagemLucroConvertido) / 100) + dividindoQuantidades;
-        resultadoIfood = ((dividindoQuantidades * porcentIfoodConvert) / 100) + resultadoDoLucroAdicionado;
+        resultadoIfood = ((resultadoDoLucroAdicionado * porcentIfoodConvert) / 100) + resultadoDoLucroAdicionado;
 
         String totalVendIfood = String.valueOf(resultadoIfood);
         valorSugeridoDeVendaDoIfood = String.format("%.2f", resultadoIfood);
@@ -746,6 +746,7 @@ public class ConfeccionarBoloFragment extends Fragment {
     private void enviarFotoCamera() {
         ProgressDialog pd = new ProgressDialog(getActivity());
         pd.setMessage("Aguarde enquanto a foto é carregada");
+        pd.setCancelable(false);
         pd.show();
 
         //imagemBoloCadastrado.setRotation(90f);
@@ -792,6 +793,7 @@ public class ConfeccionarBoloFragment extends Fragment {
     public void enviarFotoGaleria() {
         ProgressDialog pd = new ProgressDialog(getActivity());
         pd.setMessage("Aguarde enquanto a foto é carregada");
+        pd.setCancelable(false);
         pd.show();
 
 

@@ -39,7 +39,7 @@ public class BolosConfecionadosAdapter extends FirestoreRecyclerAdapter<BolosMod
         holder.porcentagemCadastradaDeLucro.setText(model.getPorcentagemAdicionadoPorContaDoLucro());
         holder.porcentagemCadastradaDeAcrescimoPorContaDoIfood.setText(model.getPorcentagemAdicionadoPorContaDoIfood());
         holder.valorSugeridoParaVendaNaBoleria.setText(model.getValorSugeridoParaVendasNaBoleriaComAcrescimoDoLucro());
-        holder.valorSugeridoParaVendaNoIfood.setText(model.getValorCadastradoParaVendasNoIfood());
+        holder.valorSugeridoParaVendaNoIfood.setText(model.getValorSugeridoParaVendasNoIfoodComAcrescimoDaPorcentagem());
         Glide.with(context).load(model.getEnderecoFoto()).into(holder.fotoCadastrada);
     }
 

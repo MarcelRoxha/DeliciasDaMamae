@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        android:id="@+id/textView159"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="24dp"
+        android:text="EDITANDO A % DE LUCRO DA RECEITA E A DO IFOOD"
+        android:textColor="@color/rosa"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView8210"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Você está editando as porcentagem de lucro e a porcentagem á mais do ifood. Essas alterações feitas, irão alterar o valor sugerido e calculos futuros."
+        android:textColor="@color/rosa"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@+id/textView159"
+        app:layout_constraintStart_toStartOf="@+id/textView159"
+        app:layout_constraintTop_toBottomOf="@+id/textView159" />
+
+    <TextView
+        android:id="@+id/textView8310"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Porcentagem de Lucro:"
+        android:textColor="@color/rosa"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@+id/textView8210"
+        app:layout_constraintTop_toBottomOf="@+id/textView8210" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout2410"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/textView8310"
+        app:layout_constraintTop_toBottomOf="@+id/textView8310">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/alerta_edit_porcentagem_de_lucro_receita_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="% de Lucro, ex: 50"
+            android:inputType="number"
+            tools:ignore="TouchTargetSizeCheck" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <TextView
+        android:id="@+id/textView8410"
+        android:layout_width="262dp"
+        android:layout_height="23dp"
+        android:layout_marginTop="20dp"
+        android:text="Porcentagem de Acrescimo do Ifood:"
+        android:textColor="@color/rosa"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@+id/textInputLayout2410"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout2410" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout22"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="@+id/textInputLayout2410"
+        app:layout_constraintStart_toStartOf="@+id/textView8410"
+        app:layout_constraintTop_toBottomOf="@+id/textView8410">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/alerta_edit_porcentagem_de_acrescimo_do_ifood_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="% Acrescentada pelo Ifood"
+            android:inputType="number" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

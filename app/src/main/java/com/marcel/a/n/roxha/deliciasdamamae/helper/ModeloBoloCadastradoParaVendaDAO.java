@@ -146,6 +146,48 @@ public class ModeloBoloCadastradoParaVendaDAO implements InterfaceModeloBoloCada
 
     @Override
     public boolean editarBoloCadastrado(BolosModel bolosModel) {
+
+
+        try{
+
+            Map<String, Object> boloAtualizadoNoEdit = new HashMap<>();
+            boloAtualizadoNoEdit.put("idBoloCadastrado",bolosModel.getIdBoloCadastrado());
+            boloAtualizadoNoEdit.put("nomeBoloCadastrado", bolosModel.getNomeBoloCadastrado());
+            boloAtualizadoNoEdit.put("idReferenciaReceitaCadastrada", bolosModel.getIdReferenciaReceitaCadastrada());
+            boloAtualizadoNoEdit.put("custoTotalDaReceitaDoBolo", bolosModel.getCustoTotalDaReceitaDoBolo());
+            boloAtualizadoNoEdit.put("valorCadastradoParaVendasNaBoleria", bolosModel.getValorCadastradoParaVendasNaBoleria());
+            boloAtualizadoNoEdit.put("valorCadastradoParaVendasNoIfood", bolosModel.getValorCadastradoParaVendasNoIfood());
+            boloAtualizadoNoEdit.put("porcentagemAdicionadoPorContaDoIfood", bolosModel.getPorcentagemAdicionadoPorContaDoIfood());
+            boloAtualizadoNoEdit.put("porcentagemAdicionadoPorContaDoLucro", bolosModel.getPorcentagemAdicionadoPorContaDoLucro());
+            boloAtualizadoNoEdit.put("valorSugeridoParaVendasNoIfoodComAcrescimoDaPorcentagem", bolosModel.getValorSugeridoParaVendasNoIfoodComAcrescimoDaPorcentagem());
+            boloAtualizadoNoEdit.put("valorSugeridoParaVendasNaBoleriaComAcrescimoDoLucro", bolosModel.getValorSugeridoParaVendasNaBoleriaComAcrescimoDoLucro());
+            boloAtualizadoNoEdit.put("enderecoFoto", bolosModel.getEnderecoFoto());
+            boloAtualizadoNoEdit.put("valorQueOBoloRealmenteFoiVendido", bolosModel.getValorQueOBoloRealmenteFoiVendido());
+            boloAtualizadoNoEdit.put("verificaCameraGaleria", bolosModel.getVerificaCameraGaleria());
+
+
+
+            collectionBoloCadastradoParaVenda.document(bolosModel.getIdBoloCadastrado()).update(boloAtualizadoNoEdit).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void unused) {
+                    Toast.makeText(context, "Sucesso ao atualizar produto para adicionar na vitrine de vendas", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(context, BolosActivity.class);
+                    context.startActivity(intent);
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception er) {
+
+                    Toast.makeText(context, "Algo deu errado, verifique a conexão de internet e tente novamente", Toast.LENGTH_SHORT).show();
+                    System.out.println("Error: " + er.getMessage());
+                }
+            });
+        }catch (Exception e){
+            System.out.println("Error: " +e.getMessage());
+        }
+
+
         return false;
     }
 

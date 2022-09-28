@@ -143,19 +143,19 @@ public class BolosModel implements Serializable {
     @Override
     public String toString() {
         return "BolosModel{" +
-                "idBoloCadastrado='" + idBoloCadastrado + '\'' +
-                ", idReferenciaReceitaCadastrada='" + idReferenciaReceitaCadastrada + '\'' +
-                ", nomeBoloCadastrado='" + nomeBoloCadastrado + '\'' +
-                ", custoTotalDaReceitaDoBolo='" + custoTotalDaReceitaDoBolo + '\'' +
-                ", valorCadastradoParaVendasNaBoleria='" + valorCadastradoParaVendasNaBoleria + '\'' +
-                ", valorCadastradoParaVendasNoIfood='" + valorCadastradoParaVendasNoIfood + '\'' +
-                ", porcentagemAdicionadoPorContaDoIfood='" + porcentagemAdicionadoPorContaDoIfood + '\'' +
-                ", porcentagemAdicionadoPorContaDoLucro='" + porcentagemAdicionadoPorContaDoLucro + '\'' +
-                ", valorSugeridoParaVendasNoIfoodComAcrescimoDaPorcentagem='" + valorSugeridoParaVendasNoIfoodComAcrescimoDaPorcentagem + '\'' +
-                ", valorSugeridoParaVendasNaBoleriaComAcrescimoDoLucro='" + valorSugeridoParaVendasNaBoleriaComAcrescimoDoLucro + '\'' +
-                ", enderecoFoto='" + enderecoFoto + '\'' +
-                ", valorQueOBoloRealmenteFoiVendido='" + valorQueOBoloRealmenteFoiVendido + '\'' +
-                ", verificaCameraGaleria=" + verificaCameraGaleria +
+                "idBoloCadastrado='" + idBoloCadastrado + '\'' + "\n" +
+                ", idReferenciaReceitaCadastrada='" + idReferenciaReceitaCadastrada + '\'' + "\n" +
+                ", nomeBoloCadastrado='" + nomeBoloCadastrado + '\'' + "\n" +
+                ", custoTotalDaReceitaDoBolo='" + custoTotalDaReceitaDoBolo + '\'' + "\n" +
+                ", valorCadastradoParaVendasNaBoleria='" + valorCadastradoParaVendasNaBoleria + '\'' + "\n" +
+                ", valorCadastradoParaVendasNoIfood='" + valorCadastradoParaVendasNoIfood + '\'' + "\n" +
+                ", porcentagemAdicionadoPorContaDoIfood='" + porcentagemAdicionadoPorContaDoIfood + '\'' + "\n" +
+                ", porcentagemAdicionadoPorContaDoLucro='" + porcentagemAdicionadoPorContaDoLucro + '\'' + "\n" +
+                ", valorSugeridoParaVendasNoIfoodComAcrescimoDaPorcentagem='" + valorSugeridoParaVendasNoIfoodComAcrescimoDaPorcentagem + '\'' + "\n" +
+                ", valorSugeridoParaVendasNaBoleriaComAcrescimoDoLucro='" + valorSugeridoParaVendasNaBoleriaComAcrescimoDoLucro + '\'' + "\n" +
+                ", valorQueOBoloRealmenteFoiVendido='" + valorQueOBoloRealmenteFoiVendido + '\'' + "\n" +
+                ", verificaCameraGaleria=" + verificaCameraGaleria + "\n" +
+                ", enderecoFoto='" + enderecoFoto + '\'' + "\n" +
                 '}';
     }
 }

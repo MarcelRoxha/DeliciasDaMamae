@@ -44,7 +44,10 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.marcel.a.n.roxha.deliciasdamamae.R;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
+import com.marcel.a.n.roxha.deliciasdamamae.helper.ModeloBoloCadastradoParaVendaDAO;
+import com.marcel.a.n.roxha.deliciasdamamae.helper.ModeloReceitaCadastradaDAO;
 import com.marcel.a.n.roxha.deliciasdamamae.model.BolosModel;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ReceitaModel;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -80,7 +83,9 @@ public class EditarBoloCadastradoVendaActivity extends AppCompatActivity {
 
     private FirebaseFirestore firebaseFirestore = ConfiguracaoFirebase.getFirestor();
     private final String COLLECTION_PRODUTOS_CADASTRADOS_PARA_ADICIONAR_PARA_VENDA = "BOLOS_CADASTRADOS_PARA_ADICIONAR_PARA_VENDA";
+    private final String COLLECTION_RECEITA_CADASTRADOS_PARA_RECUPERAR_QUANTIDADE_DE_RENDIMENTO_POR_FORNADA = "RECEITA_CADASTRADA";
     private CollectionReference referenciaProdutoCadastradoParaVendas = firebaseFirestore.collection(COLLECTION_PRODUTOS_CADASTRADOS_PARA_ADICIONAR_PARA_VENDA);
+    private CollectionReference referenciaReceitaCadastradoDoProdutoEditando = firebaseFirestore.collection(COLLECTION_RECEITA_CADASTRADOS_PARA_RECUPERAR_QUANTIDADE_DE_RENDIMENTO_POR_FORNADA);
 
     //Final
 
@@ -94,16 +99,51 @@ public class EditarBoloCadastradoVendaActivity extends AppCompatActivity {
     private String currentPatch = null;
     private String enderecoSalvoFoto;
     private String fileName;
+    private String idReferenciaReceitaParaRecuperarQuantidadeDeRendimentoPoReceita;
     private String nomeCadastradoRecuperado;
     private String valorVendaBoleriaCadastradoRecuperado;
     private String custoTotalReceitaCadastradaRecuperado;
     private String valorVendaIfoodCadastradoRecuperado;
     private String porcentagemDeLucroCadastrado;
     private String porcentagemPorContaDoIfood;
+    private String porcentagemLucroAlert;
+    private String porcentagemIfoodAlert;
     private String valorSugeridoParaVendasNaBoleria;
+    private String valorSugeridoParaVendasNoIfoodEditandoAlert;
     private String valorSugeridoParaVendasNoIfood;
+    private String valorSugeridoDeVendaNaBoleriaEditandoAlert;
+    private String quantRendimentoReceita;
     private String boloId;
+
     private int verificaGaleriaCamera;
+    private int quantidadeRendimentoConvertido;
+
+
+    private double porcentConvertEditando;
+    private double porcentIfoodConvertEditando;
+    private double custoConvertEditando;
+    private double custoIfoodConvertEditando;
+    private double resultadoEditando;
+    private double resultadoIfoodEditando;
+    private double valorSugeridoDeVendaDoIfoodEditando;
+
+    private double dividindoQuantidades;
+
+
+
+    private double porcentConvertLucroEditando;
+    private double porcentIfoodConvertLucroEditando;
+    private double custoConvertLucroEditando;
+    private double custoIfoodConvertLucroEditando;
+    private double resultadoLucroEditando;
+    private double resultadoIfoodLucroEditando;
+    private double valorSugeridoDeVendaDoIfoodLucroEditando;
+
+    //Classes
+
+    private BolosModel bolosModelJaCadastradoAtualizando;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,13 +180,19 @@ public class EditarBoloCadastradoVendaActivity extends AppCompatActivity {
         botao_excluir_bolo_cadastrado_venda = findViewById(R.id.botao_excluir_bolo_cadastrado_venda_id);
         botao_trocar_foto_bolo_cadastrado = findViewById(R.id.botao_trocar_foto_bolo_cadastrado_venda_id);
 
+        ProgressDialog pd = new ProgressDialog(this);
+        pd.setMessage("Aguarde enquanto carregamos as informações");
+        pd.setCancelable(false);
+        pd.show();
 
         referenciaProdutoCadastradoParaVendas.document(boloId).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
 
+
                 BolosModel bolosModelRecuperado = documentSnapshot.toObject(BolosModel.class);
                 nomeCadastradoRecuperado = bolosModelRecuperado.getNomeBoloCadastrado() ;
+                idReferenciaReceitaParaRecuperarQuantidadeDeRendimentoPoReceita = bolosModelRecuperado.getIdReferenciaReceitaCadastrada();
                 valorVendaBoleriaCadastradoRecuperado= bolosModelRecuperado.getValorCadastradoParaVendasNaBoleria() ;
                 custoTotalReceitaCadastradaRecuperado= bolosModelRecuperado.getCustoTotalDaReceitaDoBolo() ;
                 valorVendaIfoodCadastradoRecuperado= bolosModelRecuperado.getValorCadastradoParaVendasNoIfood() ;
@@ -160,16 +206,42 @@ public class EditarBoloCadastradoVendaActivity extends AppCompatActivity {
                     Glide.with(getApplicationContext()).load(enderecoSalvoFoto).into(imagem_bolo_cadastrado_venda);
 
 
+                pd.setMessage("Só mais alguns instantes...");
 
 
-                edit_nome_bolo_cadastrado_venda.setText(nomeCadastradoRecuperado);
-                edit_valor_venda_bolo_cadastrado_venda_boleria.setText(valorVendaBoleriaCadastradoRecuperado);
-                edit_valor_venda_bolo_cadastrado_venda_ifood.setText(valorVendaIfoodCadastradoRecuperado);
-                edit_porcentagem_cadastrada_lucro.setText(porcentagemDeLucroCadastrado + " %");
-                edit_porcentagem_cadastrada_do_ifood.setText(porcentagemPorContaDoIfood  + " %");
-                edit_valor_sugerido_venda_boleria.setText(valorSugeridoParaVendasNaBoleria);
-                edit_valor_sugerido_venda_ifood.setText(valorSugeridoParaVendasNoIfood);
-                edit_custo_bolo_cadastrado_venda.setText(custoTotalReceitaCadastradaRecuperado);
+                referenciaReceitaCadastradoDoProdutoEditando.document(idReferenciaReceitaParaRecuperarQuantidadeDeRendimentoPoReceita)
+                        .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        pd.setMessage("Prontinho tudo carregado...");
+                        ReceitaModel receitaModelRecuperadaParaEditacao = documentSnapshot.toObject(ReceitaModel.class);
+
+                        quantRendimentoReceita = receitaModelRecuperadaParaEditacao.getQuantRendimentoReceita();
+
+
+                        edit_nome_bolo_cadastrado_venda.setText(nomeCadastradoRecuperado);
+                        edit_valor_venda_bolo_cadastrado_venda_boleria.setText(valorVendaBoleriaCadastradoRecuperado);
+                        edit_valor_venda_bolo_cadastrado_venda_ifood.setText(valorVendaIfoodCadastradoRecuperado);
+                        edit_porcentagem_cadastrada_lucro.setText(porcentagemDeLucroCadastrado + " %");
+                        edit_porcentagem_cadastrada_do_ifood.setText(porcentagemPorContaDoIfood  + " %");
+                        edit_valor_sugerido_venda_boleria.setText(valorSugeridoParaVendasNaBoleria);
+                        edit_valor_sugerido_venda_ifood.setText(valorSugeridoParaVendasNoIfood);
+                        edit_custo_bolo_cadastrado_venda.setText(custoTotalReceitaCadastradaRecuperado);
+
+
+                        System.out.println("RECUPERANDO DENTRO DO RECEITA CADASTRADAS: " + quantRendimentoReceita);
+                        pd.dismiss();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                        Toast.makeText(getApplicationContext(), "Algo deu errado, verifique a internet e tente novamente.", Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+
+
 
 
             }
@@ -200,6 +272,11 @@ public class EditarBoloCadastradoVendaActivity extends AppCompatActivity {
         botao_atualizar_bolo_cadastrado_venda.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
+
+
+
                 atualizarBolo();
             }
         });
@@ -209,6 +286,15 @@ public class EditarBoloCadastradoVendaActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 deletarBolo();
+
+            }
+        });
+
+        botao_editar_porcentagens.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                carregarAlertEditarPorcent();
 
             }
         });
@@ -282,16 +368,23 @@ public class EditarBoloCadastradoVendaActivity extends AppCompatActivity {
     }
 
     private void atualizarBolo() {
+        String nomeAtualizando = edit_nome_bolo_cadastrado_venda.getText().toString();
 
-        String nomeAtualiza = edit_nome_bolo_cadastrado_venda.getText().toString();
-        String precoAtualiza = edit_valor_venda_bolo_cadastrado_venda_boleria.getText().toString();
-        String custoAtualiza = edit_custo_bolo_cadastrado_venda.getText().toString();
+        String valorCadastradoParaVendaNaBoleriaAtualizando = edit_valor_venda_bolo_cadastrado_venda_boleria.getText().toString().replace(",", ".");
+        String valorCadastradoParaVendaNIfoodAtualizando = edit_valor_venda_bolo_cadastrado_venda_ifood.getText().toString().replace(",", ".");
 
-        if (edit_valor_venda_bolo_cadastrado_venda_boleria.getText().toString().isEmpty() && edit_valor_venda_bolo_cadastrado_venda_boleria.getText().toString().isEmpty()
-                && edit_custo_bolo_cadastrado_venda.getText().toString().isEmpty()) {
 
-            AlertDialog.Builder alerta = new AlertDialog.Builder(getApplicationContext());
-            alerta.setTitle("ATENÇÃO");
+
+        bolosModelJaCadastradoAtualizando = new BolosModel();
+
+        ModeloBoloCadastradoParaVendaDAO modeloBoloCadastradoParaVendaDAOEditando = new ModeloBoloCadastradoParaVendaDAO(this);
+
+
+
+        if (edit_valor_venda_bolo_cadastrado_venda_boleria.getText().toString().isEmpty() && edit_valor_venda_bolo_cadastrado_venda_ifood.getText().toString().isEmpty()) {
+
+            AlertDialog.Builder alerta = new AlertDialog.Builder(this);
+            alerta.setTitle("ATENÇÃO - CAMPOS VÁZIOS");
             alerta.setMessage("Foi identificado que um dos campos está vazio, para completar a atualização é necessário que todos os campos estejam preenchidos, favor insira as informações para completar a ação");
             alerta.setCancelable(false);
             alerta.setNeutralButton("OK", new DialogInterface.OnClickListener() {
@@ -300,37 +393,50 @@ public class EditarBoloCadastradoVendaActivity extends AppCompatActivity {
 
                 }
             });
+            alerta.create();
+            alerta.show();
         } else {
 
-            BolosModel boloAtualizar = new BolosModel();
-          /*  boloAtualizar.setNomeBolo(nomeAtualiza);
-            boloAtualizar.setValorVenda(precoAtualiza);
-            boloAtualizar.setCustoBolo(custoAtualiza);
-            boloAtualizar.setEnderecoFoto(enderecoSalvoFoto);
 
+            bolosModelJaCadastradoAtualizando.setIdBoloCadastrado(boloId);
+            bolosModelJaCadastradoAtualizando.setNomeBoloCadastrado(nomeAtualizando);
+            bolosModelJaCadastradoAtualizando.setIdReferenciaReceitaCadastrada(idReferenciaReceitaParaRecuperarQuantidadeDeRendimentoPoReceita);
+            bolosModelJaCadastradoAtualizando.setCustoTotalDaReceitaDoBolo(custoTotalReceitaCadastradaRecuperado);
+            bolosModelJaCadastradoAtualizando.setValorCadastradoParaVendasNaBoleria(valorCadastradoParaVendaNaBoleriaAtualizando);
+            bolosModelJaCadastradoAtualizando.setValorCadastradoParaVendasNoIfood(valorCadastradoParaVendaNIfoodAtualizando);
+            bolosModelJaCadastradoAtualizando.setPorcentagemAdicionadoPorContaDoIfood(porcentagemPorContaDoIfood);
+            bolosModelJaCadastradoAtualizando.setPorcentagemAdicionadoPorContaDoLucro(porcentagemDeLucroCadastrado);
+            bolosModelJaCadastradoAtualizando.setValorSugeridoParaVendasNoIfoodComAcrescimoDaPorcentagem(valorSugeridoParaVendasNoIfood);
+            bolosModelJaCadastradoAtualizando.setValorSugeridoParaVendasNaBoleriaComAcrescimoDoLucro(valorSugeridoParaVendasNaBoleria);
+            bolosModelJaCadastradoAtualizando.setEnderecoFoto(enderecoSalvoFoto);
+            bolosModelJaCadastradoAtualizando.setValorQueOBoloRealmenteFoiVendido("CADASTRO");
+            bolosModelJaCadastradoAtualizando.setVerificaCameraGaleria(verificaGaleriaCamera);
 
-            Map<String, Object> boloAtualizado = new HashMap<>();
-            boloAtualizado.put("nomeBolo", boloAtualizar.getNomeBolo());
-            boloAtualizado.put("valorVenda", boloAtualizar.getValorVenda());
-            boloAtualizado.put("custoBolo", boloAtualizar.getCustoBolo());
-            boloAtualizado.put("verificaCameraGaleria", verificaGaleriaCamera);
-            boloAtualizado.put("enderecoFoto", boloAtualizar.getEnderecoFoto());
-            boloAtualizado.put("quantBoloVenda", "1");*/
+            System.out.println("------------- DENTRO DO ATUALIZAR BOLO QUANDO OS VALOS CADASTRADOS NÃO ESTÃO VAZIOS-------------------");
+            System.out.println("------------- bolosModelJaCadastradoAtualizando-------------------" + bolosModelJaCadastradoAtualizando.toString());
 
-       /*     referenceBoloCadastrado.document(boloId).update(boloAtualizado).addOnSuccessListener(new OnSuccessListener<Void>() {
+            AlertDialog.Builder alerta = new AlertDialog.Builder(this);
+            alerta.setTitle("CONFIRMANDO ATUALIZAÇÕES");
+            alerta.setMessage("Para finalizar as alterações, por favor confirme os dados a serem alterados de " + bolosModelJaCadastradoAtualizando.getNomeBoloCadastrado());
+            alerta.setCancelable(false);
+            alerta.setNeutralButton("CONFIRMAR", new DialogInterface.OnClickListener() {
                 @Override
-                public void onSuccess(Void aVoid) {
-                    Toast.makeText(EditarBoloCadastradoVendaActivity.this, "Bolo Atualizado com sucesso", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(EditarBoloCadastradoVendaActivity.this, BolosActivity.class);
-                    startActivity(intent);
-                    finish();
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                    modeloBoloCadastradoParaVendaDAOEditando.editarBoloCadastrado(bolosModelJaCadastradoAtualizando);
+
+
+
                 }
-            }).addOnFailureListener(new OnFailureListener() {
+            }).setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
                 @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(EditarBoloCadastradoVendaActivity.this, "Não foi possível atualizar", Toast.LENGTH_SHORT).show();
+                public void onClick(DialogInterface dialog, int which) {
+
                 }
-            });*/
+            });
+
+            alerta.create();
+            alerta.show();
 
 
         }
@@ -383,17 +489,21 @@ public class EditarBoloCadastradoVendaActivity extends AppCompatActivity {
 
         ProgressDialog pd = new ProgressDialog(EditarBoloCadastradoVendaActivity.this);
         pd.setMessage("Aguarde enquanto a foto é carregada");
+        pd.setCancelable(false);
         pd.show();
-
         Bitmap bitmap = ((BitmapDrawable) imagem_bolo_cadastrado_venda.getDrawable()).getBitmap();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+        Date dateId = new Date();
+        long dataIdlong = dateId.getTime();
+        String convertdataId = Long.toString(dataIdlong);
+
 
         byte[] image = byteArrayOutputStream.toByteArray();
 
         if (verificaGaleriaCamera == 1) {
 
-            StorageReference reference = FirebaseStorage.getInstance().getReference().child("fotosSalvas").child(fileName + "_" + nomeCadastradoRecuperado + ".jpeg");
+            StorageReference reference = FirebaseStorage.getInstance().getReference().child("fotosSalvas").child(fileName + "_" + nomeCadastradoRecuperado + "_"+ convertdataId+ ".jpeg");
             UploadTask uploadTask = reference.putBytes(image);
             uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
@@ -535,4 +645,101 @@ public class EditarBoloCadastradoVendaActivity extends AppCompatActivity {
         dialog.create();
         dialog.show();
     }
+
+    public void carregarAlertEditarPorcent(){
+        AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setTitle("VOCÊ ESTÁ EDITANDO: " + nomeCadastradoRecuperado);
+        View viewLayout = getLayoutInflater().inflate(R.layout.layout_alert_editando_porcentagem_produto_ja_cadastrado, null);
+        EditText textoPorcentagemEditandoLucro = viewLayout.findViewById(R.id.alerta_edit_porcentagem_de_lucro_receita_id);
+        EditText textoPorcentagemEditandoIfood = viewLayout.findViewById(R.id.alerta_edit_porcentagem_de_acrescimo_do_ifood_id);
+
+        dialog.setView(textoPorcentagemEditandoLucro);
+        dialog.setView(textoPorcentagemEditandoIfood);
+
+
+        dialog.setPositiveButton("CONFIRMAR", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                porcentagemDeLucroCadastrado = textoPorcentagemEditandoLucro.getText().toString();
+                porcentagemPorContaDoIfood	 = textoPorcentagemEditandoIfood.getText().toString();
+
+
+                if (!porcentagemDeLucroCadastrado.isEmpty() && !porcentagemPorContaDoIfood.isEmpty()) {
+
+                    calcularValorSugeridoEditandoComAsPorcentagensEditadas(custoTotalReceitaCadastradaRecuperado, porcentagemDeLucroCadastrado, porcentagemPorContaDoIfood);
+
+
+
+                } else {
+
+                    Toast.makeText(getApplicationContext(), "É necessário informar a % de lucro e de acrescimo do ifoods", Toast.LENGTH_SHORT).show();
+                }
+
+
+            }
+        }).setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+
+        dialog.setView(viewLayout);
+        dialog.create();
+        dialog.show();
+
+    }
+
+    private void calcularValorSugeridoIfoodEditando(String custoTotalReceitaCadastradaRecuperado, String porctIfood, String porct) {
+
+
+        String custoFormatado = custoTotalReceitaCadastradaRecuperado.replace(",", ".");
+        String porncetFormatado = porctIfood.replace(",", ".");
+        String porncetLucroFormatado = porct.replace(",", ".");
+        String quantidadeRendimentoFornada = quantRendimentoReceita;
+
+
+
+    }
+
+    private void calcularValorSugeridoEditandoComAsPorcentagensEditadas(String custoTotalReceitaCadastradaRecuperado, String porcentagemPassaLucro, String porcentagemPassadaIfood) {
+
+        String custoFormatado = custoTotalReceitaCadastradaRecuperado.replace(",", ".");
+        String porncetFormatadoLucro = porcentagemPassaLucro.replace(",", ".");
+        String porncetFormatadoIfood = porcentagemPassadaIfood.replace(",", ".");
+        String quantidadeRendimentoFornada = quantRendimentoReceita;
+
+
+        custoConvertLucroEditando = Double.parseDouble(custoFormatado);
+        porcentConvertLucroEditando = Double.parseDouble(porncetFormatadoLucro);
+        porcentIfoodConvertEditando = Double.parseDouble(porncetFormatadoIfood);
+
+
+
+         quantidadeRendimentoConvertido = Integer.parseInt(quantidadeRendimentoFornada);
+
+         dividindoQuantidades = custoConvertLucroEditando /quantidadeRendimentoConvertido ;
+
+         resultadoLucroEditando = ((dividindoQuantidades * porcentConvertLucroEditando) / 100) + dividindoQuantidades;
+
+
+
+        resultadoIfoodEditando = ((resultadoLucroEditando * porcentIfoodConvertEditando) / 100) + resultadoLucroEditando;
+
+
+        valorSugeridoParaVendasNoIfood = String.format("%.2f", resultadoIfoodEditando);
+
+
+        valorSugeridoParaVendasNaBoleria = String.format("%.2f", resultadoLucroEditando);
+
+
+        edit_porcentagem_cadastrada_lucro.setText(porncetFormatadoLucro + " %");
+        edit_porcentagem_cadastrada_do_ifood.setText(porncetFormatadoIfood  + " %");
+        edit_valor_sugerido_venda_boleria.setText(valorSugeridoParaVendasNaBoleria);
+        edit_valor_sugerido_venda_ifood.setText(valorSugeridoParaVendasNoIfood);
+
+
+    }
+
 }
