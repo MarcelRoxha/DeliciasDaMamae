@@ -220,7 +220,7 @@ public class ConfeccionarBoloFragment extends Fragment {
         textValorVendaIfoodBolo = view.findViewById(R.id.texto_valor_sugerido_venda_porcentagem_ifood);
         botaParaEditarPorcentagensDeLucroEIfood = view.findViewById(R.id.botao_para_editar_porcentagem_lucro_e_ifood);
 
-        textValorSugeridoVendaIfood = view.findViewById(R.id.textView89);
+        textValorSugeridoVendaIfood = view.findViewById(R.id.texto_informativo_sobre_aba_caixa_id);
 
 
         textInfoPorcentagemLucro = view.findViewById(R.id.textView85);

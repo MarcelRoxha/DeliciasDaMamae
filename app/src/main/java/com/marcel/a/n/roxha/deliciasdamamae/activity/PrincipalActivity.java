@@ -82,7 +82,7 @@ public class PrincipalActivity extends AppCompatActivity {
         botao_tela_loja.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(PrincipalActivity.this, LojaActivity.class);
+                Intent intent = new Intent(PrincipalActivity.this, LojaActivityV2.class);
                 startActivity(intent);
             }
         });

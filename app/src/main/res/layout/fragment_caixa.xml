@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.CaixaLojaFragment"
+    tools:ignore="SpeakableTextPresentCheck">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="800dp">
+
+        <TextView
+            android:id="@+id/textoInfoDataUltimaAtualizacaoFragmentCaixa"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="24dp"
+            android:text="DATA DA ÚLTIMA ATUALIZAÇÃO DO CAIXA:"
+            android:textColor="@color/rosa"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/texto_ultima_atualizacao_caixa_loja"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="7dp"
+            android:text="TextView"
+            app:layout_constraintBottom_toBottomOf="@+id/textoInfoDataUltimaAtualizacaoFragmentCaixa"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textoInfoDataUltimaAtualizacaoFragmentCaixa" />
+
+        <TextView
+            android:id="@+id/texto_informativo_sobre_aba_caixa_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="7dp"
+            android:text=""
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textoInfoDataUltimaAtualizacaoFragmentCaixa" />
+
+        <TextView
+            android:id="@+id/textViewcaixa95"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="7dp"
+            android:text="O CAIXA INICIOU O DIA COM:"
+            android:textColor="@color/rosa"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/texto_informativo_sobre_aba_caixa_id" />
+
+        <TextView
+            android:id="@+id/texto_total_que_o_caixa_iniciou_o_dia_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="7dp"
+            android:text="TextView"
+            app:layout_constraintBottom_toBottomOf="@+id/textViewcaixa95"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textViewcaixa95" />
+
+
+
+
+
+
+        <TextView
+            android:id="@+id/textViewcaixa90"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="7dp"
+            android:text="TOTAL NO CAIXA HOJE:"
+            android:textColor="@color/rosa"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewcaixa95" />
+
+        <TextView
+            android:id="@+id/texto_total_no_caixa_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="7dp"
+            android:text="TextView"
+            app:layout_constraintBottom_toBottomOf="@+id/textViewcaixa90"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textViewcaixa90" />
+
+        <TextView
+            android:id="@+id/textViewcaixa91"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="7dp"
+            android:text="TOTAL DE ENTRADA EM DINHEIRO NO CAIXA HOJE:"
+            android:textColor="@color/rosa"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewcaixa90" />
+
+        <TextView
+            android:id="@+id/texto_entrada_diaria_no_caixa_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="7dp"
+            android:text="TextView"
+            app:layout_constraintBottom_toBottomOf="@+id/textViewcaixa91"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textViewcaixa91" />
+
+        <TextView
+            android:id="@+id/textViewcaixa92"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="7dp"
+            android:text="TOTAL DE SAIDA DO CAIXA HOJE:"
+            android:textColor="@color/rosa"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewcaixa91" />
+
+        <TextView
+            android:id="@+id/texto_saida_diaria_no_caixa_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="7dp"
+            android:text="TextView"
+            app:layout_constraintBottom_toBottomOf="@+id/textViewcaixa92"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textViewcaixa92" />
+
+
+        <TextView
+            android:id="@+id/textViewcaixa97"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="7dp"
+            android:text="TOTAL DE VENDAS NO CRÉDITO HOJE:"
+            android:textColor="@color/rosa"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewcaixa92" />
+
+        <TextView
+            android:id="@+id/texto_entrada_no_credito_hoje_no_caixa_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="7dp"
+            android:text="TextView"
+            app:layout_constraintBottom_toBottomOf="@+id/textViewcaixa97"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textViewcaixa97" />
+
+
+        <TextView
+            android:id="@+id/textViewcaixa98"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="7dp"
+            android:text="TOTAL DE VENDAS NO DÉBITO DO CAIXA HOJE:"
+            android:textColor="@color/rosa"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewcaixa97" />
+
+        <TextView
+            android:id="@+id/texto_entrada_no_debito_hoje_no_caixa_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="7dp"
+            android:text="TextView"
+            app:layout_constraintBottom_toBottomOf="@+id/textViewcaixa98"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textViewcaixa98" />
+
+
+
+        <Button
+            android:id="@+id/botao_iniciar_o_dia_boleria_id"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="7dp"
+            android:text="INICIAR O DIA"
+            android:background="@drawable/btn"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewcaixa98" />
+
+        <Button
+            android:id="@+id/botao_criar_montante_mensal_id"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="7dp"
+            android:text="CRIAR MONTANTE MENSAL"
+            android:background="@drawable/btn"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/botao_iniciar_o_dia_boleria_id" />
+
+
+
+
+
+
+        <Button
+            android:id="@+id/botao_vendi_alguma_coisa_id"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="7dp"
+            android:text="OPA VENDI !"
+            android:background="@drawable/btn"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/botao_criar_montante_mensal_id" />
+
+        <Button
+            android:id="@+id/botao_ver_vendas_id"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="7dp"
+            android:text="VENDAS FEITAS"
+            android:background="@drawable/btn"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/botao_vendi_alguma_coisa_id" />
+
+
+        <Button
+            android:id="@+id/botao_finalizar_dia_id"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="7dp"
+            android:layout_marginBottom="24dp"
+            android:background="@drawable/btn"
+            android:text="FINALIZAR O DIA"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/botao_ver_vendas_id" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

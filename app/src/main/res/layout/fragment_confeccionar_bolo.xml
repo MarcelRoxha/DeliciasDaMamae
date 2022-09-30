@@ -117,7 +117,7 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView89" />
+            app:layout_constraintTop_toBottomOf="@+id/texto_informativo_sobre_aba_caixa_id" />
 
         <TextView
             android:id="@+id/textView18"
@@ -307,7 +307,7 @@
             app:layout_constraintTop_toTopOf="@+id/textView87" />
 
         <TextView
-            android:id="@+id/textView89"
+            android:id="@+id/texto_informativo_sobre_aba_caixa_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -323,8 +323,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:text="TextView"
-            app:layout_constraintStart_toEndOf="@+id/textView89"
-            app:layout_constraintTop_toTopOf="@+id/textView89" />
+            app:layout_constraintStart_toEndOf="@+id/texto_informativo_sobre_aba_caixa_id"
+            app:layout_constraintTop_toTopOf="@+id/texto_informativo_sobre_aba_caixa_id" />
 
         <Button
             android:id="@+id/botao_para_editar_porcentagem_lucro_e_ifood"
