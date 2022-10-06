@@ -1,27 +1,45 @@
 package com.marcel.a.n.roxha.deliciasdamamae.fragments;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.OptIn;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.marcel.a.n.roxha.deliciasdamamae.R;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloMontanteMensalLoja;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link CaixaLojaFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
+
+
+
 public class CaixaLojaFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
@@ -32,6 +50,77 @@ public class CaixaLojaFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+
+    //ALERT CARREGANDO AS INFORMAÇÕES DO CAIXA DIARIO DO USUARIO
+
+    private ProgressDialog progressDialogCarregandoAsInformacoesDoCaixaDiario;
+
+
+
+    //CARREGAR AS INFORMAÇÕES DO USUARIO COMO TOKEN.
+
+
+
+    //COMPONENTES DE TELA
+
+    //Texto
+    private TextView textoDataDaUltimaAtualizacaoDoCaixaApresentandoParaOUsuario;
+    private TextView textoOCaixaIniciouODiaComOValor;
+    private TextView textoTotalNoCaixaHoje;
+    private TextView textoTotalDeEntradaEmDinheiroNoCaixaHoje;
+    private TextView textoTotalDeSaidaNoCaixaHoje;
+    private TextView textoTotalDeVendasNoCreditoHoje;
+    private TextView textoTotalDeVendasNoDebitoNoCaixaHoje;
+    private TextView textoInformativoSobreEssaAbaCaixa;
+
+
+    //TextoInfo
+    private TextView infoTextoDataDaUltimaAtualizacaoDoCaixaApresentandoParaOUsuario;
+    private TextView infoTextoOCaixaIniciouODiaComOValor;
+    private TextView infoTextoTotalNoCaixaHoje;
+    private TextView infoTextoTotalDeEntradaEmDinheiroNoCaixaHoje;
+    private TextView infoTextoTotalDeSaidaNoCaixaHoje;
+    private TextView infoTextoTotalDeVendasNoCreditoHoje;
+    private TextView infoTextoTotalDeVendasNoDebitoNoCaixaHoje;
+    private TextView infoTextoInformativoSobreEssaAbaCaixa;
+
+
+    //Botões
+    private Button botaoParaIniciarOdia;
+    private Button botaoParaCriarMontante;
+    private Button botaoOpaVendi;
+    private Button botaoVendasFeitas;
+    private Button botaoFinalizarDia;
+
+    //Variaveis globais
+    private String keyUserRecuperado = "";
+    private String mesAtual = "";
+    private String diaAtual = "";
+    private String idRecuperadoMontanteCasoExista = "";
+    private String idRecuperadoMontanteDiarioCasoExista = "";
+    private String idRecuperadoCaixaDiarioCasoExista = "";
+    private int numMesReferencia;
+    private int verificaCaixaMensalCriado = 0;
+    private final String COLLECTION_CAIXA_DIARIO = "CAIXA_DIARIO";
+    private final String COLLECTION_MONTANTE_DESSE_MES = "MONTANTES_GERAL";
+
+    private Date hoje = new Date();
+    private Date dataCollectionReferenciaMontanteMensal = new Date();
+    private String hojeString = "";
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+    private SimpleDateFormat simpleDateFormatCollectionReferenciaAtual = new SimpleDateFormat("MM/yy");
+
+
+
+
+    //BANCO FIREBASE
+    private FirebaseAuth auth = ConfiguracaoFirebase.getAuth();
+    private FirebaseFirestore firebaseFirestore = ConfiguracaoFirebase.getFirestor();
+    private CollectionReference referenceCaixaDiario = firebaseFirestore.collection(COLLECTION_CAIXA_DIARIO);
+    private CollectionReference referenceMontanteDesseMes = firebaseFirestore.collection(COLLECTION_MONTANTE_DESSE_MES);
+
+
 
     public CaixaLojaFragment() {
         // Required empty public constructor
@@ -65,52 +154,6 @@ public class CaixaLojaFragment extends Fragment {
     }
 
 
-    //ALERT CARREGANDO AS INFORMAÇÕES DO CAIXA DIARIO DO USUARIO
-
-
-
-    //CARREGAR AS INFORMAÇÕES DO USUARIO COMO TOKEN.
-
-
-
-    //COMPONENTES DE TELA
-
-            //Texto
-    private TextView textoDataDaUltimaAtualizacaoDoCaixaApresentandoParaOUsuario;
-    private TextView textoOCaixaIniciouODiaComOValor;
-    private TextView textoTotalNoCaixaHoje;
-    private TextView textoTotalDeEntradaEmDinheiroNoCaixaHoje;
-    private TextView textoTotalDeSaidaNoCaixaHoje;
-    private TextView textoTotalDeVendasNoCreditoHoje;
-    private TextView textoTotalDeVendasNoDebitoNoCaixaHoje;
-    private TextView textoInformativoSobreEssaAbaCaixa;
-
-
-    //TextoInfo
-    private TextView infoTextoDataDaUltimaAtualizacaoDoCaixaApresentandoParaOUsuario;
-    private TextView infoTextoOCaixaIniciouODiaComOValor;
-    private TextView infoTextoTotalNoCaixaHoje;
-    private TextView infoTextoTotalDeEntradaEmDinheiroNoCaixaHoje;
-    private TextView infoTextoTotalDeSaidaNoCaixaHoje;
-    private TextView infoTextoTotalDeVendasNoCreditoHoje;
-    private TextView infoTextoTotalDeVendasNoDebitoNoCaixaHoje;
-    private TextView infoTextoInformativoSobreEssaAbaCaixa;
-
-
-
-
-
-            //Botões
-    private Button botaoParaIniciarOdia;
-    private Button botaoParaCriarMontante;
-    private Button botaoOpaVendi;
-    private Button botaoVendasFeitas;
-    private Button botaoFinalizarDia;
-
-    private FirebaseAuth auth = ConfiguracaoFirebase.getAuth();
-
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -119,11 +162,13 @@ public class CaixaLojaFragment extends Fragment {
         View viewCaixaFragment = inflater.inflate(R.layout.fragment_caixa, container, false);
 
 
-        auth.getCurrentUser().toString();
+        progressDialogCarregandoAsInformacoesDoCaixaDiario = new ProgressDialog(getContext());
+        progressDialogCarregandoAsInformacoesDoCaixaDiario.setContentView(R.layout.progress_dialog_carregando_informacoes_caixa_diario);
+        progressDialogCarregandoAsInformacoesDoCaixaDiario.setCancelable(false);
+        progressDialogCarregandoAsInformacoesDoCaixaDiario.show();
 
-        System.out.println("--------------------- RETORNO DE auth.getCurrentUser().getUid() -------------------------" + auth.getCurrentUser().getUid().toString());
 
-
+       keyUserRecuperado =  auth.getCurrentUser().toString();
 
         //Carregando os componentes de tela em visualização em GONE
 
@@ -148,44 +193,40 @@ public class CaixaLojaFragment extends Fragment {
 
 
 
-
         botaoParaIniciarOdia = viewCaixaFragment.findViewById(R.id.botao_iniciar_o_dia_boleria_id);
         botaoParaCriarMontante = viewCaixaFragment.findViewById(R.id.botao_criar_montante_mensal_id);
         botaoOpaVendi = viewCaixaFragment.findViewById(R.id.botao_vendi_alguma_coisa_id);
         botaoVendasFeitas = viewCaixaFragment.findViewById(R.id.botao_ver_vendas_id);
         botaoFinalizarDia = viewCaixaFragment.findViewById(R.id.botao_finalizar_dia_id);
 
-
+        hoje = new Date();
+        hojeString = simpleDateFormat.format(hoje.getTime());
+        textoDataDaUltimaAtualizacaoDoCaixaApresentandoParaOUsuario.setText(hojeString);
+        numMesReferencia = 1 + hoje.getMonth();
 
         carregarComponentesDeTelaParaNaoVisualizar();
 
-
-
-
-
-        AlertDialog.Builder alertaCarregandoAsInformacoesDoCaixaDiario = new AlertDialog.Builder(getActivity());
-        View viewLayoutAlertaCarregandoAsInformacoesCaixaDiario = getLayoutInflater().inflate(R.layout.layout_alerta_carregando_as_informacoes_caixa_diario, null);
-        TextView textoParaOUsuarioAguardandoAsInformacoesSeremCarregadas = viewLayoutAlertaCarregandoAsInformacoesCaixaDiario.findViewById(R.id.textoInfoAlertaCarregandoCaixaDiario);
-        alertaCarregandoAsInformacoesDoCaixaDiario.setView(textoParaOUsuarioAguardandoAsInformacoesSeremCarregadas);
-        alertaCarregandoAsInformacoesDoCaixaDiario.setCancelable(false);
-        alertaCarregandoAsInformacoesDoCaixaDiario.setNegativeButton("VISUALIZAR ITENS", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-                carregarComponentesDeTelaParaVizualizar();
-
-            }
-        });
-
-        alertaCarregandoAsInformacoesDoCaixaDiario.setView(viewLayoutAlertaCarregandoAsInformacoesCaixaDiario);
-        alertaCarregandoAsInformacoesDoCaixaDiario.create();
-        alertaCarregandoAsInformacoesDoCaixaDiario.show();
+        verificarMontanteCaixaCriado(keyUserRecuperado, progressDialogCarregandoAsInformacoesDoCaixaDiario);
 
 
         return viewCaixaFragment;
 
 
     }
+
+    private void carregandoAsInformacoesDoCaixaDiario(String idUsuarioReferencia, AlertDialog.Builder alertaCarregandoAsInformacoesDoCaixaDiario) {
+
+        //Verificando se existe montante criado
+
+
+
+
+    }
+
+    private  String recuperaUUIUsuario(){
+      return   keyUserRecuperado =  auth.getCurrentUser().toString();
+    }
+
 
 
     public void carregarComponentesDeTelaParaVizualizar(){
@@ -214,6 +255,50 @@ public class CaixaLojaFragment extends Fragment {
         infoTextoTotalDeVendasNoDebitoNoCaixaHoje.setVisibility(View.VISIBLE);
 
     }
+
+
+    public void carregarComponentesDeTelaParaVizualizarQuandoNaoTemMontanteDiarioCriado(){
+
+        botaoFinalizarDia.setVisibility(View.VISIBLE);
+        botaoVendasFeitas.setVisibility(View.VISIBLE);
+        botaoOpaVendi.setVisibility(View.VISIBLE);
+        botaoParaCriarMontante.setVisibility(View.VISIBLE);
+        botaoParaIniciarOdia.setVisibility(View.VISIBLE);
+        textoInformativoSobreEssaAbaCaixa.setVisibility(View.VISIBLE);
+
+
+        textoTotalDeVendasNoDebitoNoCaixaHoje.setVisibility(View.VISIBLE);
+        textoTotalDeVendasNoCreditoHoje.setVisibility(View.VISIBLE);
+        textoTotalDeSaidaNoCaixaHoje.setVisibility(View.VISIBLE);
+        textoTotalDeEntradaEmDinheiroNoCaixaHoje.setVisibility(View.VISIBLE);
+        textoTotalNoCaixaHoje.setVisibility(View.VISIBLE);
+        textoOCaixaIniciouODiaComOValor.setVisibility(View.VISIBLE);
+        textoDataDaUltimaAtualizacaoDoCaixaApresentandoParaOUsuario.setVisibility(View.VISIBLE);
+
+
+        infoTextoDataDaUltimaAtualizacaoDoCaixaApresentandoParaOUsuario.setVisibility(View.VISIBLE);
+        infoTextoOCaixaIniciouODiaComOValor.setVisibility(View.VISIBLE);
+        infoTextoTotalNoCaixaHoje.setVisibility(View.VISIBLE);
+        infoTextoTotalDeEntradaEmDinheiroNoCaixaHoje.setVisibility(View.VISIBLE);
+        infoTextoTotalDeSaidaNoCaixaHoje.setVisibility(View.VISIBLE);
+        infoTextoTotalDeVendasNoCreditoHoje.setVisibility(View.VISIBLE);
+        infoTextoTotalDeVendasNoDebitoNoCaixaHoje.setVisibility(View.VISIBLE);
+
+
+        textoInformativoSobreEssaAbaCaixa.setText("NA ABA CAIXA, VOCÊ GERENCIA AS ATIVIDADES DIARIA DA LOJINHA: \n  *-CRIE UM MONTANTE PARA INICIAR O PROCESSO DE CONTABILIZACÃO MENSAL \n *-INICIE O DIA PARA INICIAR O PROCESSO DE CONTABILIZAÇÃO DIÁRIA");
+        textoTotalDeVendasNoDebitoNoCaixaHoje.setText("0");
+        textoTotalDeEntradaEmDinheiroNoCaixaHoje.setText("0");
+        textoTotalDeVendasNoCreditoHoje.setText("0");
+        textoTotalDeSaidaNoCaixaHoje.setText("0");
+        textoTotalNoCaixaHoje.setText("0");
+        textoOCaixaIniciouODiaComOValor.setText("0");
+
+
+
+
+    }
+
+
 
     public void carregarComponentesDeTelaParaNaoVisualizar(){
 
@@ -246,7 +331,112 @@ public class CaixaLojaFragment extends Fragment {
 
     }
 
+    private void verificarMontanteCaixaCriado(String idDoUsuario, ProgressDialog progressDialogAlertaCarregandoInformacoesCaixaDiario) {
+
+
+        dataCollectionReferenciaMontanteMensal = new Date();
+        String colletionReferenciaVerificaMontante = simpleDateFormatCollectionReferenciaAtual.format(dataCollectionReferenciaMontanteMensal.getTime());
+
+        System.out.println("--------------------------------------COLLECTION REFERENCIA VERIFICA MONTANTE------------------------------" + colletionReferenciaVerificaMontante);
+
+        String nomeCompletoColletion = COLLECTION_MONTANTE_DESSE_MES + "_" + colletionReferenciaVerificaMontante;
+
+        System.out.println("--------------------------------------nomeCompletoColletion------------------------------" + nomeCompletoColletion);
+
+        firebaseFirestore.collection(idDoUsuario).whereEqualTo("mesReferenciaMontanteMensal",colletionReferenciaVerificaMontante)
+                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                List<DocumentSnapshot> snapshotList = queryDocumentSnapshots.getDocuments();
+
+                if(snapshotList.size() > 0){
+                    //EXISTE MONTANTE MENSAL CRIADO ENTÃO ----------------------------
+
+                    //-------------VERIFICANDO SE TEM MONTANTE CAIXA DIARIO------------------
+
+
+                    for (DocumentSnapshot snapshot : snapshotList) {
+                        idRecuperadoMontanteDiarioCasoExista = snapshot.getId();
+                    }
+
+
+                    firebaseFirestore.collection(idDoUsuario).document(nomeCompletoColletion).collection(idRecuperadoMontanteDiarioCasoExista)
+                            .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                            List<DocumentSnapshot> snapshotListMontanteDiario = queryDocumentSnapshots.getDocuments();
+
+                            if(snapshotListMontanteDiario.size() > 0){
+
+                                //TEM MONTANTE DIARIO CRIADO
+                                Toast.makeText(getActivity(), "Tem montante diario criado", Toast.LENGTH_SHORT).show();
+
+                            }else{
+
+                                //NÃO TEM MONTANTE DIARIO CRIADO
+                                Toast.makeText(getActivity(), "Não tem montante diario criado", Toast.LENGTH_SHORT).show();
+
+                            }
+
+
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
+                        }
+                    });
+
+
+                }else{
 
 
 
+
+                    progressDialogAlertaCarregandoInformacoesCaixaDiario.dismiss();
+                    carregarComponentesDeTelaParaVizualizarQuandoNaoTemMontanteDiarioCriado();
+                }
+
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+
+
+
+    }
+
+    private void carregarInformacoesMontanteExiste(String idRecuperadoMontante) {
+
+        referenceMontanteDesseMes.document(idRecuperadoMontante).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+
+
+
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+
+    }
 }

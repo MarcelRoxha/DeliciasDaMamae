@@ -22,6 +22,7 @@
         <entry key="..\:/APLICACOES/DELICIAS_DA_MAMAE/Aplicacao/DeliciasDaMamae/app/src/main/res/layout/layout_ingredientes_adapter.xml" value="0.5" />
         <entry key="..\:/APLICACOES/DELICIAS_DA_MAMAE/Aplicacao/DeliciasDaMamae/app/src/main/res/layout/layout_item_estoque_adapter.xml" value="0.5" />
         <entry key="..\:/APLICACOES/DELICIAS_DA_MAMAE/Aplicacao/DeliciasDaMamae/app/src/main/res/layout/layout_receitas_prontas_adapter.xml" value="0.25" />
+        <entry key="..\:/APLICACOES/DELICIAS_DA_MAMAE/codigo/DeliciasDaMamae/app/src/main/res/drawable/bg_progress_carrega_informacoes_caixa_diario.xml" value="0.2203125" />
         <entry key="..\:/APLICACOES/DELICIAS_DA_MAMAE/codigo/DeliciasDaMamae/app/src/main/res/layout/activity_editar_bolo_cadastrado_venda.xml" value="0.33" />
         <entry key="..\:/APLICACOES/DELICIAS_DA_MAMAE/codigo/DeliciasDaMamae/app/src/main/res/layout/activity_loja.xml" value="0.67" />
         <entry key="..\:/APLICACOES/DELICIAS_DA_MAMAE/codigo/DeliciasDaMamae/app/src/main/res/layout/activity_loja_v2.xml" value="0.23076923076923078" />
@@ -35,6 +36,7 @@
         <entry key="..\:/APLICACOES/DELICIAS_DA_MAMAE/codigo/DeliciasDaMamae/app/src/main/res/layout/layout_alert_editando_porcentagem_produto_ja_cadastrado.xml" value="0.33" />
         <entry key="..\:/APLICACOES/DELICIAS_DA_MAMAE/codigo/DeliciasDaMamae/app/src/main/res/layout/layout_alerta_carregando_as_informacoes_caixa_diario.xml" value="0.25" />
         <entry key="..\:/APLICACOES/DELICIAS_DA_MAMAE/codigo/DeliciasDaMamae/app/src/main/res/layout/layout_bolos_confecionados_adapter.xml" value="0.75" />
+        <entry key="..\:/APLICACOES/DELICIAS_DA_MAMAE/codigo/DeliciasDaMamae/app/src/main/res/layout/progress_dialog_carregando_informacoes_caixa_diario.xml" value="0.20416666666666666" />
       </map>
     </option>
   </component>
