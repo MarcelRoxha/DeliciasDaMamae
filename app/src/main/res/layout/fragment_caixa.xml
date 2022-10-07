@@ -9,7 +9,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="800dp">
+        android:layout_height="800dp"
+        android:padding="7sp">
 
         <TextView
             android:id="@+id/textoInfoDataUltimaAtualizacaoFragmentCaixa"
@@ -17,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="7dp"
             android:layout_marginTop="24dp"
-            android:text="DATA DA ÚLTIMA ATUALIZAÇÃO DO CAIXA:"
+            android:text="ÚLTIMA ATUALIZAÇÃO DO CAIXA:"
             android:textColor="@color/rosa"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
@@ -104,7 +105,7 @@
             android:layout_marginStart="7dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="7dp"
-            android:text="TOTAL DE ENTRADA EM DINHEIRO NO CAIXA HOJE:"
+            android:text="TOTAL DE VENDAS EM DINHEIRO HOJE:"
             android:textColor="@color/rosa"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"

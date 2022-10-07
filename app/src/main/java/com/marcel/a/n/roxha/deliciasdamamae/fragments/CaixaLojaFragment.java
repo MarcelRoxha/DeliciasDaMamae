@@ -3,6 +3,7 @@ package com.marcel.a.n.roxha.deliciasdamamae.fragments;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,8 +27,12 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.marcel.a.n.roxha.deliciasdamamae.R;
+import com.marcel.a.n.roxha.deliciasdamamae.activity.LojaActivityV2;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
+import com.marcel.a.n.roxha.deliciasdamamae.model.LoadingDialog;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloMontanteMensalLoja;
+
+import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -54,8 +60,8 @@ public class CaixaLojaFragment extends Fragment {
 
     //ALERT CARREGANDO AS INFORMAÇÕES DO CAIXA DIARIO DO USUARIO
 
-    private ProgressDialog progressDialogCarregandoAsInformacoesDoCaixaDiario;
-
+    //private ProgressDialog progressDialogCarregandoAsInformacoesDoCaixaDiario;
+    public AlertDialog progressDialogCarregandoAsInformacoesDoCaixaDiario;
 
 
     //CARREGAR AS INFORMAÇÕES DO USUARIO COMO TOKEN.
@@ -161,12 +167,17 @@ public class CaixaLojaFragment extends Fragment {
 
         View viewCaixaFragment = inflater.inflate(R.layout.fragment_caixa, container, false);
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        progressDialogCarregandoAsInformacoesDoCaixaDiario = new ProgressDialog(getContext());
-        progressDialogCarregandoAsInformacoesDoCaixaDiario.setContentView(R.layout.progress_dialog_carregando_informacoes_caixa_diario);
-        progressDialogCarregandoAsInformacoesDoCaixaDiario.setCancelable(false);
-        progressDialogCarregandoAsInformacoesDoCaixaDiario.show();
+        LayoutInflater inflaterLayout = getActivity().getLayoutInflater();
+        builder.setView(inflaterLayout.inflate(R.layout.progress_dialog_carregando_informacoes_caixa_diario, null));
+        builder.setCancelable(true);
 
+        this.progressDialogCarregandoAsInformacoesDoCaixaDiario = builder.create();
+        this.progressDialogCarregandoAsInformacoesDoCaixaDiario.getWindow().setBackgroundDrawableResource(
+                android.R.color.transparent
+        );
+        this.progressDialogCarregandoAsInformacoesDoCaixaDiario.show();
 
        keyUserRecuperado =  auth.getCurrentUser().toString();
 
@@ -181,7 +192,6 @@ public class CaixaLojaFragment extends Fragment {
         textoTotalDeVendasNoDebitoNoCaixaHoje = viewCaixaFragment.findViewById(R.id.texto_entrada_no_debito_hoje_no_caixa_id);
         textoInformativoSobreEssaAbaCaixa = viewCaixaFragment.findViewById(R.id.texto_informativo_sobre_aba_caixa_id);
 
-
         infoTextoDataDaUltimaAtualizacaoDoCaixaApresentandoParaOUsuario = viewCaixaFragment.findViewById(R.id.textoInfoDataUltimaAtualizacaoFragmentCaixa);
         infoTextoOCaixaIniciouODiaComOValor = viewCaixaFragment.findViewById(R.id.textViewcaixa95);
         infoTextoTotalNoCaixaHoje = viewCaixaFragment.findViewById(R.id.textViewcaixa90);
@@ -189,9 +199,6 @@ public class CaixaLojaFragment extends Fragment {
         infoTextoTotalDeSaidaNoCaixaHoje = viewCaixaFragment.findViewById(R.id.textViewcaixa92);
         infoTextoTotalDeVendasNoCreditoHoje = viewCaixaFragment.findViewById(R.id.textViewcaixa97);
         infoTextoTotalDeVendasNoDebitoNoCaixaHoje = viewCaixaFragment.findViewById(R.id.textViewcaixa98);
-
-
-
 
         botaoParaIniciarOdia = viewCaixaFragment.findViewById(R.id.botao_iniciar_o_dia_boleria_id);
         botaoParaCriarMontante = viewCaixaFragment.findViewById(R.id.botao_criar_montante_mensal_id);
@@ -207,6 +214,15 @@ public class CaixaLojaFragment extends Fragment {
         carregarComponentesDeTelaParaNaoVisualizar();
 
         verificarMontanteCaixaCriado(keyUserRecuperado, progressDialogCarregandoAsInformacoesDoCaixaDiario);
+
+        botaoParaCriarMontante.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                verificaSeExisteMontanteCriadoAoTentarCriarUm(keyUserRecuperado);
+
+            }
+        });
 
 
         return viewCaixaFragment;
@@ -331,17 +347,86 @@ public class CaixaLojaFragment extends Fragment {
 
     }
 
-    private void verificarMontanteCaixaCriado(String idDoUsuario, ProgressDialog progressDialogAlertaCarregandoInformacoesCaixaDiario) {
+
+    public void verificaSeExisteMontanteCriadoAoTentarCriarUm(String idDoUsuario){
 
 
         dataCollectionReferenciaMontanteMensal = new Date();
         String colletionReferenciaVerificaMontante = simpleDateFormatCollectionReferenciaAtual.format(dataCollectionReferenciaMontanteMensal.getTime());
 
-        System.out.println("--------------------------------------COLLECTION REFERENCIA VERIFICA MONTANTE------------------------------" + colletionReferenciaVerificaMontante);
-
         String nomeCompletoColletion = COLLECTION_MONTANTE_DESSE_MES + "_" + colletionReferenciaVerificaMontante;
 
-        System.out.println("--------------------------------------nomeCompletoColletion------------------------------" + nomeCompletoColletion);
+        firebaseFirestore.collection(idDoUsuario).whereEqualTo("mesReferenciaMontanteMensal",colletionReferenciaVerificaMontante)
+                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                List<DocumentSnapshot> snapshotList = queryDocumentSnapshots.getDocuments();
+
+                if(snapshotList.size() > 0) {
+                    for (DocumentSnapshot snapshot : snapshotList) {
+                        idRecuperadoMontanteDiarioCasoExista = snapshot.getId();
+                    }
+                    Toast.makeText(getActivity(), "ATENÇÃO JÁ EXISTE UM MONTANTE MENSAL CRIADO, VERIFIQUE A ABA FINANCEIRO PARA MAIS DETALHES", Toast.LENGTH_SHORT).show();
+
+                }else{
+
+
+                    AlertDialog.Builder alertaParaCriarUmMontante = new AlertDialog.Builder(getActivity());
+                    View viewLayout = getLayoutInflater().inflate(R.layout.alerta_criar_um_montante_mensal, null);
+
+                    EditText quantoIniciaraPositivoMontanteMensal = viewLayout.findViewById(R.id.input_com_quanto_o_montante_iniciara_positivo_id);
+                    EditText quantoIniciaraNegativoMontanteMensal = viewLayout.findViewById(R.id.input_com_quanto_o_montante_iniciara_negativo_id);
+                    TextView textoInformativoCriandoMontanteMensal = viewLayout.findViewById(R.id.texto_informativo_criando_montante_mensal_do_mes_de_id);
+
+                    //CRIARNDO UM MONTANTE MENSAL DO MÊS DE:
+
+
+                    alertaParaCriarUmMontante.setCancelable(false);
+
+                    alertaParaCriarUmMontante.setView(quantoIniciaraPositivoMontanteMensal);
+                    alertaParaCriarUmMontante.setView(quantoIniciaraNegativoMontanteMensal);
+                    alertaParaCriarUmMontante.setView(textoInformativoCriandoMontanteMensal);
+                    textoInformativoCriandoMontanteMensal.setText("CRIANDO UM MONTANTE MENSAL DO MÊS DE: " + colletionReferenciaVerificaMontante);
+                    alertaParaCriarUmMontante.setView(viewLayout);
+
+                    alertaParaCriarUmMontante.setPositiveButton("CRIAR MONTANTE", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    }).setNegativeButton("CANCELAR CRIAÇÃO", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+
+                    alertaParaCriarUmMontante.show();
+                    alertaParaCriarUmMontante.create();
+
+
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+
+
+
+
+    }
+
+    private void verificarMontanteCaixaCriado(String idDoUsuario, AlertDialog progressDialogAlertaCarregandoInformacoesCaixaDiario) {
+       // progressDialogCarregandoAsInformacoesDoCaixaDiario.setMessage("CARREGANDO AS INFORMAÇÕES.");
+
+        dataCollectionReferenciaMontanteMensal = new Date();
+        String colletionReferenciaVerificaMontante = simpleDateFormatCollectionReferenciaAtual.format(dataCollectionReferenciaMontanteMensal.getTime());
+
+        String nomeCompletoColletion = COLLECTION_MONTANTE_DESSE_MES + "_" + colletionReferenciaVerificaMontante;
 
         firebaseFirestore.collection(idDoUsuario).whereEqualTo("mesReferenciaMontanteMensal",colletionReferenciaVerificaMontante)
                 .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -351,16 +436,10 @@ public class CaixaLojaFragment extends Fragment {
                 List<DocumentSnapshot> snapshotList = queryDocumentSnapshots.getDocuments();
 
                 if(snapshotList.size() > 0){
-                    //EXISTE MONTANTE MENSAL CRIADO ENTÃO ----------------------------
-
-                    //-------------VERIFICANDO SE TEM MONTANTE CAIXA DIARIO------------------
-
 
                     for (DocumentSnapshot snapshot : snapshotList) {
                         idRecuperadoMontanteDiarioCasoExista = snapshot.getId();
                     }
-
-
                     firebaseFirestore.collection(idDoUsuario).document(nomeCompletoColletion).collection(idRecuperadoMontanteDiarioCasoExista)
                             .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                         @Override
@@ -371,12 +450,33 @@ public class CaixaLojaFragment extends Fragment {
                             if(snapshotListMontanteDiario.size() > 0){
 
                                 //TEM MONTANTE DIARIO CRIADO
-                                Toast.makeText(getActivity(), "Tem montante diario criado", Toast.LENGTH_SHORT).show();
+                                for (DocumentSnapshot snapshot : snapshotListMontanteDiario) {
+                                    idRecuperadoMontanteDiarioCasoExista = snapshot.getId();
+                                }
+                                firebaseFirestore.collection(idDoUsuario).document(nomeCompletoColletion).collection(idRecuperadoMontanteDiarioCasoExista)
+                                        .document(idRecuperadoMontanteDiarioCasoExista)
+                                        .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+
+                                    }
+                                });
+
+
+
+
 
                             }else{
 
                                 //NÃO TEM MONTANTE DIARIO CRIADO
-                                Toast.makeText(getActivity(), "Não tem montante diario criado", Toast.LENGTH_SHORT).show();
+
+
 
                             }
 
@@ -392,10 +492,11 @@ public class CaixaLojaFragment extends Fragment {
 
                 }else{
 
-
+                //    progressDialogCarregandoAsInformacoesDoCaixaDiario.setMessage("CARREGANDO AS INFORMAÇÕES.");
 
 
                     progressDialogAlertaCarregandoInformacoesCaixaDiario.dismiss();
+                 //   progressDialogAlertaCarregandoInformacoesCaixaDiario.dismiss();
                     carregarComponentesDeTelaParaVizualizarQuandoNaoTemMontanteDiarioCriado();
                 }
 
@@ -417,9 +518,6 @@ public class CaixaLojaFragment extends Fragment {
         referenceMontanteDesseMes.document(idRecuperadoMontante).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-
-
-
 
 
             }
