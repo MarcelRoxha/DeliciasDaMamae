@@ -5,23 +5,28 @@ import java.io.Serializable;
 public class ModeloMontanteMensalLoja implements Serializable {
 
     private String idMontante;
-    private String dataReferenciaDesseMontante;
+    private String mesReferenciaDesseMontante;
     private String valorTotalVendasBoleriaMensal;
     private String valorTotalVendasIfoodMensal;
     private String valorTotalVendasEmGeralMensal;
     private String quantoDinheiroEntrouEsseMes;
     private String quantoDinheiroSaiuEsseMes;
+    private String valorQueOMontanteIniciouPositivo;
+    private String valorQueOMontanteIniciouNegativo;
 
     public ModeloMontanteMensalLoja() {
     }
 
-    public ModeloMontanteMensalLoja(String idMontante, String valorTotalVendasBoleriaMensal, String valorTotalVendasIfoodMensal, String valorTotalVendasEmGeralMensal, String quantoDinheiroEntrouEsseMes, String quantoDinheiroSaiuEsseMes) {
+    public ModeloMontanteMensalLoja(String idMontante, String mesReferenciaDesseMontante, String valorTotalVendasBoleriaMensal, String valorTotalVendasIfoodMensal, String valorTotalVendasEmGeralMensal, String quantoDinheiroEntrouEsseMes, String quantoDinheiroSaiuEsseMes, String valorQueOMontanteIniciouPositivo, String valorQueOMontanteIniciouNegativo) {
         this.idMontante = idMontante;
+        this.mesReferenciaDesseMontante = mesReferenciaDesseMontante;
         this.valorTotalVendasBoleriaMensal = valorTotalVendasBoleriaMensal;
         this.valorTotalVendasIfoodMensal = valorTotalVendasIfoodMensal;
         this.valorTotalVendasEmGeralMensal = valorTotalVendasEmGeralMensal;
         this.quantoDinheiroEntrouEsseMes = quantoDinheiroEntrouEsseMes;
         this.quantoDinheiroSaiuEsseMes = quantoDinheiroSaiuEsseMes;
+        this.valorQueOMontanteIniciouPositivo = valorQueOMontanteIniciouPositivo;
+        this.valorQueOMontanteIniciouNegativo = valorQueOMontanteIniciouNegativo;
     }
 
     public String getIdMontante() {
@@ -72,15 +77,42 @@ public class ModeloMontanteMensalLoja implements Serializable {
         this.quantoDinheiroSaiuEsseMes = quantoDinheiroSaiuEsseMes;
     }
 
+    public String getMesReferenciaDesseMontante() {
+        return mesReferenciaDesseMontante;
+    }
+
+    public void setMesReferenciaDesseMontante(String dataReferenciaDesseMontante) {
+        this.mesReferenciaDesseMontante = dataReferenciaDesseMontante;
+    }
+
+    public String getValorQueOMontanteIniciouPositivo() {
+        return valorQueOMontanteIniciouPositivo;
+    }
+
+    public void setValorQueOMontanteIniciouPositivo(String valorQueOMontanteIniciouPositivo) {
+        this.valorQueOMontanteIniciouPositivo = valorQueOMontanteIniciouPositivo;
+    }
+
+    public String getValorQueOMontanteIniciouNegativo() {
+        return valorQueOMontanteIniciouNegativo;
+    }
+
+    public void setValorQueOMontanteIniciouNegativo(String valorQueOMontanteIniciouNegativo) {
+        this.valorQueOMontanteIniciouNegativo = valorQueOMontanteIniciouNegativo;
+    }
+
     @Override
     public String toString() {
         return "ModeloMontanteMensalLoja{" +
                 "idMontante='" + idMontante + '\'' +
+                ", mesReferenciaDesseMontante='" + mesReferenciaDesseMontante + '\'' +
                 ", valorTotalVendasBoleriaMensal='" + valorTotalVendasBoleriaMensal + '\'' +
                 ", valorTotalVendasIfoodMensal='" + valorTotalVendasIfoodMensal + '\'' +
                 ", valorTotalVendasEmGeralMensal='" + valorTotalVendasEmGeralMensal + '\'' +
                 ", quantoDinheiroEntrouEsseMes='" + quantoDinheiroEntrouEsseMes + '\'' +
                 ", quantoDinheiroSaiuEsseMes='" + quantoDinheiroSaiuEsseMes + '\'' +
+                ", valorQueOMontanteIniciouPositivo='" + valorQueOMontanteIniciouPositivo + '\'' +
+                ", valorQueOMontanteIniciouNegativo='" + valorQueOMontanteIniciouNegativo + '\'' +
                 '}';
     }
 }

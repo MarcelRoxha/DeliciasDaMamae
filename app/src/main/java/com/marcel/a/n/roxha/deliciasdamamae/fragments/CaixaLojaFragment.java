@@ -29,6 +29,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.marcel.a.n.roxha.deliciasdamamae.R;
 import com.marcel.a.n.roxha.deliciasdamamae.activity.LojaActivityV2;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
+import com.marcel.a.n.roxha.deliciasdamamae.helper.ModeloMontanteMensalDAO;
 import com.marcel.a.n.roxha.deliciasdamamae.model.LoadingDialog;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloMontanteMensalLoja;
 
@@ -115,7 +116,7 @@ public class CaixaLojaFragment extends Fragment {
     private Date dataCollectionReferenciaMontanteMensal = new Date();
     private String hojeString = "";
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
-    private SimpleDateFormat simpleDateFormatCollectionReferenciaAtual = new SimpleDateFormat("MM/yy");
+    private SimpleDateFormat simpleDateFormatCollectionReferenciaAtual = new SimpleDateFormat("MM/yyyy");
 
 
 
@@ -354,7 +355,7 @@ public class CaixaLojaFragment extends Fragment {
         dataCollectionReferenciaMontanteMensal = new Date();
         String colletionReferenciaVerificaMontante = simpleDateFormatCollectionReferenciaAtual.format(dataCollectionReferenciaMontanteMensal.getTime());
 
-        String nomeCompletoColletion = COLLECTION_MONTANTE_DESSE_MES + "_" + colletionReferenciaVerificaMontante;
+        String nomeCompletoColletionMontanteDesseMes = COLLECTION_MONTANTE_DESSE_MES + "_" + colletionReferenciaVerificaMontante;
 
         firebaseFirestore.collection(idDoUsuario).whereEqualTo("mesReferenciaMontanteMensal",colletionReferenciaVerificaMontante)
                 .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -393,6 +394,129 @@ public class CaixaLojaFragment extends Fragment {
                     alertaParaCriarUmMontante.setPositiveButton("CRIAR MONTANTE", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+
+                            System.out.println("------------------------------------------INICIANDO CRIAR MONTANTE CLIQUEI NO BOTÃO----------------------------------------");
+
+                            String quantoNegativoDigitado = quantoIniciaraNegativoMontanteMensal.getText().toString();
+                            String quantoPositivoDigitado = quantoIniciaraPositivoMontanteMensal.getText().toString();
+
+
+                            if(quantoNegativoDigitado.equals("")){
+
+                                System.out.println("------------------------------------------INICIANDO CRIAR MONTANTE CLIQUEI NO BOTÃO quantoIniciaraNegativoMontanteMensal.equals(\"\")----------------------------------------");
+
+
+                                ModeloMontanteMensalLoja modeloMontanteMensalLojaSendoIniciado = new ModeloMontanteMensalLoja();
+                                ModeloMontanteMensalDAO modeloMontanteMensalDAOSendoIniciado = new ModeloMontanteMensalDAO(getContext());
+                                String mesReferenciaAtualConvertidoStr = String.valueOf(numMesReferencia);
+                                String valorQueUsuarioDigitouInicioPositivoMontante = quantoIniciaraPositivoMontanteMensal.getText().toString();
+                                String valorTotalVendasBoleriaMensalIniciando = "0";
+                                String valorTotalVendasIfoodMensal = "0";
+                                String valorTotalVendasEmGeralMensal = "0";
+                                String quantoDinheiroEntrouEsseMes = "0";
+                                String quantoDinheiroSaiuEsseMes = "0";
+                                //   String valorQueOMontanteIniciouPositivo = "0";
+                                String valorQueOMontanteIniciouNegativo = "0";
+
+                                modeloMontanteMensalLojaSendoIniciado.setMesReferenciaDesseMontante(mesReferenciaAtualConvertidoStr);
+                                modeloMontanteMensalLojaSendoIniciado.setValorQueOMontanteIniciouPositivo(valorQueUsuarioDigitouInicioPositivoMontante);
+                                modeloMontanteMensalLojaSendoIniciado.setValorTotalVendasBoleriaMensal(valorTotalVendasBoleriaMensalIniciando);
+                                modeloMontanteMensalLojaSendoIniciado.setValorTotalVendasIfoodMensal(valorTotalVendasIfoodMensal);
+                                modeloMontanteMensalLojaSendoIniciado.setValorTotalVendasEmGeralMensal(valorTotalVendasEmGeralMensal);
+                                modeloMontanteMensalLojaSendoIniciado.setQuantoDinheiroEntrouEsseMes(quantoDinheiroEntrouEsseMes);
+                                modeloMontanteMensalLojaSendoIniciado.setQuantoDinheiroSaiuEsseMes(quantoDinheiroSaiuEsseMes);
+                                modeloMontanteMensalLojaSendoIniciado.setValorQueOMontanteIniciouNegativo(valorQueOMontanteIniciouNegativo);
+
+                                System.out.println("----------------------------------------modeloMontanteMensalLojaSendoIniciado" + modeloMontanteMensalLojaSendoIniciado.toString());
+
+
+
+                                modeloMontanteMensalDAOSendoIniciado.modeloMontanteCriando(idDoUsuario, modeloMontanteMensalLojaSendoIniciado);
+
+
+
+                            }else
+                            if (quantoPositivoDigitado.equals("")){
+                                System.out.println("------------------------------------------INICIANDO CRIAR MONTANTE CLIQUEI NO BOTÃO quantoIniciaraPositivoMontanteMensal.equals(\"\")----------------------------------------");
+
+
+                                ModeloMontanteMensalLoja modeloMontanteMensalLojaSendoIniciado = new ModeloMontanteMensalLoja();
+                                ModeloMontanteMensalDAO modeloMontanteMensalDAOSendoIniciado = new ModeloMontanteMensalDAO(getContext());
+                                String mesReferenciaAtualConvertidoStr = String.valueOf(numMesReferencia);
+                                String valorTotalVendasBoleriaMensalIniciando = "0";
+                                String valorTotalVendasIfoodMensal = "0";
+                                String valorTotalVendasEmGeralMensal = "0";
+                                String quantoDinheiroEntrouEsseMes = "0";
+                                String quantoDinheiroSaiuEsseMes = "0";
+                                String valorQueOMontanteIniciouPositivo = "0";
+                                String valorQueOMontanteIniciouNegativo = quantoIniciaraNegativoMontanteMensal.getText().toString();
+
+                                modeloMontanteMensalLojaSendoIniciado.setMesReferenciaDesseMontante(mesReferenciaAtualConvertidoStr);
+                                modeloMontanteMensalLojaSendoIniciado.setValorQueOMontanteIniciouPositivo(valorQueOMontanteIniciouPositivo);
+                                modeloMontanteMensalLojaSendoIniciado.setValorTotalVendasBoleriaMensal(valorTotalVendasBoleriaMensalIniciando);
+                                modeloMontanteMensalLojaSendoIniciado.setValorTotalVendasIfoodMensal(valorTotalVendasIfoodMensal);
+                                modeloMontanteMensalLojaSendoIniciado.setValorTotalVendasEmGeralMensal(valorTotalVendasEmGeralMensal);
+                                modeloMontanteMensalLojaSendoIniciado.setQuantoDinheiroEntrouEsseMes(quantoDinheiroEntrouEsseMes);
+                                modeloMontanteMensalLojaSendoIniciado.setQuantoDinheiroSaiuEsseMes(quantoDinheiroSaiuEsseMes);
+                                modeloMontanteMensalLojaSendoIniciado.setValorQueOMontanteIniciouNegativo(valorQueOMontanteIniciouNegativo);
+                                System.out.println("----------------------------------------modeloMontanteMensalLojaSendoIniciado" + modeloMontanteMensalLojaSendoIniciado.toString());
+
+                                modeloMontanteMensalDAOSendoIniciado.modeloMontanteCriando(idDoUsuario, modeloMontanteMensalLojaSendoIniciado);
+                            }else
+                            if (quantoNegativoDigitado.equals("") && quantoPositivoDigitado.equals("")){
+
+                                System.out.println("------------------------------------------INICIANDO CRIAR MONTANTE CLIQUEI NO BOTÃO quantoIniciaraPositivoMontanteMensal.equals(\"\") || quantoIniciaraNegativoMontanteMensal.equals(\"\")----------------------------------------");
+
+                                ModeloMontanteMensalLoja modeloMontanteMensalLojaSendoIniciado = new ModeloMontanteMensalLoja();
+                                ModeloMontanteMensalDAO modeloMontanteMensalDAOSendoIniciado = new ModeloMontanteMensalDAO(getContext());
+                                String mesReferenciaAtualConvertidoStr = String.valueOf(numMesReferencia);
+                                String valorTotalVendasBoleriaMensalIniciando = "0";
+                                String valorTotalVendasIfoodMensal = "0";
+                                String valorTotalVendasEmGeralMensal = "0";
+                                String quantoDinheiroEntrouEsseMes = "0";
+                                String quantoDinheiroSaiuEsseMes = "0";
+                                String valorQueOMontanteIniciouPositivo = "0";
+                                String valorQueOMontanteIniciouNegativo = "0";
+
+                                modeloMontanteMensalLojaSendoIniciado.setMesReferenciaDesseMontante(mesReferenciaAtualConvertidoStr);
+                                modeloMontanteMensalLojaSendoIniciado.setValorQueOMontanteIniciouPositivo(valorQueOMontanteIniciouPositivo);
+                                modeloMontanteMensalLojaSendoIniciado.setValorTotalVendasBoleriaMensal(valorTotalVendasBoleriaMensalIniciando);
+                                modeloMontanteMensalLojaSendoIniciado.setValorTotalVendasIfoodMensal(valorTotalVendasIfoodMensal);
+                                modeloMontanteMensalLojaSendoIniciado.setValorTotalVendasEmGeralMensal(valorTotalVendasEmGeralMensal);
+                                modeloMontanteMensalLojaSendoIniciado.setQuantoDinheiroEntrouEsseMes(quantoDinheiroEntrouEsseMes);
+                                modeloMontanteMensalLojaSendoIniciado.setQuantoDinheiroSaiuEsseMes(quantoDinheiroSaiuEsseMes);
+                                modeloMontanteMensalLojaSendoIniciado.setValorQueOMontanteIniciouNegativo(valorQueOMontanteIniciouNegativo);
+                                System.out.println("----------------------------------------modeloMontanteMensalLojaSendoIniciado" + modeloMontanteMensalLojaSendoIniciado.toString());
+
+                                modeloMontanteMensalDAOSendoIniciado.modeloMontanteCriando(idDoUsuario, modeloMontanteMensalLojaSendoIniciado);
+
+                            }else{
+
+                                System.out.println("------------------------------------------INICIANDO CRIAR MONTANTE CLIQUEI NO BOTÃO VALOR DIGITADO PELO USUARIO----------------------------------------");
+
+                                ModeloMontanteMensalLoja modeloMontanteMensalLojaSendoIniciado = new ModeloMontanteMensalLoja();
+                                ModeloMontanteMensalDAO modeloMontanteMensalDAOSendoIniciado = new ModeloMontanteMensalDAO(getContext());
+                                String mesReferenciaAtualConvertidoStr = String.valueOf(numMesReferencia);
+                                String valorTotalVendasBoleriaMensalIniciando = "0";
+                                String valorTotalVendasIfoodMensal = "0";
+                                String valorTotalVendasEmGeralMensal = "0";
+                                String quantoDinheiroEntrouEsseMes = "0";
+                                String quantoDinheiroSaiuEsseMes = "0";
+                                String valorQueUsuarioDigitouInicioPositivoMontante = quantoIniciaraPositivoMontanteMensal.getText().toString();
+                                String valorQueOMontanteIniciouNegativo = quantoIniciaraNegativoMontanteMensal.getText().toString();
+
+                                modeloMontanteMensalLojaSendoIniciado.setMesReferenciaDesseMontante(mesReferenciaAtualConvertidoStr);
+                                modeloMontanteMensalLojaSendoIniciado.setValorQueOMontanteIniciouPositivo(valorQueUsuarioDigitouInicioPositivoMontante);
+                                modeloMontanteMensalLojaSendoIniciado.setValorTotalVendasBoleriaMensal(valorTotalVendasBoleriaMensalIniciando);
+                                modeloMontanteMensalLojaSendoIniciado.setValorTotalVendasIfoodMensal(valorTotalVendasIfoodMensal);
+                                modeloMontanteMensalLojaSendoIniciado.setValorTotalVendasEmGeralMensal(valorTotalVendasEmGeralMensal);
+                                modeloMontanteMensalLojaSendoIniciado.setQuantoDinheiroEntrouEsseMes(quantoDinheiroEntrouEsseMes);
+                                modeloMontanteMensalLojaSendoIniciado.setQuantoDinheiroSaiuEsseMes(quantoDinheiroSaiuEsseMes);
+                                modeloMontanteMensalLojaSendoIniciado.setValorQueOMontanteIniciouNegativo(valorQueOMontanteIniciouNegativo);
+                                System.out.println("----------------------------------------modeloMontanteMensalLojaSendoIniciado" + modeloMontanteMensalLojaSendoIniciado.toString());
+
+                                modeloMontanteMensalDAOSendoIniciado.modeloMontanteCriando(idDoUsuario, modeloMontanteMensalLojaSendoIniciado);
+                            }
 
                         }
                     }).setNegativeButton("CANCELAR CRIAÇÃO", new DialogInterface.OnClickListener() {
