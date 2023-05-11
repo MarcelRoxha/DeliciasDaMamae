@@ -13,11 +13,14 @@ public class ModeloMontanteMensalLoja implements Serializable {
     private String quantoDinheiroSaiuEsseMes;
     private String valorQueOMontanteIniciouPositivo;
     private String valorQueOMontanteIniciouNegativo;
+    private String valorTotalDeVendasNoDinheiroDesseMes;
+    private String valorTotalDeVendasNoCreditoDesseMes;
+    private String valorTotalDeVendasNoDebitoDesseMes;
 
     public ModeloMontanteMensalLoja() {
     }
 
-    public ModeloMontanteMensalLoja(String idMontante, String mesReferenciaDesseMontante, String valorTotalVendasBoleriaMensal, String valorTotalVendasIfoodMensal, String valorTotalVendasEmGeralMensal, String quantoDinheiroEntrouEsseMes, String quantoDinheiroSaiuEsseMes, String valorQueOMontanteIniciouPositivo, String valorQueOMontanteIniciouNegativo) {
+    public ModeloMontanteMensalLoja(String idMontante, String mesReferenciaDesseMontante, String valorTotalVendasBoleriaMensal, String valorTotalVendasIfoodMensal, String valorTotalVendasEmGeralMensal, String quantoDinheiroEntrouEsseMes, String quantoDinheiroSaiuEsseMes, String valorQueOMontanteIniciouPositivo, String valorQueOMontanteIniciouNegativo, String valorTotalDeVendasNoDinheiroDesseMes, String valorTotalDeVendasNoCreditoDesseMes, String valorTotalDeVendasNoDebitoDesseMes) {
         this.idMontante = idMontante;
         this.mesReferenciaDesseMontante = mesReferenciaDesseMontante;
         this.valorTotalVendasBoleriaMensal = valorTotalVendasBoleriaMensal;
@@ -27,6 +30,9 @@ public class ModeloMontanteMensalLoja implements Serializable {
         this.quantoDinheiroSaiuEsseMes = quantoDinheiroSaiuEsseMes;
         this.valorQueOMontanteIniciouPositivo = valorQueOMontanteIniciouPositivo;
         this.valorQueOMontanteIniciouNegativo = valorQueOMontanteIniciouNegativo;
+        this.valorTotalDeVendasNoDinheiroDesseMes = valorTotalDeVendasNoDinheiroDesseMes;
+        this.valorTotalDeVendasNoCreditoDesseMes = valorTotalDeVendasNoCreditoDesseMes;
+        this.valorTotalDeVendasNoDebitoDesseMes = valorTotalDeVendasNoDebitoDesseMes;
     }
 
     public String getIdMontante() {
@@ -99,6 +105,30 @@ public class ModeloMontanteMensalLoja implements Serializable {
 
     public void setValorQueOMontanteIniciouNegativo(String valorQueOMontanteIniciouNegativo) {
         this.valorQueOMontanteIniciouNegativo = valorQueOMontanteIniciouNegativo;
+    }
+
+    public String getValorTotalDeVendasNoDinheiroDesseMes() {
+        return valorTotalDeVendasNoDinheiroDesseMes;
+    }
+
+    public void setValorTotalDeVendasNoDinheiroDesseMes(String valorTotalDeVendasNoDinheiroDesseMes) {
+        this.valorTotalDeVendasNoDinheiroDesseMes = valorTotalDeVendasNoDinheiroDesseMes;
+    }
+
+    public String getValorTotalDeVendasNoCreditoDesseMes() {
+        return valorTotalDeVendasNoCreditoDesseMes;
+    }
+
+    public void setValorTotalDeVendasNoCreditoDesseMes(String valorTotalDeVendasNoCreditoDesseMes) {
+        this.valorTotalDeVendasNoCreditoDesseMes = valorTotalDeVendasNoCreditoDesseMes;
+    }
+
+    public String getValorTotalDeVendasNoDebitoDesseMes() {
+        return valorTotalDeVendasNoDebitoDesseMes;
+    }
+
+    public void setValorTotalDeVendasNoDebitoDesseMes(String valorTotalDeVendasNoDebitoDesseMes) {
+        this.valorTotalDeVendasNoDebitoDesseMes = valorTotalDeVendasNoDebitoDesseMes;
     }
 
     @Override

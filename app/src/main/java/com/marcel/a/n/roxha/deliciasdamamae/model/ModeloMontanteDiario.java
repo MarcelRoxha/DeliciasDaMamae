@@ -110,4 +110,20 @@ public class ModeloMontanteDiario implements Serializable {
     public void setValorTotalDeTrocoDesseDia(String valorTotalDeTrocoDesseDia) {
         this.valorTotalDeTrocoDesseDia = valorTotalDeTrocoDesseDia;
     }
+
+    @Override
+    public String toString() {
+        return "ModeloMontanteDiario{" +
+                "idReferenciaMontanteDiarioDesseDia='" + idReferenciaMontanteDiarioDesseDia + '\'' +
+                ", dataReferenciaMontanteDiarioDesseDia='" + dataReferenciaMontanteDiarioDesseDia + '\'' +
+                ", valorQueOCaixaIniciouODia='" + valorQueOCaixaIniciouODia + '\'' +
+                ", valorTotalDeVendasNaLojaDesseDia='" + valorTotalDeVendasNaLojaDesseDia + '\'' +
+                ", valorTotalDeVendasNoIfoodDesseDia='" + valorTotalDeVendasNoIfoodDesseDia + '\'' +
+                ", valorTotalDeVendasEmGeralDesseDia='" + valorTotalDeVendasEmGeralDesseDia + '\'' +
+                ", valorTotalDeVendasNoDinheiroDesseDia='" + valorTotalDeVendasNoDinheiroDesseDia + '\'' +
+                ", valorTotalDeVendasNoCreditoDesseDia='" + valorTotalDeVendasNoCreditoDesseDia + '\'' +
+                ", valorTotalDeVendasNoDebitoDesseDia='" + valorTotalDeVendasNoDebitoDesseDia + '\'' +
+                ", valorTotalDeTrocoDesseDia='" + valorTotalDeTrocoDesseDia + '\'' +
+                '}';
+    }
 }
