@@ -192,6 +192,52 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/textViewcaixa98" />
 
+        <TextView
+            android:id="@+id/textViewcaixa99"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="7dp"
+            android:text="TOTAL DE VENDAS NO IFOOD HOJE:"
+            android:textColor="@color/rosa"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewcaixa98" />
+
+        <TextView
+            android:id="@+id/texto_venda_no_ifood_hoje_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="7dp"
+            android:text="TextView"
+            app:layout_constraintBottom_toBottomOf="@+id/textViewcaixa99"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textViewcaixa99" />
+
+        <TextView
+            android:id="@+id/textViewcaixa100"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="7dp"
+            android:text="TOTAL DE VENDAS EM GERAL HOJE:"
+            android:textColor="@color/rosa"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewcaixa99" />
+
+        <TextView
+            android:id="@+id/texto_total_de_vendas_em_geral_hoje_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="7dp"
+            android:text="TextView"
+            app:layout_constraintBottom_toBottomOf="@+id/textViewcaixa100"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textViewcaixa100" />
+
 
         <Button
             android:id="@+id/botao_iniciar_o_dia_boleria_id"

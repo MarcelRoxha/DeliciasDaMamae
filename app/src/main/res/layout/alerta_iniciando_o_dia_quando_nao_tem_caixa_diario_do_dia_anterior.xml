@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.CaixaLojaFragment"
+    tools:ignore="SpeakableTextPresentCheck">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="800dp"
+        android:background="@color/white"
+        android:padding="7sp">
+
+        <ImageView
+            android:id="@+id/imageView12"
+            android:layout_width="175dp"
+            android:layout_height="175dp"
+            android:layout_marginTop="3dp"
+            android:scaleType="fitCenter"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_logo_load_activity" />
+
+        <TextView
+            android:id="@+id/texto_informativo_iniciando_o_dia"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="50dp"
+            android:gravity="center"
+            android:padding="7sp"
+            android:text="VOCÊ ESTÁ INICIANDO PELA PRIMEIRA VEZ"
+            android:textAlignment="center"
+            android:textColor="@color/rosa"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView12" />
+
+        <TextView
+            android:id="@+id/textView91"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="50dp"
+            android:text="O CAIXA DIÁRIO E O MONTANTE MENSAL IRÁ INICIAR COM R$:"
+            android:textAlignment="center"
+            android:textColor="@color/rosa"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView88" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout14"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="3dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="3dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView91">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/input_caixa_iniciou_a_primeira_vez_o_caixa"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="O MÊS E O CAIXA INICIARÁ COM R$: "
+                tools:ignore="TouchTargetSizeCheck" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <TextView
+            android:id="@+id/textView88"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="3dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="3dp"
+            android:text="COMO É A PRIMEIRA VEZ QUE INICIA O DIA, VAMOS CRIAR TAMBÉM UM MONTANTE MENSAL COM BASE NESSE VALOR DE AGORA"
+            android:textAlignment="center"
+            android:textColor="@color/azul_claro"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/texto_informativo_iniciando_o_dia" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
