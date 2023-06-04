@@ -14,12 +14,20 @@ import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloMontanteDiario;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloMontanteMensalLoja;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ModeloMontanteDiarioDAO implements InterfaceModeloMontanteDiarioDAO{
-    private static final String COLLECTIO_MONTANTE_MENSAL = "CAIXAS_DIARIO";
+    private static final String COLLECTION_CAIXA_DIARIO = "CAIXAS_DIARIO";
+    private Date dataHoje = new Date();
+    private String mesAtual = "";
+    private String anoAtual = "";
+    private String  nomeCompletoColletion = "";
+    private SimpleDateFormat simpleDateFormatCollectionReferenciaAtual = new SimpleDateFormat("MM");
+    private SimpleDateFormat simpleDateFormatCollectionReferenciaAnoAtual = new SimpleDateFormat("yyyy");
+
 
     private Context context;
     private FirebaseFirestore firestore = ConfiguracaoFirebase.getFirestor();
@@ -27,8 +35,10 @@ public class ModeloMontanteDiarioDAO implements InterfaceModeloMontanteDiarioDAO
 
     public ModeloMontanteDiarioDAO(Context context){
         this.context = context;
-        this.referenceMontanteDiarioHoje = firestore.collection(COLLECTIO_MONTANTE_MENSAL);
-
+        this.mesAtual = simpleDateFormatCollectionReferenciaAtual.format(dataHoje);
+        this.anoAtual = simpleDateFormatCollectionReferenciaAnoAtual.format(dataHoje);
+        this.nomeCompletoColletion = COLLECTION_CAIXA_DIARIO + "_" + mesAtual + "_" + anoAtual;
+        this.referenceMontanteDiarioHoje = firestore.collection(nomeCompletoColletion);
     }
 
 

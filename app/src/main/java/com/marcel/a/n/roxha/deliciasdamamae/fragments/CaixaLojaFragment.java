@@ -695,6 +695,8 @@ public class CaixaLojaFragment extends Fragment {
                         String referenciaDesseMesNoMontanteMensal = mesAtual + "_" + anoAtual;
 
                         String nomeCompletoColletion = COLLECTION_MONTANTE_DESSE_MES + "_" + referenciaDesseMesNoMontanteMensal;
+                        String nomeCompletoCollectionMontanteDiario = COLLECTION_CAIXA_DIARIO + "_" + referenciaDesseMesNoMontanteMensal;
+
                         System.out.println("nomeCompletoColletion --" + nomeCompletoColletion);
                         firebaseFirestore.collection(nomeCompletoColletion).whereEqualTo("mesReferenciaDesseMontante", referenciaDesseMesNoMontanteMensal)
                                 .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -750,10 +752,10 @@ public class CaixaLojaFragment extends Fragment {
 
                                     AlertDialog.Builder alertaCriarMontanteMensal = new AlertDialog.Builder(getActivity());
                                     LayoutInflater inflaterLayout = getActivity().getLayoutInflater();
-                                    alertaCriarMontanteMensal.setView(inflaterLayout.inflate(R.layout.alerta_criar_um_montante_mensal, null));
-                                    View view = getLayoutInflater().inflate(R.layout.alerta_criar_um_montante_mensal, null);
+                                    alertaCriarMontanteMensal.setView(inflaterLayout.inflate(R.layout.alerta_criar_um_montante_diario_e_montante_mensal, null));
+                                    View view = getLayoutInflater().inflate(R.layout.alerta_criar_um_montante_diario_e_montante_mensal, null);
 
-                                    EditText valorDigitadoPeloUsuario = view.findViewById(R.id.input_com_quanto_ira_iniciar_o_caixa_esse_mes);
+                                    EditText valorDigitadoPeloUsuario = view.findViewById(R.id.input_com_quanto_ira_iniciar_o_caixa_diario_e_desse_mes);
                                     alertaCriarMontanteMensal.setView(view);
 
                                     alertaCriarMontanteMensal.setPositiveButton("CONFIRMAR", new DialogInterface.OnClickListener() {
@@ -796,6 +798,11 @@ public class CaixaLojaFragment extends Fragment {
 
 
                                             modeloMontanteDiarioDAOSendoIniciadoDesseMes.modeloMontanteDiarioIniciandoODia(modeloMontanteDiarioIniciado);
+
+                                            carregandoAsInformacoesDoCaixaDiario(progressDialogCarregandoAsInformacoesDoCaixaDiario, diaAtual, nomeCompletoCollectionMontanteDiario);
+
+
+
 
                                         }
                                     }).setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
