@@ -256,25 +256,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewcaixa98" />
 
-        <Button
-            android:id="@+id/botao_criar_montante_mensal_id"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="7dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="7dp"
-            android:text="INICIALIZAR MÊS"
-            android:background="@drawable/btn"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/botao_iniciar_o_dia_boleria_id" />
-
-
-
-
-
 
         <Button
             android:id="@+id/botao_vendi_alguma_coisa_id"
@@ -283,13 +264,13 @@
             android:layout_marginStart="7dp"
             android:layout_marginTop="12dp"
             android:layout_marginEnd="7dp"
-            android:text="OPA VENDI !"
             android:background="@drawable/btn"
+            android:text="OPA VENDI !"
             android:textColor="@color/white"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/botao_criar_montante_mensal_id" />
+            app:layout_constraintTop_toBottomOf="@+id/botao_iniciar_o_dia_boleria_id" />
 
         <Button
             android:id="@+id/botao_ver_vendas_id"

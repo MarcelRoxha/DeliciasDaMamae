@@ -3,12 +3,17 @@ package com.marcel.a.n.roxha.deliciasdamamae.fragments;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.OptIn;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +23,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -25,12 +31,18 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.marcel.a.n.roxha.deliciasdamamae.R;
+import com.marcel.a.n.roxha.deliciasdamamae.activity.LojaActivity;
 import com.marcel.a.n.roxha.deliciasdamamae.activity.LojaActivityV2;
+import com.marcel.a.n.roxha.deliciasdamamae.activity.PrincipalActivity;
+import com.marcel.a.n.roxha.deliciasdamamae.activity.ProducaoActivity;
+import com.marcel.a.n.roxha.deliciasdamamae.adapter.BolosAdicionadosExpostosVitrineAdapter;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
 import com.marcel.a.n.roxha.deliciasdamamae.helper.ModeloMontanteDiarioDAO;
 import com.marcel.a.n.roxha.deliciasdamamae.helper.ModeloMontanteMensalDAO;
+import com.marcel.a.n.roxha.deliciasdamamae.model.BolosAdicionadosVitrine;
 import com.marcel.a.n.roxha.deliciasdamamae.model.LoadingDialog;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloMontanteDiario;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloMontanteMensalLoja;
@@ -67,6 +79,7 @@ public class CaixaLojaFragment extends Fragment {
 
     //private ProgressDialog progressDialogCarregandoAsInformacoesDoCaixaDiario;
     public AlertDialog progressDialogCarregandoAsInformacoesDoCaixaDiario;
+    private RecyclerView recyclerView_itens_vitrine;
 
 
     //CARREGAR AS INFORMAÇÕES DO USUARIO COMO TOKEN.
@@ -98,6 +111,8 @@ public class CaixaLojaFragment extends Fragment {
     private TextView textoTotalDeVendasEmGeral;
 
 
+
+
     //TextoInfo
     private TextView infoTextoDataDaUltimaAtualizacaoDoCaixaApresentandoParaOUsuario;
     private TextView infoTextoOCaixaIniciouODiaComOValor;
@@ -112,7 +127,6 @@ public class CaixaLojaFragment extends Fragment {
 
     //Botões
     private Button botaoParaIniciarOdia;
-    private Button botaoParaCriarMontante;
     private Button botaoOpaVendi;
     private Button botaoVendasFeitas;
     private Button botaoFinalizarDia;
@@ -130,8 +144,10 @@ public class CaixaLojaFragment extends Fragment {
     private int numMesReferencia;
     private int verificaCaixaMensalCriado = 0;
     private final String COLLECTION_CAIXA_DIARIO = "CAIXAS_DIARIO";
-    private final String COLLECTION_CAIXA_DIARIO_COMPLETO = "CAIXA_DIARIO_ANO";
+
     private final String COLLECTION_MONTANTE_DESSE_MES = "MONTANTE_MENSAL";
+
+    private final String COLLECTION_BOLOS_EXPOSTOS_VITRINE = "BOLOS_EXPOSTOS_VITRINE";
     private String nomeDoMes = "";
 
     private Date hoje = new Date();
@@ -150,6 +166,9 @@ public class CaixaLojaFragment extends Fragment {
     private FirebaseFirestore firebaseFirestore = ConfiguracaoFirebase.getFirestor();
     private CollectionReference referenceCaixaDiario = firebaseFirestore.collection(COLLECTION_CAIXA_DIARIO);
     private CollectionReference referenceMontanteDesseMes = firebaseFirestore.collection(COLLECTION_MONTANTE_DESSE_MES);
+    private BolosAdicionadosExpostosVitrineAdapter expostoAdapter;
+
+    private CollectionReference refBolosExpostosVitrine = firebaseFirestore.collection(COLLECTION_BOLOS_EXPOSTOS_VITRINE);
 
 
     //CLASSES
@@ -239,7 +258,7 @@ public class CaixaLojaFragment extends Fragment {
 
 
         botaoParaIniciarOdia = viewCaixaFragment.findViewById(R.id.botao_iniciar_o_dia_boleria_id);
-        botaoParaCriarMontante = viewCaixaFragment.findViewById(R.id.botao_criar_montante_mensal_id);
+
         botaoOpaVendi = viewCaixaFragment.findViewById(R.id.botao_vendi_alguma_coisa_id);
         botaoVendasFeitas = viewCaixaFragment.findViewById(R.id.botao_ver_vendas_id);
         botaoFinalizarDia = viewCaixaFragment.findViewById(R.id.botao_finalizar_dia_id);
@@ -257,15 +276,6 @@ public class CaixaLojaFragment extends Fragment {
 
         verificaSeJaTemCaixaDiarioCriado(this.progressDialogCarregandoAsInformacoesDoCaixaDiario);
 
-        botaoParaCriarMontante.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                progressDialogCarregandoAsInformacoesDoCaixaDiario.show();
-                criarMontanteInicialMes(progressDialogCarregandoAsInformacoesDoCaixaDiario);
-
-            }
-        });
 
 
         botaoParaIniciarOdia.setOnClickListener(new View.OnClickListener() {
@@ -277,6 +287,41 @@ public class CaixaLojaFragment extends Fragment {
 
             }
         });
+
+        botaoOpaVendi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                AlertDialog.Builder alertaMostrarProdutosDaVetrinePoisFoiVendidoAlgo = new AlertDialog.Builder(getContext());
+                alertaMostrarProdutosDaVetrinePoisFoiVendidoAlgo.setTitle("TESTANDO");
+
+                alertaMostrarProdutosDaVetrinePoisFoiVendidoAlgo.setView(inflaterLayout.inflate(R.layout.alerta_opa_vendi_alguma_coisa, null));
+                View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.alerta_opa_vendi_alguma_coisa, null);
+                alertaMostrarProdutosDaVetrinePoisFoiVendidoAlgo.setView(dialogView);
+
+
+                recyclerView_itens_vitrine = dialogView.findViewById(R.id.recyclerView_opa_vendi_alguma_coisa_id);
+                Query query = refBolosExpostosVitrine.orderBy("nomeBolo", Query.Direction.ASCENDING);
+
+                FirestoreRecyclerOptions<BolosAdicionadosVitrine> options = new FirestoreRecyclerOptions.Builder<BolosAdicionadosVitrine>()
+                        .setQuery(query, BolosAdicionadosVitrine.class)
+                        .build();
+
+                expostoAdapter = new BolosAdicionadosExpostosVitrineAdapter(options, getContext());
+
+                LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+
+                recyclerView_itens_vitrine.setHasFixedSize(true);
+                recyclerView_itens_vitrine.setLayoutManager(layoutManager);
+                recyclerView_itens_vitrine.setAdapter(expostoAdapter);
+                expostoAdapter.startListening();
+
+                alertaMostrarProdutosDaVetrinePoisFoiVendidoAlgo.create();
+                alertaMostrarProdutosDaVetrinePoisFoiVendidoAlgo.show();
+
+            }
+        });
+
 
         progressDialogCarregandoAsInformacoesDoCaixaDiario.dismiss();
         return viewCaixaFragment;
@@ -881,7 +926,6 @@ public class CaixaLojaFragment extends Fragment {
                                 botaoFinalizarDia.setVisibility(View.VISIBLE);
                                 botaoVendasFeitas.setVisibility(View.VISIBLE);
                                 botaoOpaVendi.setVisibility(View.VISIBLE);
-                                botaoParaCriarMontante.setVisibility(View.VISIBLE);
                                 botaoParaIniciarOdia.setVisibility(View.VISIBLE);
                                 textoInformativoSobreEssaAbaCaixa.setVisibility(View.VISIBLE);
                                 textoTotalDeVendasNoDebitoNoCaixaHoje.setVisibility(View.VISIBLE);
@@ -982,7 +1026,6 @@ public class CaixaLojaFragment extends Fragment {
 
                                 botaoVendasFeitas.setVisibility(View.VISIBLE);
                                 botaoOpaVendi.setVisibility(View.VISIBLE);
-                                botaoParaCriarMontante.setVisibility(View.VISIBLE);
                                 botaoParaIniciarOdia.setVisibility(View.VISIBLE);
                                 textoInformativoSobreEssaAbaCaixa.setVisibility(View.VISIBLE);
 
@@ -1037,7 +1080,6 @@ public class CaixaLojaFragment extends Fragment {
         botaoFinalizarDia.setVisibility(View.VISIBLE);
         botaoVendasFeitas.setVisibility(View.VISIBLE);
         botaoOpaVendi.setVisibility(View.VISIBLE);
-        botaoParaCriarMontante.setVisibility(View.VISIBLE);
         botaoParaIniciarOdia.setVisibility(View.VISIBLE);
         textoInformativoSobreEssaAbaCaixa.setVisibility(View.VISIBLE);
 
@@ -1076,7 +1118,6 @@ public class CaixaLojaFragment extends Fragment {
         botaoFinalizarDia.setVisibility(View.VISIBLE);
         botaoVendasFeitas.setVisibility(View.VISIBLE);
         botaoOpaVendi.setVisibility(View.VISIBLE);
-        botaoParaCriarMontante.setVisibility(View.VISIBLE);
         botaoParaIniciarOdia.setVisibility(View.VISIBLE);
         textoInformativoSobreEssaAbaCaixa.setVisibility(View.VISIBLE);
         textoTotalDeVendasNoDebitoNoCaixaHoje.setVisibility(View.VISIBLE);
@@ -1125,7 +1166,6 @@ public class CaixaLojaFragment extends Fragment {
         botaoFinalizarDia.setVisibility(View.GONE);
         botaoVendasFeitas.setVisibility(View.GONE);
         botaoOpaVendi.setVisibility(View.GONE);
-        botaoParaCriarMontante.setVisibility(View.GONE);
         botaoParaIniciarOdia.setVisibility(View.GONE);
         textoInformativoSobreEssaAbaCaixa.setVisibility(View.GONE);
         textoTotalDeVendasNoDebitoNoCaixaHoje.setVisibility(View.GONE);
@@ -1150,5 +1190,6 @@ public class CaixaLojaFragment extends Fragment {
         infoTextoTotalDeVendasNoIfoofHoje.setVisibility(View.GONE);
 
     }
+
 }
 
