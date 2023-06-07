@@ -34,6 +34,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.marcel.a.n.roxha.deliciasdamamae.R;
+import com.marcel.a.n.roxha.deliciasdamamae.activity.AdicionarBoloVitrineActivity2;
 import com.marcel.a.n.roxha.deliciasdamamae.activity.LojaActivity;
 import com.marcel.a.n.roxha.deliciasdamamae.activity.LojaActivityV2;
 import com.marcel.a.n.roxha.deliciasdamamae.activity.PrincipalActivity;
@@ -128,6 +129,7 @@ public class CaixaLojaFragment extends Fragment {
     //Botões
     private Button botaoParaIniciarOdia;
     private Button botaoOpaVendi;
+    private Button botaoVitrineLoja;
     private Button botaoVendasFeitas;
     private Button botaoFinalizarDia;
 
@@ -260,6 +262,7 @@ public class CaixaLojaFragment extends Fragment {
         botaoParaIniciarOdia = viewCaixaFragment.findViewById(R.id.botao_iniciar_o_dia_boleria_id);
 
         botaoOpaVendi = viewCaixaFragment.findViewById(R.id.botao_vendi_alguma_coisa_id);
+        botaoVitrineLoja = viewCaixaFragment.findViewById(R.id.botao_vitrine_loja_id);
         botaoVendasFeitas = viewCaixaFragment.findViewById(R.id.botao_ver_vendas_id);
         botaoFinalizarDia = viewCaixaFragment.findViewById(R.id.botao_finalizar_dia_id);
         carregarComponentesDeTelaParaNaoVisualizar();
@@ -322,6 +325,14 @@ public class CaixaLojaFragment extends Fragment {
             }
         });
 
+        botaoVitrineLoja.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), AdicionarBoloVitrineActivity2.class);
+                startActivity(intent);
+                getActivity().finish();
+            }
+        });
 
         progressDialogCarregandoAsInformacoesDoCaixaDiario.dismiss();
         return viewCaixaFragment;
@@ -926,6 +937,7 @@ public class CaixaLojaFragment extends Fragment {
                                 botaoFinalizarDia.setVisibility(View.VISIBLE);
                                 botaoVendasFeitas.setVisibility(View.VISIBLE);
                                 botaoOpaVendi.setVisibility(View.VISIBLE);
+                                botaoVitrineLoja.setVisibility(View.VISIBLE);
                                 botaoParaIniciarOdia.setVisibility(View.VISIBLE);
                                 textoInformativoSobreEssaAbaCaixa.setVisibility(View.VISIBLE);
                                 textoTotalDeVendasNoDebitoNoCaixaHoje.setVisibility(View.VISIBLE);
@@ -1026,6 +1038,7 @@ public class CaixaLojaFragment extends Fragment {
 
                                 botaoVendasFeitas.setVisibility(View.VISIBLE);
                                 botaoOpaVendi.setVisibility(View.VISIBLE);
+                                botaoVitrineLoja.setVisibility(View.VISIBLE);
                                 botaoParaIniciarOdia.setVisibility(View.VISIBLE);
                                 textoInformativoSobreEssaAbaCaixa.setVisibility(View.VISIBLE);
 
@@ -1080,6 +1093,7 @@ public class CaixaLojaFragment extends Fragment {
         botaoFinalizarDia.setVisibility(View.VISIBLE);
         botaoVendasFeitas.setVisibility(View.VISIBLE);
         botaoOpaVendi.setVisibility(View.VISIBLE);
+        botaoVitrineLoja.setVisibility(View.VISIBLE);
         botaoParaIniciarOdia.setVisibility(View.VISIBLE);
         textoInformativoSobreEssaAbaCaixa.setVisibility(View.VISIBLE);
 
@@ -1118,6 +1132,7 @@ public class CaixaLojaFragment extends Fragment {
         botaoFinalizarDia.setVisibility(View.VISIBLE);
         botaoVendasFeitas.setVisibility(View.VISIBLE);
         botaoOpaVendi.setVisibility(View.VISIBLE);
+        botaoVitrineLoja.setVisibility(View.VISIBLE);
         botaoParaIniciarOdia.setVisibility(View.VISIBLE);
         textoInformativoSobreEssaAbaCaixa.setVisibility(View.VISIBLE);
         textoTotalDeVendasNoDebitoNoCaixaHoje.setVisibility(View.VISIBLE);
@@ -1166,6 +1181,7 @@ public class CaixaLojaFragment extends Fragment {
         botaoFinalizarDia.setVisibility(View.GONE);
         botaoVendasFeitas.setVisibility(View.GONE);
         botaoOpaVendi.setVisibility(View.GONE);
+        botaoVitrineLoja.setVisibility(View.GONE);
         botaoParaIniciarOdia.setVisibility(View.GONE);
         textoInformativoSobreEssaAbaCaixa.setVisibility(View.GONE);
         textoTotalDeVendasNoDebitoNoCaixaHoje.setVisibility(View.GONE);

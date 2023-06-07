@@ -53,7 +53,7 @@ public class AdicionarBoloVitrineActivity2 extends AppCompatActivity {
 
     //Banco de dados
     private FirebaseFirestore db = ConfiguracaoFirebase.getFirestor();
-    private CollectionReference reference = db.collection("Bolos_Cadastrados_venda");
+    private CollectionReference reference = db.collection("BOLOS_CADASTRADOS_PARA_ADICIONAR_PARA_VENDA");
     private FirebaseFirestore dbBolosAdicionadosVitrine = ConfiguracaoFirebase.getFirestor();
     private CollectionReference refBolosAdicionadosVitrine = dbBolosAdicionadosVitrine.collection("BOLOS_EXPOSTOS_VITRINE");
     private CollectionReference CAIXA_MENSAL_REFERENCIA = FirebaseFirestore.getInstance().collection("CAIXA_MENSAL");
@@ -147,7 +147,7 @@ public class AdicionarBoloVitrineActivity2 extends AppCompatActivity {
 
     private void carregarListaBolosCadastrados() {
 
-        Query query = reference.orderBy("nomeBolo", Query.Direction.ASCENDING);
+        Query query = reference.orderBy("nomeBoloCadastrado", Query.Direction.ASCENDING);
 
         FirestoreRecyclerOptions<BolosModel> options = new FirestoreRecyclerOptions.Builder<BolosModel>()
                 .setQuery(query, BolosModel.class)
@@ -164,23 +164,6 @@ public class AdicionarBoloVitrineActivity2 extends AppCompatActivity {
             @Override
             public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
 
-/*
-
-                BolosModel boloAdd = documentSnapshot.toObject(BolosModel.class);
-                String nomeBoloAdd = boloAdd.getNomeBolo();
-                String valorVenda = boloAdd.getValorVenda();
-                String enderecoFoto = boloAdd.getEnderecoFoto();
-                int verificaFoto = boloAdd.getVerificaCameraGaleria();
-                String custoRecuperado = boloAdd.getCustoBolo();
-*/
-
-/*
-
-                double valorConvert = Double.parseDouble(valorVenda);
-
-
-                carregarAlertDialogQuantBolosAdd(nomeBoloAdd, enderecoFoto, valorConvert, custoRecuperado);
-*/
 
             }
         });
