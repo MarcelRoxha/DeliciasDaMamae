@@ -37,7 +37,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.AdicionarBoloVitrineActivity2"
-            android:parentActivityName=".activity.LojaActivity"
+            android:parentActivityName=".activity.ReceitasProntasActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.FornoActivity"

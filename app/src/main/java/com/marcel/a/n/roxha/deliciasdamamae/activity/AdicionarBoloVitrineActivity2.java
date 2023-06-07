@@ -164,6 +164,9 @@ public class AdicionarBoloVitrineActivity2 extends AppCompatActivity {
             @Override
             public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
 
+                BolosModel bolosModelRecuperadoParaAdicionarNaVitrine = documentSnapshot.toObject(BolosModel.class);
+
+                Toast.makeText(getApplicationContext(), "recuperado esse cara aqui: " + bolosModelRecuperadoParaAdicionarNaVitrine.toString(), Toast.LENGTH_SHORT).show();
 
             }
         });
