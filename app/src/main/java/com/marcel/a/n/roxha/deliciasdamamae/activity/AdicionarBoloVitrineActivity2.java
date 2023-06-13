@@ -36,8 +36,13 @@ import com.marcel.a.n.roxha.deliciasdamamae.model.BolosAdicionadosVitrine;
 import com.marcel.a.n.roxha.deliciasdamamae.model.BolosAdicionadosVitrineDiarioModel;
 import com.marcel.a.n.roxha.deliciasdamamae.model.BolosModel;
 import com.marcel.a.n.roxha.deliciasdamamae.model.CaixaMensalModel;
+import com.marcel.a.n.roxha.deliciasdamamae.model.IngredienteModel;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloIngredienteAdicionadoReceita;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloItemEstoque;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ReceitaModel;
 
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -165,8 +170,85 @@ public class AdicionarBoloVitrineActivity2 extends AppCompatActivity {
             public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
 
                 BolosModel bolosModelRecuperadoParaAdicionarNaVitrine = documentSnapshot.toObject(BolosModel.class);
+                String idRecuperadoDaReceitaDeReferencia = bolosModelRecuperadoParaAdicionarNaVitrine.getIdReferenciaReceitaCadastrada();
 
-                Toast.makeText(getApplicationContext(), "recuperado esse cara aqui: " + bolosModelRecuperadoParaAdicionarNaVitrine.toString(), Toast.LENGTH_SHORT).show();
+                FirebaseFirestore firebaseFirestore = ConfiguracaoFirebase.getFirestor();
+                CollectionReference collectionReferenceReceitaCadastradaReferenteAoProdutoSelecionadoParaAdicionarNaVitrine = firebaseFirestore.collection("RECEITA_CADASTRADA");
+                DocumentReference documentReferenceReceitaCadastradaReferenteAoProdutoSelecionadoParaAdicionarNaVitrine = collectionReferenceReceitaCadastradaReferenteAoProdutoSelecionadoParaAdicionarNaVitrine.document(idRecuperadoDaReceitaDeReferencia);
+
+                documentReferenceReceitaCadastradaReferenteAoProdutoSelecionadoParaAdicionarNaVitrine.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                        ReceitaModel receitaModelRecuperada = documentSnapshot.toObject(ReceitaModel.class);
+
+                        FirebaseFirestore fb = ConfiguracaoFirebase.getFirestor();
+                        CollectionReference coll = fb.collection("RECEITA_CADASTRADA").document(receitaModelRecuperada.getIdReceita()).collection("INGREDIENTES_ADICIONADOS");
+                        coll.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                            @Override
+                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
+
+                                for(DocumentSnapshot lista: list){
+                                    String idRecuperado = lista.getId();
+
+                                    DocumentReference documentoRecuperado = coll.document(idRecuperado);
+                                    documentoRecuperado.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                            ModeloIngredienteAdicionadoReceita ingredienteModelRecuperadoDaReceita = documentSnapshot.toObject(ModeloIngredienteAdicionadoReceita.class);
+                                            String quantidadeUsadaRecuperada = ingredienteModelRecuperadoDaReceita.getQuantidadeUtilizadaReceita();
+                                            String idRecuperadoItemEstoque = ingredienteModelRecuperadoDaReceita.getIdReferenciaItemEmEstoque();
+                                            FirebaseFirestore.getInstance().collection("ITEM_ESTOQUE").document(idRecuperadoItemEstoque)
+                                                    .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                        @Override
+                                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                                                            ModeloItemEstoque modeloItemEstoqueRecuperado = documentSnapshot.toObject(ModeloItemEstoque.class);
+                                                            String quantidadeTotalDesseItemEmEstoque = modeloItemEstoqueRecuperado.getQuantidadeTotalItemEmEstoqueEmGramas();
+                                                            Toast.makeText(AdicionarBoloVitrineActivity2.this, "quantidade usada no ingrediente usado " + quantidadeUsadaRecuperada + "\n"
+                                                                    + "quantidade total do item em estoque " + quantidadeTotalDesseItemEmEstoque, Toast.LENGTH_SHORT).show();
+
+                                                        }
+                                                    }).addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+
+                                                        }
+                                                    });
+
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+
+                                        }
+                                    });
+
+
+                                }
+
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+
+                            }
+                        });
+
+
+
+                        Toast.makeText(AdicionarBoloVitrineActivity2.this, "recuperado aqui" + receitaModelRecuperada.toString(), Toast.LENGTH_SHORT).show();
+
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                });
+
 
             }
         });
