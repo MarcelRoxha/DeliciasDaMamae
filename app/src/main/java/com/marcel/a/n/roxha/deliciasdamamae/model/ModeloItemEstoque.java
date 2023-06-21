@@ -14,9 +14,13 @@ public class ModeloItemEstoque  implements Serializable {
     private String unidadeMedidaUtilizadoNasReceitas;
     private String valorFracionadoItemEstoque;
     private String custoPorReceitaItemEstoque;
+
+
+
     private String custoTotalDoItemEmEstoque;
     private String quantidadeUtilizadaNasReceitas;
     private String quantidadeTotalItemEmEstoquePorVolume;
+
     private String quantidadeTotalItemEmEstoqueEmGramas;
     private String resultadoRetornado;
     private String resultadoRetornadoValorItemPorReceita;
@@ -128,6 +132,15 @@ public class ModeloItemEstoque  implements Serializable {
     public String getQuantidadeTotalItemEmEstoqueEmGramas() {
         return quantidadeTotalItemEmEstoqueEmGramas;
     }
+    public void setCustoTotalDoItemEmEstoque(String custoTotalDoItemEmEstoque) {
+        this.custoTotalDoItemEmEstoque = custoTotalDoItemEmEstoque;
+    }
+
+
+    public void setQuantidadeTotalItemEmEstoqueEmGramas(String quantidadeTotalItemEmEstoqueEmGramas) {
+        this.quantidadeTotalItemEmEstoqueEmGramas = quantidadeTotalItemEmEstoqueEmGramas;
+    }
+
 
     public String getCustoTotalDoItemEmEstoque() {
         return custoTotalDoItemEmEstoque;

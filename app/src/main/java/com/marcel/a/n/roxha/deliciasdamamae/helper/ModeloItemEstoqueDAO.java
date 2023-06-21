@@ -150,4 +150,41 @@ public class ModeloItemEstoqueDAO implements InterfaceModeloItemEstoqueDAO{
     public boolean deletarItemEstoque(String KeyItemEstoque, ModeloItemEstoque modeloItemEstoque) {
         return false;
     }
+
+    public boolean atualizarItemAoSerAdicionadoNaVitrine (String KeyItemEstoque, ModeloItemEstoque modeloItemEstoque){
+        if(KeyItemEstoque != null){
+
+            try{
+
+                Map<String, Object> item = new HashMap<>();
+                item.put("quantidadeTotalItemEmEstoqueEmGramas", modeloItemEstoque.getQuantidadeTotalItemEmEstoqueEmGramas());
+
+                referenceItemEstoque.document(KeyItemEstoque).update(item).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+
+                        Toast.makeText(context, modeloItemEstoque.getNomeItemEstoque().toUpperCase() + "----------------ATUALIZADO", Toast.LENGTH_SHORT).show();
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(context, "Erro ao atualizar  item estoque", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+            }catch (Exception e){
+
+                Log.i("Error: " , e.getMessage());
+                resultadoUpdate = false;
+            }
+
+
+
+        }
+
+
+        return resultadoUpdate;
+
+    }
 }

@@ -2,6 +2,7 @@ package com.marcel.a.n.roxha.deliciasdamamae.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import android.app.ProgressDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -12,9 +13,17 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ProgressBar;
+
+import androidx.appcompat.app.AppCompatActivity;
+
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -32,6 +41,7 @@ import com.marcel.a.n.roxha.deliciasdamamae.adapter.BolosCadastradosVendaAddVitr
 import com.marcel.a.n.roxha.deliciasdamamae.adapter.IngredienteAdapter;
 import com.marcel.a.n.roxha.deliciasdamamae.adapter.ItemEstoqueAdapter;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
+import com.marcel.a.n.roxha.deliciasdamamae.helper.ModeloItemEstoqueDAO;
 import com.marcel.a.n.roxha.deliciasdamamae.model.BolosAdicionadosVitrine;
 import com.marcel.a.n.roxha.deliciasdamamae.model.BolosAdicionadosVitrineDiarioModel;
 import com.marcel.a.n.roxha.deliciasdamamae.model.BolosModel;
@@ -56,6 +66,8 @@ public class AdicionarBoloVitrineActivity2 extends AppCompatActivity {
     private RecyclerView recyclerViewListaBolosCadastradosVenda;
     private RecyclerView recyclerViewListaBolosAdicionadosExpostosVitrine;
 
+ /*   public AlertDialog progressbarCarregarInformacoes;*/
+
     //Banco de dados
     private FirebaseFirestore db = ConfiguracaoFirebase.getFirestor();
     private CollectionReference reference = db.collection("BOLOS_CADASTRADOS_PARA_ADICIONAR_PARA_VENDA");
@@ -74,6 +86,7 @@ public class AdicionarBoloVitrineActivity2 extends AppCompatActivity {
     private int mesAtual;
     private int verificaCaixaMensalCriado = 0;
     private int verifica = 0;
+    private   double resultadoDaConta = 0;
 
     private String idCaixaMensalRecuperado;
     private String textoVerifica;
@@ -166,8 +179,25 @@ public class AdicionarBoloVitrineActivity2 extends AppCompatActivity {
         recyclerViewListaBolosCadastradosVenda.setAdapter(addVitrineAdapter);
         recyclerViewListaBolosCadastradosVenda.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
         addVitrineAdapter.setOnItemClickListerner(new IngredienteAdapter.OnItemClickLisener() {
+            private android.app.AlertDialog progressbarCarregarInformacoes;
+
             @Override
             public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
+
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(AdicionarBoloVitrineActivity2.this);
+
+                LayoutInflater inflaterLayout = AdicionarBoloVitrineActivity2.this.getLayoutInflater();
+                builder.setView(inflaterLayout.inflate(R.layout.progress_dialog_carregando_informacoes_caixa_diario, null));
+                builder.setCancelable(true);
+
+                this.progressbarCarregarInformacoes = builder.create();
+                this.progressbarCarregarInformacoes.getWindow().setBackgroundDrawableResource(
+                        android.R.color.transparent
+                );
+
+
+
+
 
                 BolosModel bolosModelRecuperadoParaAdicionarNaVitrine = documentSnapshot.toObject(BolosModel.class);
                 String idRecuperadoDaReceitaDeReferencia = bolosModelRecuperadoParaAdicionarNaVitrine.getIdReferenciaReceitaCadastrada();
@@ -189,7 +219,8 @@ public class AdicionarBoloVitrineActivity2 extends AppCompatActivity {
                             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                                 List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
 
-                                for(DocumentSnapshot lista: list){
+                                for (DocumentSnapshot lista : list) {
+
                                     String idRecuperado = lista.getId();
 
                                     DocumentReference documentoRecuperado = coll.document(idRecuperado);
@@ -199,15 +230,57 @@ public class AdicionarBoloVitrineActivity2 extends AppCompatActivity {
                                             ModeloIngredienteAdicionadoReceita ingredienteModelRecuperadoDaReceita = documentSnapshot.toObject(ModeloIngredienteAdicionadoReceita.class);
                                             String quantidadeUsadaRecuperada = ingredienteModelRecuperadoDaReceita.getQuantidadeUtilizadaReceita();
                                             String idRecuperadoItemEstoque = ingredienteModelRecuperadoDaReceita.getIdReferenciaItemEmEstoque();
+                                            double quantidadeUsadaRecuperadaConvertida = Double.parseDouble(quantidadeUsadaRecuperada);
+
+
+
                                             FirebaseFirestore.getInstance().collection("ITEM_ESTOQUE").document(idRecuperadoItemEstoque)
                                                     .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                                         @Override
                                                         public void onSuccess(DocumentSnapshot documentSnapshot) {
 
                                                             ModeloItemEstoque modeloItemEstoqueRecuperado = documentSnapshot.toObject(ModeloItemEstoque.class);
+                                                            ModeloItemEstoqueDAO ModeloItemEstoqueDAO  = new ModeloItemEstoqueDAO(AdicionarBoloVitrineActivity2.this);
+                                                            ModeloItemEstoque modeloItemEstoqueAtualizado = new ModeloItemEstoque();
+
+                                                            String id = documentSnapshot.getId();
+                                                           /* String nomeItem = modeloItemEstoqueRecuperado.getNomeItemEstoque();
+                                                            String valorIndividual = modeloItemEstoqueRecuperado.getValorIndividualItemEstoque();
+                                                            String quantidadePorVolume = modeloItemEstoqueRecuperado.getQuantidadePorVolumeItemEstoque();
+                                                            String unidadeMedidaPacote = modeloItemEstoqueRecuperado.getUnidadeMedidaPacoteItemEstoque();
+                                                            String unidadeMedidaUtilizada = modeloItemEstoqueRecuperado.getUnidadeMedidaUtilizadoNasReceitas();
+                                                            String valorFracionado = modeloItemEstoqueRecuperado.getValorFracionadoItemEstoque();
+                                                            String custoPorReceita = modeloItemEstoqueRecuperado.getCustoPorReceitaItemEstoque();
+                                                            String custoTotalItem = modeloItemEstoqueRecuperado.getCustoTotalDoItemEmEstoque();
+                                                            String quantidadeUtilizadaNasReceitas = modeloItemEstoqueRecuperado.getQuantidadeUtilizadaNasReceitas();
+                                                            String quantidadeTotalPorVolume = modeloItemEstoqueRecuperado.getQuantidadeTotalItemEmEstoquePorVolume();*/
+                                                            String quantidadeTotalItemEmEstoqueRecuperado  = modeloItemEstoqueRecuperado.getQuantidadeTotalItemEmEstoqueEmGramas();
+
+                                                            double quantidadeTotalItemEmEstoqueConvertidoDouble = Double.parseDouble(quantidadeTotalItemEmEstoqueRecuperado);
+
+                                                            resultadoDaConta = quantidadeTotalItemEmEstoqueConvertidoDouble - quantidadeUsadaRecuperadaConvertida;
+
+                                                             String valorTotalDoItemEmEstoqueEmGramasConvertidoParaOBanco = String.valueOf(resultadoDaConta);
+                                                             System.out.println("Recuperado de total do item " + quantidadeTotalItemEmEstoqueRecuperado);
+                                                             System.out.println("Recuperado de quanto utilizado na receita " + quantidadeUsadaRecuperada);
+                                                             System.out.println("resultado da conta " + valorTotalDoItemEmEstoqueEmGramasConvertidoParaOBanco);
+                                                             System.out.println("id recuperado " + id);
+                                                            modeloItemEstoqueAtualizado = modeloItemEstoqueRecuperado;
+                                                            modeloItemEstoqueAtualizado.setQuantidadeTotalItemEmEstoqueEmGramas(valorTotalDoItemEmEstoqueEmGramasConvertidoParaOBanco);
+
+
+                                                            System.out.println("Item recuperado " + modeloItemEstoqueRecuperado);
+                                                            System.out.println("Item para atualizar " + modeloItemEstoqueAtualizado);
+
+
+                                                            ModeloItemEstoqueDAO.atualizarItemAoSerAdicionadoNaVitrine(id, modeloItemEstoqueAtualizado);
+
+                                                            /*modeloItemEstoqueDAO.atualizarItemEstoque(itemKey, atualizarItemEstoque);*/
+
+/*
                                                             String quantidadeTotalDesseItemEmEstoque = modeloItemEstoqueRecuperado.getQuantidadeTotalItemEmEstoqueEmGramas();
                                                             Toast.makeText(AdicionarBoloVitrineActivity2.this, "quantidade usada no ingrediente usado " + quantidadeUsadaRecuperada + "\n"
-                                                                    + "quantidade total do item em estoque " + quantidadeTotalDesseItemEmEstoque, Toast.LENGTH_SHORT).show();
+                                                                    + "quantidade total do item em estoque " + quantidadeTotalDesseItemEmEstoque, Toast.LENGTH_SHORT).show();*/
 
                                                         }
                                                     }).addOnFailureListener(new OnFailureListener() {
@@ -216,7 +289,6 @@ public class AdicionarBoloVitrineActivity2 extends AppCompatActivity {
 
                                                         }
                                                     });
-
                                         }
                                     }).addOnFailureListener(new OnFailureListener() {
                                         @Override
@@ -227,6 +299,7 @@ public class AdicionarBoloVitrineActivity2 extends AppCompatActivity {
 
 
                                 }
+                                progressbarCarregarInformacoes.dismiss();
 
                             }
                         }).addOnFailureListener(new OnFailureListener() {
@@ -235,7 +308,6 @@ public class AdicionarBoloVitrineActivity2 extends AppCompatActivity {
 
                             }
                         });
-
 
 
                         Toast.makeText(AdicionarBoloVitrineActivity2.this, "recuperado aqui" + receitaModelRecuperada.toString(), Toast.LENGTH_SHORT).show();
