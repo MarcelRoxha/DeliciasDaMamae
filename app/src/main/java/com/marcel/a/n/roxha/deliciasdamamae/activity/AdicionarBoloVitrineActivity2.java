@@ -197,7 +197,7 @@ public class AdicionarBoloVitrineActivity2 extends AppCompatActivity {
 
 
 
-
+                progressbarCarregarInformacoes.show();
 
                 BolosModel bolosModelRecuperadoParaAdicionarNaVitrine = documentSnapshot.toObject(BolosModel.class);
                 String idRecuperadoDaReceitaDeReferencia = bolosModelRecuperadoParaAdicionarNaVitrine.getIdReferenciaReceitaCadastrada();
@@ -255,32 +255,41 @@ public class AdicionarBoloVitrineActivity2 extends AppCompatActivity {
                                                             String quantidadeUtilizadaNasReceitas = modeloItemEstoqueRecuperado.getQuantidadeUtilizadaNasReceitas();
                                                             String quantidadeTotalPorVolume = modeloItemEstoqueRecuperado.getQuantidadeTotalItemEmEstoquePorVolume();*/
                                                             String quantidadeTotalItemEmEstoqueRecuperado  = modeloItemEstoqueRecuperado.getQuantidadeTotalItemEmEstoqueEmGramas();
+                                                            String quantidadePorVolumeDesseItem = modeloItemEstoqueRecuperado.getQuantidadePorVolumeItemEstoque();
 
                                                             double quantidadeTotalItemEmEstoqueConvertidoDouble = Double.parseDouble(quantidadeTotalItemEmEstoqueRecuperado);
+                                                            double quantidadePorVolumeItemEmEstoqueConvertidoDouble = Double.parseDouble(quantidadePorVolumeDesseItem);
 
                                                             resultadoDaConta = quantidadeTotalItemEmEstoqueConvertidoDouble - quantidadeUsadaRecuperadaConvertida;
 
-                                                             String valorTotalDoItemEmEstoqueEmGramasConvertidoParaOBanco = String.valueOf(resultadoDaConta);
-                                                             System.out.println("Recuperado de total do item " + quantidadeTotalItemEmEstoqueRecuperado);
-                                                             System.out.println("Recuperado de quanto utilizado na receita " + quantidadeUsadaRecuperada);
-                                                             System.out.println("resultado da conta " + valorTotalDoItemEmEstoqueEmGramasConvertidoParaOBanco);
-                                                             System.out.println("id recuperado " + id);
-                                                            modeloItemEstoqueAtualizado = modeloItemEstoqueRecuperado;
-                                                            modeloItemEstoqueAtualizado.setQuantidadeTotalItemEmEstoqueEmGramas(valorTotalDoItemEmEstoqueEmGramasConvertidoParaOBanco);
+                                                            if(resultadoDaConta < 0){
+
+                                                                String valorTotalDoItemEmEstoqueEmGramasConvertidoParaOBanco = "0";
+                                                                modeloItemEstoqueAtualizado = modeloItemEstoqueRecuperado;
+                                                                modeloItemEstoqueAtualizado.setQuantidadeTotalItemEmEstoqueEmGramas(valorTotalDoItemEmEstoqueEmGramasConvertidoParaOBanco);
+                                                                ModeloItemEstoqueDAO.atualizarItemAoSerAdicionadoNaVitrine(id, modeloItemEstoqueAtualizado);
+                                                                ModeloItemEstoqueDAO.adicionarItemEstoqueAListaDeItensAcabandoEmEstoque(id, modeloItemEstoqueAtualizado);
 
 
-                                                            System.out.println("Item recuperado " + modeloItemEstoqueRecuperado);
-                                                            System.out.println("Item para atualizar " + modeloItemEstoqueAtualizado);
+
+                                                            }else if(resultadoDaConta < quantidadePorVolumeItemEmEstoqueConvertidoDouble){
+
+                                                                String valorTotalDoItemEmEstoqueEmGramasConvertidoParaOBanco = String.valueOf(resultadoDaConta);
+                                                                modeloItemEstoqueAtualizado = modeloItemEstoqueRecuperado;
+                                                                modeloItemEstoqueAtualizado.setQuantidadeTotalItemEmEstoqueEmGramas(valorTotalDoItemEmEstoqueEmGramasConvertidoParaOBanco);
+                                                                ModeloItemEstoqueDAO.atualizarItemAoSerAdicionadoNaVitrine(id, modeloItemEstoqueAtualizado);
+                                                                ModeloItemEstoqueDAO.adicionarItemEstoqueAListaDeItensAcabandoEmEstoque(id, modeloItemEstoqueAtualizado);
 
 
-                                                            ModeloItemEstoqueDAO.atualizarItemAoSerAdicionadoNaVitrine(id, modeloItemEstoqueAtualizado);
+                                                            }else{
+                                                                String valorTotalDoItemEmEstoqueEmGramasConvertidoParaOBanco = String.valueOf(resultadoDaConta);
+                                                                modeloItemEstoqueAtualizado = modeloItemEstoqueRecuperado;
+                                                                modeloItemEstoqueAtualizado.setQuantidadeTotalItemEmEstoqueEmGramas(valorTotalDoItemEmEstoqueEmGramasConvertidoParaOBanco);
+                                                                ModeloItemEstoqueDAO.atualizarItemAoSerAdicionadoNaVitrine(id, modeloItemEstoqueAtualizado);
 
-                                                            /*modeloItemEstoqueDAO.atualizarItemEstoque(itemKey, atualizarItemEstoque);*/
+                                                            }
 
-/*
-                                                            String quantidadeTotalDesseItemEmEstoque = modeloItemEstoqueRecuperado.getQuantidadeTotalItemEmEstoqueEmGramas();
-                                                            Toast.makeText(AdicionarBoloVitrineActivity2.this, "quantidade usada no ingrediente usado " + quantidadeUsadaRecuperada + "\n"
-                                                                    + "quantidade total do item em estoque " + quantidadeTotalDesseItemEmEstoque, Toast.LENGTH_SHORT).show();*/
+
 
                                                         }
                                                     }).addOnFailureListener(new OnFailureListener() {
@@ -308,10 +317,6 @@ public class AdicionarBoloVitrineActivity2 extends AppCompatActivity {
 
                             }
                         });
-
-
-                        Toast.makeText(AdicionarBoloVitrineActivity2.this, "recuperado aqui" + receitaModelRecuperada.toString(), Toast.LENGTH_SHORT).show();
-
 
                     }
                 }).addOnFailureListener(new OnFailureListener() {

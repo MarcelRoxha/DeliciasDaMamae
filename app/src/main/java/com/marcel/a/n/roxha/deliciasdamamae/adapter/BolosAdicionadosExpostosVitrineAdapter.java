@@ -40,10 +40,6 @@ public class BolosAdicionadosExpostosVitrineAdapter extends FirestoreRecyclerAda
 
         Glide.with(context).load(model.getEnderecoFotoSalva()).into(holder.foto_salva);
 
-
-
-
-
     }
 
     @NonNull

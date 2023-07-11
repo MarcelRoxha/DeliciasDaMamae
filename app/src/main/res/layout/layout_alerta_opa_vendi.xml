@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/imageView13"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/fundo_bolo_adicionados_expostos_vitrine" />
+
+    <TextView
+        android:id="@+id/texto_nome_do_bolo_no_opa_vendi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:fontFamily="@font/bungee_shade"
+        android:text="NOME:"
+        android:textColor="@color/azul_claro"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/imageView13"
+        app:layout_constraintTop_toTopOf="@+id/imageView13" />
+
+    <TextView
+        android:id="@+id/nome_do_produto_vendido_opa_vendi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:fontFamily="@font/bungee_shade"
+        android:text="TextView"
+        android:textColor="@color/azul_claro"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/texto_nome_do_bolo_no_opa_vendi"
+        app:layout_constraintStart_toEndOf="@+id/texto_nome_do_bolo_no_opa_vendi"
+        app:layout_constraintTop_toTopOf="@+id/texto_nome_do_bolo_no_opa_vendi" />
+
+    <TextView
+        android:id="@+id/texto_valor_venda_loja"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="6dp"
+        android:fontFamily="@font/bungee_shade"
+        android:text="LOJA R$:"
+        android:textColor="@color/azul_claro"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/texto_valor_venda_ifood"
+        app:layout_constraintStart_toEndOf="@+id/imageView13"
+        app:layout_constraintTop_toBottomOf="@+id/texto_nome_do_bolo_no_opa_vendi" />
+
+    <TextView
+        android:id="@+id/valor_venda_loja"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:fontFamily="@font/bungee_shade"
+        android:text="TextView"
+        android:textColor="@color/azul_claro"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/texto_valor_venda_loja"
+        app:layout_constraintStart_toEndOf="@+id/texto_valor_venda_loja"
+        app:layout_constraintTop_toTopOf="@+id/texto_valor_venda_loja" />
+
+    <TextView
+        android:id="@+id/texto_valor_venda_ifood"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:fontFamily="@font/bungee_shade"
+        android:text="LOJA R$:"
+        android:textColor="@color/azul_claro"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView13"
+        app:layout_constraintStart_toEndOf="@+id/imageView13" />
+
+    <TextView
+        android:id="@+id/valor_venda_ifood"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:fontFamily="@font/bungee_shade"
+        android:text="TextView"
+        android:textColor="@color/azul_claro"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/texto_valor_venda_ifood"
+        app:layout_constraintStart_toEndOf="@+id/texto_valor_venda_loja"
+        app:layout_constraintTop_toTopOf="@+id/texto_valor_venda_ifood" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

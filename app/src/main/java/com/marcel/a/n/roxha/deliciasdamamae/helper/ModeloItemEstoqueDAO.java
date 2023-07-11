@@ -24,9 +24,11 @@ import java.util.Map;
 public class ModeloItemEstoqueDAO implements InterfaceModeloItemEstoqueDAO{
 
     private static final String COLLECTIO_ITEM_ESTOQUE = "ITEM_ESTOQUE";
+    private static final String COLLECTIO_ITEM_ESTOQUE_ACABANDO = "ITEM_ESTOQUE_ACABANDO";
     private Context context;
     private FirebaseFirestore firestore = ConfiguracaoFirebase.getFirestor();
     private CollectionReference referenceItemEstoque = firestore.collection(COLLECTIO_ITEM_ESTOQUE);
+    private CollectionReference referenceItemEstoqueAcabando = firestore.collection(COLLECTIO_ITEM_ESTOQUE_ACABANDO);
     private boolean resultadoUpdate;
 
     public ModeloItemEstoqueDAO(Context context) {
@@ -187,4 +189,54 @@ public class ModeloItemEstoqueDAO implements InterfaceModeloItemEstoqueDAO{
         return resultadoUpdate;
 
     }
+
+
+    public boolean adicionarItemEstoqueAListaDeItensAcabandoEmEstoque(String idReferenciaItemEstoque, ModeloItemEstoque modeloItemEstoque){
+
+        if(idReferenciaItemEstoque != null){
+
+            try{
+
+                Map<String, Object> item = new HashMap<>();
+
+                item.put("idReferenciaItemEmEstoque",idReferenciaItemEstoque);
+                item.put("nomeItemEstoque",modeloItemEstoque.getNomeItemEstoque().trim());
+                item.put("quantidadeTotalItemEstoque", modeloItemEstoque.getQuantidadeTotalItemEstoque());
+                item.put("quantidadePorVolumeItemEstoque", modeloItemEstoque.getQuantidadePorVolumeItemEstoque());
+                item.put("quantidadeUtilizadaNasReceitas", modeloItemEstoque.getQuantidadeUtilizadaNasReceitas());
+                item.put("unidadeMedidaPacoteItemEstoque", modeloItemEstoque.getUnidadeMedidaPacoteItemEstoque());
+                item.put("unidadeMedidaUtilizadoNasReceitas", modeloItemEstoque.getUnidadeMedidaUtilizadoNasReceitas());
+                item.put("valorIndividualItemEstoque", modeloItemEstoque.getValorIndividualItemEstoque());
+                item.put("valorFracionadoItemEstoque", modeloItemEstoque.getValorFracionadoItemEstoque());
+                item.put("custoPorReceitaItemEstoque", modeloItemEstoque.getCustoPorReceitaItemEstoque());
+                item.put("quantidadeTotalItemEmEstoquePorVolume", modeloItemEstoque.getQuantidadeTotalItemEmEstoquePorVolume());
+                item.put("quantidadeTotalItemEmEstoqueEmGramas", modeloItemEstoque.getQuantidadeTotalItemEmEstoqueEmGramas());
+                item.put("custoTotalDoItemEmEstoque", modeloItemEstoque.getCustoTotalDoItemEmEstoque());
+                item.put("versionEstoque", "Estoque_DeliciasDaMamae");
+
+                referenceItemEstoqueAcabando.add(item).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Toast.makeText(context, modeloItemEstoque.getNomeItemEstoque() +" FOI ADICIONADO A LISTA DE ITENS QUE ESTÃO ACABANDO", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(context, "VERIFIQUE A INTERNET E TENTE NOVAMENTE", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }catch (Exception e){
+
+                Log.i("Error: " , e.getMessage());
+                resultadoUpdate = false;
+            }
+
+
+
+        }
+
+
+        return resultadoUpdate;
+    }
+
 }

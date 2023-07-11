@@ -40,10 +40,17 @@ public class BolosCadastradosVendaAddVitrineAdapter extends FirestoreRecyclerAda
 
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        return super.getItemViewType(position);
+    }
+
     @NonNull
     @Override
     public BolosCadastradosVendaAddVitrineViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
+        System.out.println("Passou pelo adapter ");
+        System.out.println("recuperando o viewType " + viewType);
+        System.out.println("recuperando o parent ");
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.bolos_cadastrados_vendas_add_vitrine_adapter, parent, false);
 
         return new BolosCadastradosVendaAddVitrineViewHolder(view);
