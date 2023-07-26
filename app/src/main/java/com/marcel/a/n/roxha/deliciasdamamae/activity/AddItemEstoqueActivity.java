@@ -17,21 +17,18 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.marcel.a.n.roxha.deliciasdamamae.R;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
-import com.marcel.a.n.roxha.deliciasdamamae.helper.ItemEstoqueDAO;
-import com.marcel.a.n.roxha.deliciasdamamae.helper.ModeloItemEstoqueDAO;
+import com.marcel.a.n.roxha.deliciasdamamae.controller.helper.ItemEstoqueDAO;
+import com.marcel.a.n.roxha.deliciasdamamae.controller.helper.ModeloItemEstoqueDAO;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ItemEstoqueModel;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloItemEstoque;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class AddItemEstoqueActivity extends AppCompatActivity {
 

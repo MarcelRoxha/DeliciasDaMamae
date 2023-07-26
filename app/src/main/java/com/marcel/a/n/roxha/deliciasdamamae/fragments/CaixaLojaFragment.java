@@ -1,16 +1,11 @@
 package com.marcel.a.n.roxha.deliciasdamamae.fragments;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.OptIn;
-import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,7 +21,6 @@ import android.widget.Toast;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -35,20 +29,15 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.marcel.a.n.roxha.deliciasdamamae.R;
 import com.marcel.a.n.roxha.deliciasdamamae.activity.AdicionarBoloVitrineActivity2;
-import com.marcel.a.n.roxha.deliciasdamamae.activity.LojaActivity;
-import com.marcel.a.n.roxha.deliciasdamamae.activity.LojaActivityV2;
-import com.marcel.a.n.roxha.deliciasdamamae.activity.PrincipalActivity;
-import com.marcel.a.n.roxha.deliciasdamamae.activity.ProducaoActivity;
 import com.marcel.a.n.roxha.deliciasdamamae.adapter.BolosAdicionadosExpostosVitrineAdapter;
+import com.marcel.a.n.roxha.deliciasdamamae.adapter.BolosAdicionadosVitrineParaExibirQuandoVenderAdapter;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
-import com.marcel.a.n.roxha.deliciasdamamae.helper.ModeloMontanteDiarioDAO;
-import com.marcel.a.n.roxha.deliciasdamamae.helper.ModeloMontanteMensalDAO;
+import com.marcel.a.n.roxha.deliciasdamamae.controller.helper.ModeloMontanteDiarioDAO;
+import com.marcel.a.n.roxha.deliciasdamamae.controller.helper.ModeloMontanteMensalDAO;
 import com.marcel.a.n.roxha.deliciasdamamae.model.BolosAdicionadosVitrine;
-import com.marcel.a.n.roxha.deliciasdamamae.model.LoadingDialog;
+import com.marcel.a.n.roxha.deliciasdamamae.model.BolosModel;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloMontanteDiario;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloMontanteMensalLoja;
-
-import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
@@ -168,7 +157,7 @@ public class CaixaLojaFragment extends Fragment {
     private FirebaseFirestore firebaseFirestore = ConfiguracaoFirebase.getFirestor();
     private CollectionReference referenceCaixaDiario = firebaseFirestore.collection(COLLECTION_CAIXA_DIARIO);
     private CollectionReference referenceMontanteDesseMes = firebaseFirestore.collection(COLLECTION_MONTANTE_DESSE_MES);
-    private BolosAdicionadosExpostosVitrineAdapter expostoAdapter;
+    private BolosAdicionadosVitrineParaExibirQuandoVenderAdapter expostoAdapter;
 
     private CollectionReference refBolosExpostosVitrine = firebaseFirestore.collection(COLLECTION_BOLOS_EXPOSTOS_VITRINE);
 
@@ -304,15 +293,15 @@ public class CaixaLojaFragment extends Fragment {
 
 
                 recyclerView_itens_vitrine = dialogView.findViewById(R.id.recyclerView_opa_vendi_alguma_coisa_id);
-                Query query = refBolosExpostosVitrine.orderBy("nomeBolo", Query.Direction.ASCENDING);
+                Query query = refBolosExpostosVitrine.orderBy("nomeBoloCadastrado", Query.Direction.ASCENDING);
 
-                FirestoreRecyclerOptions<BolosAdicionadosVitrine> options = new FirestoreRecyclerOptions.Builder<BolosAdicionadosVitrine>()
-                        .setQuery(query, BolosAdicionadosVitrine.class)
+                FirestoreRecyclerOptions<BolosModel> options = new FirestoreRecyclerOptions.Builder<BolosModel>()
+                        .setQuery(query, BolosModel.class)
                         .build();
 
-                expostoAdapter = new BolosAdicionadosExpostosVitrineAdapter(options, getContext());
+                expostoAdapter = new BolosAdicionadosVitrineParaExibirQuandoVenderAdapter(options, getContext());
 
-                LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+                LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
 
                 recyclerView_itens_vitrine.setHasFixedSize(true);
                 recyclerView_itens_vitrine.setLayoutManager(layoutManager);

@@ -51,7 +51,7 @@ import com.google.firebase.storage.UploadTask;
 import com.marcel.a.n.roxha.deliciasdamamae.R;
 import com.marcel.a.n.roxha.deliciasdamamae.adapter.ReceitasBolosAdapter;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
-import com.marcel.a.n.roxha.deliciasdamamae.helper.ModeloBoloCadastradoParaVendaDAO;
+import com.marcel.a.n.roxha.deliciasdamamae.controller.helper.ModeloBoloCadastradoParaVendaDAO;
 import com.marcel.a.n.roxha.deliciasdamamae.model.BolosModel;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ReceitaModel;
 

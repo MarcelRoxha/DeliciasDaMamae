@@ -29,14 +29,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.common.ErrorDialogFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -44,8 +42,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.marcel.a.n.roxha.deliciasdamamae.R;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
-import com.marcel.a.n.roxha.deliciasdamamae.helper.ModeloBoloCadastradoParaVendaDAO;
-import com.marcel.a.n.roxha.deliciasdamamae.helper.ModeloReceitaCadastradaDAO;
+import com.marcel.a.n.roxha.deliciasdamamae.controller.helper.ModeloBoloCadastradoParaVendaDAO;
 import com.marcel.a.n.roxha.deliciasdamamae.model.BolosModel;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ReceitaModel;
 
@@ -53,8 +50,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 
 public class EditarBoloCadastradoVendaActivity extends AppCompatActivity {

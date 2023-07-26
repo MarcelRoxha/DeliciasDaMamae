@@ -27,7 +27,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -39,17 +38,14 @@ import com.marcel.a.n.roxha.deliciasdamamae.adapter.IngredienteAdicionadoAdapter
 import com.marcel.a.n.roxha.deliciasdamamae.adapter.IngredientesCadastradosEmEstoqueAdapter;
 import com.marcel.a.n.roxha.deliciasdamamae.adapter.ItemEstoqueAdapter;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
-import com.marcel.a.n.roxha.deliciasdamamae.helper.ModeloReceitaCadastradaDAO;
+import com.marcel.a.n.roxha.deliciasdamamae.controller.helper.ModeloReceitaCadastradaDAO;
 import com.marcel.a.n.roxha.deliciasdamamae.model.IngredienteModel;
-import com.marcel.a.n.roxha.deliciasdamamae.model.ItemEstoqueModel;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloIngredienteAdicionadoReceita;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloItemEstoque;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ReceitaModel;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.

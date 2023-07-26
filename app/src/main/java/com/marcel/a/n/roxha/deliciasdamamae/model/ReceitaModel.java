@@ -1,9 +1,5 @@
 package com.marcel.a.n.roxha.deliciasdamamae.model;
 
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -11,16 +7,10 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.gson.internal.$Gson$Preconditions;
-import com.marcel.a.n.roxha.deliciasdamamae.activity.NovaReceitaActivity;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
-import com.marcel.a.n.roxha.deliciasdamamae.helper.Base64Custom;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class ReceitaModel implements Serializable {

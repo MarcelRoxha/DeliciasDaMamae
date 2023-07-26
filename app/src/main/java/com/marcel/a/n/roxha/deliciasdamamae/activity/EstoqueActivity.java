@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,7 +32,7 @@ import com.marcel.a.n.roxha.deliciasdamamae.R;
 import com.marcel.a.n.roxha.deliciasdamamae.adapter.ItemEstoqueAdapter;
 import com.marcel.a.n.roxha.deliciasdamamae.adapter.ModeloItemEstoqueAdapter;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
-import com.marcel.a.n.roxha.deliciasdamamae.helper.ItemEstoqueDAO;
+import com.marcel.a.n.roxha.deliciasdamamae.controller.helper.ItemEstoqueDAO;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ItemEstoqueModel;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloItemEstoque;
 

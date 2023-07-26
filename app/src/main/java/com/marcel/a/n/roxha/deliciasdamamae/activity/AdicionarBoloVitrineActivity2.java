@@ -2,30 +2,19 @@ package com.marcel.a.n.roxha.deliciasdamamae.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import android.app.ProgressDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.Manifest;
 import android.content.DialogInterface;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ProgressBar;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 
-import com.bumptech.glide.Glide;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -39,20 +28,17 @@ import com.marcel.a.n.roxha.deliciasdamamae.R;
 import com.marcel.a.n.roxha.deliciasdamamae.adapter.BolosAdicionadosExpostosVitrineActiviyAdicionarBolosVitrineAdapter;
 import com.marcel.a.n.roxha.deliciasdamamae.adapter.BolosCadastradosVendaAddVitrineAdapter;
 import com.marcel.a.n.roxha.deliciasdamamae.adapter.IngredienteAdapter;
-import com.marcel.a.n.roxha.deliciasdamamae.adapter.ItemEstoqueAdapter;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
-import com.marcel.a.n.roxha.deliciasdamamae.helper.ModeloItemEstoqueDAO;
+import com.marcel.a.n.roxha.deliciasdamamae.controller.helper.ModeloBoloAdicionadoExpostoVitrineParaOpaVendiDAO;
+import com.marcel.a.n.roxha.deliciasdamamae.controller.helper.ModeloItemEstoqueDAO;
 import com.marcel.a.n.roxha.deliciasdamamae.model.BolosAdicionadosVitrine;
-import com.marcel.a.n.roxha.deliciasdamamae.model.BolosAdicionadosVitrineDiarioModel;
 import com.marcel.a.n.roxha.deliciasdamamae.model.BolosModel;
-import com.marcel.a.n.roxha.deliciasdamamae.model.CaixaMensalModel;
-import com.marcel.a.n.roxha.deliciasdamamae.model.IngredienteModel;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloBolosAdicionadosVitrineQuandoVender;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloIngredienteAdicionadoReceita;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloItemEstoque;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ReceitaModel;
 
 import java.text.SimpleDateFormat;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -200,7 +186,27 @@ public class AdicionarBoloVitrineActivity2 extends AppCompatActivity {
                 progressbarCarregarInformacoes.show();
 
                 BolosModel bolosModelRecuperadoParaAdicionarNaVitrine = documentSnapshot.toObject(BolosModel.class);
+                ModeloBolosAdicionadosVitrineQuandoVender modeloBolosAdicionadosVitrineQuandoVender = new ModeloBolosAdicionadosVitrineQuandoVender();
+
+                modeloBolosAdicionadosVitrineQuandoVender.setIdReferenciaBoloCadastradoParaVenda(documentSnapshot.getId());
+                modeloBolosAdicionadosVitrineQuandoVender.setNomeDoBoloVendido(bolosModelRecuperadoParaAdicionarNaVitrine.getNomeBoloCadastrado());
+                modeloBolosAdicionadosVitrineQuandoVender.setPrecoQueFoiVendido("");
+                modeloBolosAdicionadosVitrineQuandoVender.setPrecoCadastradoVendaNaLoja(bolosModelRecuperadoParaAdicionarNaVitrine.getValorCadastradoParaVendasNaBoleria());
+                modeloBolosAdicionadosVitrineQuandoVender.setPrecoCadastradoVendaIfood(bolosModelRecuperadoParaAdicionarNaVitrine.getValorCadastradoParaVendasNoIfood());
+                modeloBolosAdicionadosVitrineQuandoVender.setValorSugeridoParaVendaNaBoleria(bolosModelRecuperadoParaAdicionarNaVitrine.getValorSugeridoParaVendasNaBoleriaComAcrescimoDoLucro());
+                modeloBolosAdicionadosVitrineQuandoVender.setValorSugeridoParaVendaIfood(bolosModelRecuperadoParaAdicionarNaVitrine.getValorSugeridoParaVendasNoIfoodComAcrescimoDaPorcentagem());
+                modeloBolosAdicionadosVitrineQuandoVender.setEnderecoFoto(bolosModelRecuperadoParaAdicionarNaVitrine.getEnderecoFoto());
+                modeloBolosAdicionadosVitrineQuandoVender.setVendeuNaLoja(false);
+                modeloBolosAdicionadosVitrineQuandoVender.setVendeuNoIfood(false);
+
+                /*Quando clicar e adicionar a receita cadastrada para venda, clonada essa receita para ser exposto na vitrine */
+
                 String idRecuperadoDaReceitaDeReferencia = bolosModelRecuperadoParaAdicionarNaVitrine.getIdReferenciaReceitaCadastrada();
+                BolosModel bolosModelParaAdicionarNaVitrineParaOOpaVendi = bolosModelRecuperadoParaAdicionarNaVitrine;
+                ModeloBoloAdicionadoExpostoVitrineParaOpaVendiDAO modeloBoloAdicionadoExpostoVitrineParaOpaVendiDAO = new ModeloBoloAdicionadoExpostoVitrineParaOpaVendiDAO(getApplicationContext());
+                modeloBoloAdicionadoExpostoVitrineParaOpaVendiDAO.salvarBoloAdicionadoNaVitrineParaOpaVendi(modeloBolosAdicionadosVitrineQuandoVender);
+
+
 
                 FirebaseFirestore firebaseFirestore = ConfiguracaoFirebase.getFirestor();
                 CollectionReference collectionReferenceReceitaCadastradaReferenteAoProdutoSelecionadoParaAdicionarNaVitrine = firebaseFirestore.collection("RECEITA_CADASTRADA");
@@ -309,7 +315,6 @@ public class AdicionarBoloVitrineActivity2 extends AppCompatActivity {
 
                                 }
                                 progressbarCarregarInformacoes.dismiss();
-
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
@@ -334,7 +339,7 @@ public class AdicionarBoloVitrineActivity2 extends AppCompatActivity {
 
     private void carregarListaBolosAdicionadosExpostosVitrine() {
 
-        Query query = refBolosAdicionadosVitrine.orderBy("nomeBolo", Query.Direction.ASCENDING);
+        Query query = refBolosAdicionadosVitrine.orderBy("nomeBoloCadastrado", Query.Direction.ASCENDING);
 
         FirestoreRecyclerOptions<BolosAdicionadosVitrine> options = new FirestoreRecyclerOptions.Builder<BolosAdicionadosVitrine>()
                 .setQuery(query, BolosAdicionadosVitrine.class)

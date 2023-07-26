@@ -4,24 +4,56 @@ import java.io.Serializable;
 
 public class ModeloBolosAdicionadosVitrineQuandoVender implements Serializable {
 
+    private String idModeloBoloAdicionadosVitrineQuandoVender;
+    private String idReferenciaBoloCadastradoParaVenda ;
+
     private String nomeDoBoloVendido;
     private String precoQueFoiVendido;
     private String precoCadastradoVendaNaLoja;
     private String precoCadastradoVendaIfood;
-    private boolean vendeuNoIfood;
-    private boolean vendeuNaLoja;
+
+    private String valorSugeridoParaVendaNaBoleria;
+
+    private String valorSugeridoParaVendaIfood;
+
+    private String enderecoFoto;
+    private boolean vendeuNoIfood = false;
+    private boolean vendeuNaLoja = false;
+
+
 
 
     public ModeloBolosAdicionadosVitrineQuandoVender() {
     }
 
-    public ModeloBolosAdicionadosVitrineQuandoVender(String nomeDoBoloVendido, String precoQueFoiVendido, String precoCadastradoVendaNaLoja, String precoCadastradoVendaIfood, boolean vendeuNoIfood, boolean vendeuNaLoja) {
+    public ModeloBolosAdicionadosVitrineQuandoVender(String idReferenciaBoloCadastradoParaVenda, String nomeDoBoloVendido, String precoQueFoiVendido, String precoCadastradoVendaNaLoja, String precoCadastradoVendaIfood, String valorSugeridoParaVendaNaBoleria, String valorSugeridoParaVendaIfood, boolean vendeuNoIfood, boolean vendeuNaLoja, String enderecoFoto, String idModeloBoloAdicionadosVitrineQuandoVender) {
+        this.idReferenciaBoloCadastradoParaVenda = idReferenciaBoloCadastradoParaVenda;
         this.nomeDoBoloVendido = nomeDoBoloVendido;
         this.precoQueFoiVendido = precoQueFoiVendido;
         this.precoCadastradoVendaNaLoja = precoCadastradoVendaNaLoja;
         this.precoCadastradoVendaIfood = precoCadastradoVendaIfood;
+        this.valorSugeridoParaVendaNaBoleria = valorSugeridoParaVendaNaBoleria;
+        this.valorSugeridoParaVendaIfood = valorSugeridoParaVendaIfood;
         this.vendeuNoIfood = vendeuNoIfood;
         this.vendeuNaLoja = vendeuNaLoja;
+        this.enderecoFoto = enderecoFoto;
+        this.idModeloBoloAdicionadosVitrineQuandoVender = idModeloBoloAdicionadosVitrineQuandoVender;
+    }
+
+    public String getIdModeloBoloAdicionadosVitrineQuandoVender() {
+        return idModeloBoloAdicionadosVitrineQuandoVender;
+    }
+
+    public void setIdModeloBoloAdicionadosVitrineQuandoVender(String idModeloBoloAdicionadosVitrineQuandoVender) {
+        this.idModeloBoloAdicionadosVitrineQuandoVender = idModeloBoloAdicionadosVitrineQuandoVender;
+    }
+
+    public String getIdReferenciaBoloCadastradoParaVenda() {
+        return idReferenciaBoloCadastradoParaVenda;
+    }
+
+    public void setIdReferenciaBoloCadastradoParaVenda(String idReferenciaBoloCadastradoParaVenda) {
+        this.idReferenciaBoloCadastradoParaVenda = idReferenciaBoloCadastradoParaVenda;
     }
 
     public String getNomeDoBoloVendido() {
@@ -56,6 +88,14 @@ public class ModeloBolosAdicionadosVitrineQuandoVender implements Serializable {
         this.precoCadastradoVendaIfood = precoCadastradoVendaIfood;
     }
 
+    public String getEnderecoFoto() {
+        return enderecoFoto;
+    }
+
+    public void setEnderecoFoto(String enderecoFoto) {
+        this.enderecoFoto = enderecoFoto;
+    }
+
     public boolean isVendeuNoIfood() {
         return vendeuNoIfood;
     }
@@ -72,13 +112,34 @@ public class ModeloBolosAdicionadosVitrineQuandoVender implements Serializable {
         this.vendeuNaLoja = vendeuNaLoja;
     }
 
+    public String getValorSugeridoParaVendaNaBoleria() {
+        return valorSugeridoParaVendaNaBoleria;
+    }
+
+    public void setValorSugeridoParaVendaNaBoleria(String valorSugeridoParaVendaNaBoleria) {
+        this.valorSugeridoParaVendaNaBoleria = valorSugeridoParaVendaNaBoleria;
+    }
+
+    public String getValorSugeridoParaVendaIfood() {
+        return valorSugeridoParaVendaIfood;
+    }
+
+    public void setValorSugeridoParaVendaIfood(String valorSugeridoParaVendaIfood) {
+        this.valorSugeridoParaVendaIfood = valorSugeridoParaVendaIfood;
+    }
+
     @Override
     public String toString() {
         return "ModeloBolosAdicionadosVitrineQuandoVender{" +
-                "nomeDoBoloVendido='" + nomeDoBoloVendido + '\'' +
+                "idModeloBoloAdicionadosVitrineQuandoVender='" + idModeloBoloAdicionadosVitrineQuandoVender + '\'' +
+                ", idReferenciaBoloCadastradoParaVenda='" + idReferenciaBoloCadastradoParaVenda + '\'' +
+                ", nomeDoBoloVendido='" + nomeDoBoloVendido + '\'' +
                 ", precoQueFoiVendido='" + precoQueFoiVendido + '\'' +
                 ", precoCadastradoVendaNaLoja='" + precoCadastradoVendaNaLoja + '\'' +
                 ", precoCadastradoVendaIfood='" + precoCadastradoVendaIfood + '\'' +
+                ", valorSugeridoParaVendaNaBoleria='" + valorSugeridoParaVendaNaBoleria + '\'' +
+                ", valorSugeridoParaVendaIfood='" + valorSugeridoParaVendaIfood + '\'' +
+                ", enderecoFoto='" + enderecoFoto + '\'' +
                 ", vendeuNoIfood=" + vendeuNoIfood +
                 ", vendeuNaLoja=" + vendeuNaLoja +
                 '}';

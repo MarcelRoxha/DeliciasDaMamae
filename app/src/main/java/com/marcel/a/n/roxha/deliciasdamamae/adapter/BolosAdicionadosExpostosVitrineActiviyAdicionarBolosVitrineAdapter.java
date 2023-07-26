@@ -39,6 +39,7 @@ public class BolosAdicionadosExpostosVitrineActiviyAdicionarBolosVitrineAdapter 
 
         String precoTexto = String.valueOf(model.getValorVenda());
         holder.preco_salvo_adicionado.setText(precoTexto);
+
     }
 
     @NonNull

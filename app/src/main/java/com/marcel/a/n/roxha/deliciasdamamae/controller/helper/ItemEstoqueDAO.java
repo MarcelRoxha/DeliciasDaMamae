@@ -1,4 +1,4 @@
-package com.marcel.a.n.roxha.deliciasdamamae.helper;
+package com.marcel.a.n.roxha.deliciasdamamae.controller.helper;
 
 import android.content.Context;
 import android.util.Log;
@@ -11,14 +11,12 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ItemEstoqueModel;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 

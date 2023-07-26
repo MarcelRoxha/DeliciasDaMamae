@@ -3,101 +3,119 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:contextClickable="false"
+    android:textAlignment="viewStart">
 
     <ImageView
-        android:id="@+id/imageView13"
+        android:id="@+id/imagemDoOpaVendi"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="15dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@drawable/fundo_bolo_adicionados_expostos_vitrine" />
 
     <TextView
         android:id="@+id/texto_nome_do_bolo_no_opa_vendi"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
+        android:layout_marginStart="3dp"
         android:fontFamily="@font/bungee_shade"
+        android:gravity="start|top"
         android:text="NOME:"
+        android:textAlignment="textStart"
         android:textColor="@color/azul_claro"
         android:textSize="14sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/imageView13"
-        app:layout_constraintTop_toTopOf="@+id/imageView13" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imagemDoOpaVendi"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/nome_do_produto_vendido_opa_vendi"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
+        android:layout_marginStart="3dp"
         android:fontFamily="@font/bungee_shade"
+        android:gravity="start|top"
         android:text="TextView"
-        android:textColor="@color/azul_claro"
+        android:textAlignment="textStart"
+        android:textColor="@color/rosa_claro"
         android:textSize="14sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/texto_nome_do_bolo_no_opa_vendi"
-        app:layout_constraintStart_toEndOf="@+id/texto_nome_do_bolo_no_opa_vendi"
-        app:layout_constraintTop_toTopOf="@+id/texto_nome_do_bolo_no_opa_vendi" />
-
-    <TextView
-        android:id="@+id/texto_valor_venda_loja"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="6dp"
-        android:fontFamily="@font/bungee_shade"
-        android:text="LOJA R$:"
-        android:textColor="@color/azul_claro"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/texto_valor_venda_ifood"
-        app:layout_constraintStart_toEndOf="@+id/imageView13"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imagemDoOpaVendi"
         app:layout_constraintTop_toBottomOf="@+id/texto_nome_do_bolo_no_opa_vendi" />
 
     <TextView
-        android:id="@+id/valor_venda_loja"
-        android:layout_width="wrap_content"
+        android:id="@+id/texto_valor_venda_loja"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="20dp"
         android:fontFamily="@font/bungee_shade"
-        android:text="TextView"
+        android:gravity="start|top"
+        android:text="LOJA R$:"
+        android:textAlignment="textStart"
         android:textColor="@color/azul_claro"
         android:textSize="14sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/texto_valor_venda_loja"
-        app:layout_constraintStart_toEndOf="@+id/texto_valor_venda_loja"
-        app:layout_constraintTop_toTopOf="@+id/texto_valor_venda_loja" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/imagemDoOpaVendi"
+        app:layout_constraintTop_toBottomOf="@+id/nome_do_produto_vendido_opa_vendi" />
+
+    <TextView
+        android:id="@+id/valor_venda_loja"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="3dp"
+        android:fontFamily="@font/bungee_shade"
+        android:gravity="start|top"
+        android:text="TextView"
+        android:textAlignment="textStart"
+        android:textColor="@color/rosa_claro"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/imagemDoOpaVendi"
+        app:layout_constraintTop_toBottomOf="@+id/texto_valor_venda_loja" />
 
     <TextView
         android:id="@+id/texto_valor_venda_ifood"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
+        android:layout_marginStart="3dp"
         android:fontFamily="@font/bungee_shade"
-        android:text="LOJA R$:"
+        android:gravity="start|top"
+        android:text="IFOOD R$:"
         android:textColor="@color/azul_claro"
         android:textSize="14sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView13"
-        app:layout_constraintStart_toEndOf="@+id/imageView13" />
+        app:layout_constraintBottom_toTopOf="@+id/valor_venda_ifood"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imagemDoOpaVendi" />
 
     <TextView
         android:id="@+id/valor_venda_ifood"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
+        android:layout_marginStart="3dp"
         android:fontFamily="@font/bungee_shade"
+        android:foregroundGravity="top"
+        android:gravity="start|top"
         android:text="TextView"
-        android:textColor="@color/azul_claro"
+        android:textColor="@color/rosa_claro"
         android:textSize="14sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/texto_valor_venda_ifood"
-        app:layout_constraintStart_toEndOf="@+id/texto_valor_venda_loja"
-        app:layout_constraintTop_toTopOf="@+id/texto_valor_venda_ifood" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/imagemDoOpaVendi" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,9 +1,7 @@
-package com.marcel.a.n.roxha.deliciasdamamae.helper;
+package com.marcel.a.n.roxha.deliciasdamamae.controller.helper;
 
 import android.content.Context;
 import android.content.Intent;
-import android.view.View;
-import android.view.contentcapture.ContentCaptureCondition;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -11,23 +9,17 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.marcel.a.n.roxha.deliciasdamamae.R;
-import com.marcel.a.n.roxha.deliciasdamamae.activity.FinalizarReceitaActivity;
 import com.marcel.a.n.roxha.deliciasdamamae.activity.ProducaoActivity;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
-import com.marcel.a.n.roxha.deliciasdamamae.fragments.ReceitaNovaFragment;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloIngredienteAdicionadoReceita;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloItemEstoque;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ReceitaModel;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package com.marcel.a.n.roxha.deliciasdamamae.helper;
+package com.marcel.a.n.roxha.deliciasdamamae.controller.helper;
 
 import android.content.Context;
 import android.widget.Toast;
@@ -9,15 +9,11 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
-import com.marcel.a.n.roxha.deliciasdamamae.model.BolosModel;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloMontanteMensalLoja;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class ModeloMontanteMensalDAO implements InterfaceModeloMontanteMensalDAO{
