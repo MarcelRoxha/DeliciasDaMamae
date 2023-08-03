@@ -57,9 +57,9 @@ public class DeletarBoloVendidoBancoActivity extends AppCompatActivity {
     //--------------------->DADOS DO BOLO VENDIDO
 
     public String nomeBoloVendido;
-    public double valorVenda;
+    public String valorVenda;
     public String textoValorVenda;
-    public double custoBolo;
+    public String custoBolo;
     public String textoValorCusto;
 
 
@@ -111,9 +111,9 @@ public class DeletarBoloVendidoBancoActivity extends AppCompatActivity {
 
                     BoloVendidoModel boloVendidoModel = documentSnapshot.toObject(BoloVendidoModel.class);
 
-                    nomeBoloVendido = boloVendidoModel.getNomeBolo();
-                    valorVenda = boloVendidoModel.getVelorVenda();
-                    custoBolo = boloVendidoModel.getCustoBolo();
+                    nomeBoloVendido = boloVendidoModel.getNomeDoProdutoVendido();
+                    valorVenda = boloVendidoModel.getValorQueOProdutoFoiVendido();
+                    custoBolo = boloVendidoModel.getCustoQueOProdutoTeveAoSerConfeccionado();
 
                     textoValorVenda = String.valueOf(valorVenda);
                     textoValorCusto = String.valueOf(custoBolo);
@@ -149,7 +149,7 @@ public class DeletarBoloVendidoBancoActivity extends AppCompatActivity {
                             valorTotalCustosBolosVendidosMensal = caixaMensalModel.getValorTotalCustosBolosVendidosMensal();
                             totalGastoMensal = caixaMensalModel.getTotalGastoMensal();
 
-                            processaExclusao(valorTotalBolosVendidosMensal, valorTotalCustosBolosVendidosMensal, totalGastoMensal, valorVenda, custoBolo);
+                           // processaExclusao(valorTotalBolosVendidosMensal, valorTotalCustosBolosVendidosMensal, totalGastoMensal, valorVenda, custoBolo);
 
 
                     }

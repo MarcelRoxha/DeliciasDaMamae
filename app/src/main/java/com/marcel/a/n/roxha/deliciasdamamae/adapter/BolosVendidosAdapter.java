@@ -26,9 +26,9 @@ public class BolosVendidosAdapter extends FirestoreRecyclerAdapter<BoloVendidoMo
     @Override
     protected void onBindViewHolder(@NonNull BolosVendidoViewHolder holder, int position, @NonNull BoloVendidoModel model) {
 
-        holder.textoNome.setText(model.getNomeBolo());
-        holder.textoValorVenda.setText(String.valueOf(model.getVelorVenda()));
-        holder.textoCusto.setText(String.valueOf(model.getCustoBolo()));
+        holder.textoNome.setText(model.getNomeDoProdutoVendido());
+        holder.textoValorVenda.setText(String.valueOf(model.getValorQueOProdutoFoiVendido()));
+        holder.textoCusto.setText(String.valueOf(model.getCustoQueOProdutoTeveAoSerConfeccionado()));
 
 
     }

@@ -28,7 +28,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.marcel.a.n.roxha.deliciasdamamae.R;
+import com.marcel.a.n.roxha.deliciasdamamae.activity.AddItemEstoqueActivity;
 import com.marcel.a.n.roxha.deliciasdamamae.activity.AdicionarBoloVitrineActivity2;
+import com.marcel.a.n.roxha.deliciasdamamae.activity.AdicionarProdutoComoVendidoNoSistema;
+import com.marcel.a.n.roxha.deliciasdamamae.activity.EstoqueActivity;
 import com.marcel.a.n.roxha.deliciasdamamae.adapter.BolosAdicionadosExpostosVitrineAdapter;
 import com.marcel.a.n.roxha.deliciasdamamae.adapter.BolosAdicionadosVitrineParaExibirQuandoVenderAdapter;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
@@ -307,6 +310,20 @@ public class CaixaLojaFragment extends Fragment {
                 recyclerView_itens_vitrine.setLayoutManager(layoutManager);
                 recyclerView_itens_vitrine.setAdapter(expostoAdapter);
                 expostoAdapter.startListening();
+                expostoAdapter.setOnItemClickListerner(new BolosAdicionadosVitrineParaExibirQuandoVenderAdapter.OnItemClickLisener() {
+                    @Override
+                    public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
+
+                        String idRecuperadoDoBoloExpostoVitrine = documentSnapshot.getId();
+                        Intent intentAdicionarProdutoComoVendidoNoSistema = new Intent( getContext(), AdicionarProdutoComoVendidoNoSistema.class);
+                        intentAdicionarProdutoComoVendidoNoSistema.putExtra("itemKey", idRecuperadoDoBoloExpostoVitrine);
+                        startActivity(intentAdicionarProdutoComoVendidoNoSistema);
+
+
+//                        Toast.makeText(getContext(), "Id recuperado: " + idRecuperadoDoBoloExpostoVitrine, Toast.LENGTH_SHORT).show();
+
+                    }
+                });
 
                 alertaMostrarProdutosDaVetrinePoisFoiVendidoAlgo.create();
                 alertaMostrarProdutosDaVetrinePoisFoiVendidoAlgo.show();

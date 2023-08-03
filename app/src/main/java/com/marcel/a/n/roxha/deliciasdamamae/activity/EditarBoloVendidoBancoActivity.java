@@ -99,9 +99,9 @@ public class EditarBoloVendidoBancoActivity extends AppCompatActivity {
 
                      //Recuperando os dados dos atributos do Objeto do tipo BoloVendidoModel:
 
-                        nomeBoloVendido = boloVendidoModel.getNomeBolo();
-                        valorVendaBoloVendidoCadastradoFirebase = boloVendidoModel.getVelorVenda();
-                        valorCustoBoloVendidoCadastradoFirebase = boloVendidoModel.getCustoBolo();
+//                        nomeBoloVendido = boloVendidoModel.getNomeBolo();
+//                        valorVendaBoloVendidoCadastradoFirebase = boloVendidoModel.getVelorVenda();
+//                        valorCustoBoloVendidoCadastradoFirebase = boloVendidoModel.getCustoBolo();
 
                         //verificando realmente se foi atribuído os valores para as variaveís
 

@@ -23,161 +23,95 @@ import java.util.Map;
 
 public class BoloVendidoModel implements Serializable {
 
-    private String idReferencia;
-    private String nomeBolo;
-    private double velorVenda;
-    private double custoBolo;
+    private String idDoProdutoVendido;
+    private String idDoCaixaQueFoiAdicionado;
+    private String nomeDoProdutoVendido;
+    private String valorQueOProdutoFoiVendido;
+    private String custoQueOProdutoTeveAoSerConfeccionado;
+    private String vendaFoiFeitaPorQualPlataforma;
+    private String dataDaVenda;
 
-    double resultadocustobolos = 0;
-    double resultadovendabolos = 0;
-    double resultadoTotalGasto = 0;
-    int contAddBolo = 0;
-
-    String idReferenciaBolo;
-    String idMontanteReferencia ;
-    String nomeReferencia ;
-    double valorReferencia ;
-    double custoReferencia;
-
-    public Context context;
 
     public BoloVendidoModel() {
-
-
     }
 
-    public String getId() {
-        return idReferencia;
+    public BoloVendidoModel(String idDoProdutoVendido, String idDoCaixaQueFoiAdicionado, String nomeDoProdutoVendido, String valorQueOProdutoFoiVendido, String custoQueOProdutoTeveAoSerConfeccionado, String vendaFoiFeitaPorQualPlataforma, String dataDaVenda) {
+        this.idDoProdutoVendido = idDoProdutoVendido;
+        this.idDoCaixaQueFoiAdicionado = idDoCaixaQueFoiAdicionado;
+        this.nomeDoProdutoVendido = nomeDoProdutoVendido;
+        this.valorQueOProdutoFoiVendido = valorQueOProdutoFoiVendido;
+        this.custoQueOProdutoTeveAoSerConfeccionado = custoQueOProdutoTeveAoSerConfeccionado;
+        this.vendaFoiFeitaPorQualPlataforma = vendaFoiFeitaPorQualPlataforma;
+        this.dataDaVenda = dataDaVenda;
     }
 
-    public void setId(String id) {
-        this.idReferencia = id;
+    public String getIdDoProdutoVendido() {
+        return idDoProdutoVendido;
     }
 
-    public String getNomeBolo() {
-        return nomeBolo;
+    public void setIdDoProdutoVendido(String idDoProdutoVendido) {
+        this.idDoProdutoVendido = idDoProdutoVendido;
     }
 
-    public void setNomeBolo(String nomeBolo) {
-        this.nomeBolo = nomeBolo;
+    public String getIdDoCaixaQueFoiAdicionado() {
+        return idDoCaixaQueFoiAdicionado;
     }
 
-    public double getVelorVenda() {
-        return velorVenda;
+    public void setIdDoCaixaQueFoiAdicionado(String idDoCaixaQueFoiAdicionado) {
+        this.idDoCaixaQueFoiAdicionado = idDoCaixaQueFoiAdicionado;
     }
 
-    public void setVelorVenda(double velorVenda) {
-        this.velorVenda = velorVenda;
+    public String getNomeDoProdutoVendido() {
+        return nomeDoProdutoVendido;
     }
 
-    public double getCustoBolo() {
-        return custoBolo;
+    public void setNomeDoProdutoVendido(String nomeDoProdutoVendido) {
+        this.nomeDoProdutoVendido = nomeDoProdutoVendido;
     }
 
-    public void setCustoBolo(double custoBolo) {
-        this.custoBolo = custoBolo;
+    public String getValorQueOProdutoFoiVendido() {
+        return valorQueOProdutoFoiVendido;
     }
 
-    public Context getContext() {
-        return context;
+    public void setValorQueOProdutoFoiVendido(String valorQueOProdutoFoiVendido) {
+        this.valorQueOProdutoFoiVendido = valorQueOProdutoFoiVendido;
     }
 
-    public void setContext(Context context) {
-        this.context = context;
+    public String getCustoQueOProdutoTeveAoSerConfeccionado() {
+        return custoQueOProdutoTeveAoSerConfeccionado;
     }
 
-    public void salvarBolobanco(Context context, String idMontante, String id, String nomeBolo, double valorVenda, double custoBolo){
-
-         this.context = context;
-         idReferenciaBolo = id;
-         idMontanteReferencia = idMontante;
-         nomeReferencia = nomeBolo;
-         valorReferencia = valorVenda;
-         custoReferencia = custoBolo;
-
-        Map<String, Object> boloVendido = new HashMap<>();
-        boloVendido.put("idReferencia", idReferenciaBolo );
-        boloVendido.put("nomeBolo", nomeReferencia );
-        boloVendido.put("velorVenda", valorReferencia );
-        boloVendido.put("custoBolo", custoReferencia );
-        FirebaseFirestore.getInstance().collection("BOLOS_VENDIDOS").add(boloVendido).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-            @Override
-            public void onSuccess(DocumentReference documentReference) {
-
-
-                FirebaseFirestore.getInstance().collection("CAIXA_MENSAL").document(idMontanteReferencia).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-
-
-                      CaixaMensalModel caixaMensalModel = documentSnapshot.toObject(CaixaMensalModel.class);
-                         String idRecuperado = idMontanteReferencia;
-                        int mesRecuperado = caixaMensalModel.getMesReferencia();
-                        int quantBoloAddRecuperado = caixaMensalModel.getQuantTotalBolosAdicionadosMensal();
-                        double totalGastoMensalRecuperado = caixaMensalModel.getTotalGastoMensal();
-                        double totalBolosVendidosRecuperado = caixaMensalModel.getValorTotalBolosVendidosMensal();
-                        double totalCustoBolosrecuperaod = caixaMensalModel.getValorTotalCustosBolosVendidosMensal();
-                        precessaVendaMontante(idReferenciaBolo, idRecuperado, valorReferencia, custoReferencia, mesRecuperado, quantBoloAddRecuperado,
-                        totalGastoMensalRecuperado, totalBolosVendidosRecuperado,  totalCustoBolosrecuperaod);
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-
-                    }
-                });
-
-
-            }
-        }).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-            @Override
-            public void onSuccess(DocumentReference documentReference) {
-
-            }
-        });
-
+    public void setCustoQueOProdutoTeveAoSerConfeccionado(String custoQueOProdutoTeveAoSerConfeccionado) {
+        this.custoQueOProdutoTeveAoSerConfeccionado = custoQueOProdutoTeveAoSerConfeccionado;
     }
 
-    private void precessaVendaMontante(
-            String idBoloDelete,
-            String idRecuperado,
-            double valorReferencia,
-            double custoReferencia,
-            int mesRecuperado,
-            int quantBoloAddRecuperado,
-            double totalGastoMensalRecuperado,
-            double totalBolosVendidosRecuperado,
-            double totalCustoBolosrecuperaod) {
+    public String getVendaFoiFeitaPorQualPlataforma() {
+        return vendaFoiFeitaPorQualPlataforma;
+    }
 
-        double valorbolo = valorReferencia;
-        double valorbolosmontante = totalBolosVendidosRecuperado;
+    public void setVendaFoiFeitaPorQualPlataforma(String vendaFoiFeitaPorQualPlataforma) {
+        this.vendaFoiFeitaPorQualPlataforma = vendaFoiFeitaPorQualPlataforma;
+    }
 
-        resultadovendabolos = valorbolo + valorbolosmontante;
+    public String getDataDaVenda() {
+        return dataDaVenda;
+    }
 
-        double custobolo = custoReferencia;
-        double valorcustomontante = totalCustoBolosrecuperaod;
+    public void setDataDaVenda(String dataDaVenda) {
+        this.dataDaVenda = dataDaVenda;
+    }
 
-        double totalGastoMontante = totalGastoMensalRecuperado;
-
-        resultadoTotalGasto = totalGastoMontante + custobolo;
-
-        resultadocustobolos = custobolo + valorcustomontante;
-
-        contAddBolo = quantBoloAddRecuperado + 1;
-
-
-            String idMontante = idRecuperado;
-            String idBoloe = idBoloDelete;
-            int mesmMontante = mesRecuperado;
-
-
-            CaixaMensalModel caixaProcessa = new CaixaMensalModel();
-            caixaProcessa.processaVendaBolo(this.context, idBoloe,idMontante, mesmMontante, contAddBolo, resultadovendabolos, resultadocustobolos, resultadoTotalGasto);
-
-           /* Intent intent = new Intent(context, LojaActivity.class);
-            context.startActivity(intent);*/
-
-
-
+    @Override
+    public String toString() {
+        return "BoloVendidoModel{" +
+                "idDoProdutoVendido='" + idDoProdutoVendido + '\'' +
+                ", idDoCaixaQueFoiAdicionado='" + idDoCaixaQueFoiAdicionado + '\'' +
+                ", nomeDoProdutoVendido='" + nomeDoProdutoVendido + '\'' +
+                ", valorQueOProdutoFoiVendido='" + valorQueOProdutoFoiVendido + '\'' +
+                ", custoQueOProdutoTeveAoSerConfeccionado='" + custoQueOProdutoTeveAoSerConfeccionado + '\'' +
+                ", vendaFoiFeitaPorQualPlataforma='" + vendaFoiFeitaPorQualPlataforma + '\'' +
+                ", dataDaVenda='" + dataDaVenda + '\'' +
+                '}';
     }
 }
+
