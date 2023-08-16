@@ -6,7 +6,8 @@
     android:id="@+id/scrollView2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:visibility="visible" >
+    android:background="@color/white"
+    android:visibility="visible">
 
     <ImageView
         android:id="@+id/imagemDoProdutoNoProcessoDeVenda"
@@ -22,11 +23,13 @@
         android:id="@+id/textView89"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="5dp"
         android:fontFamily="sans-serif-smallcaps"
         android:text="NOME: "
+        android:textColor="@color/azul_claro"
         android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imagemDoProdutoNoProcessoDeVenda" />
 
@@ -34,47 +37,149 @@
         android:id="@+id/nomeDoProdutoExibidoNoProcessoDeVenda"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:fontFamily="sans-serif-smallcaps"
+        android:shadowColor="@color/rosa"
         android:text="NOME: "
         android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView89" />
 
+    <TextView
+        android:id="@+id/textView96"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="LOJA R$:"
+        android:textColor="@color/azul_claro"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/imagemDoProdutoNoProcessoDeVenda"
+        app:layout_constraintStart_toStartOf="@+id/imagemDoProdutoNoProcessoDeVenda"
+        app:layout_constraintTop_toTopOf="@+id/textView89" />
+
+    <TextView
+        android:id="@+id/valorCadastradoParaVendaNaLojaProcessoDeVenda"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textColor="@color/rosa"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/textView96"
+        app:layout_constraintStart_toStartOf="@+id/textView96"
+        app:layout_constraintTop_toBottomOf="@+id/textView96" />
+
+    <TextView
+        android:id="@+id/textView98"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:text="IFOOD R$: "
+        android:textColor="@color/azul_claro"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView96" />
+
+    <TextView
+        android:id="@+id/valorCadastradoParaVendaNoIfoodProcessoDeVenda"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:shadowColor="@color/rosa"
+        android:text="TextView"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/textView98"
+        app:layout_constraintStart_toStartOf="@+id/textView98"
+        app:layout_constraintTop_toBottomOf="@+id/textView98" />
+
     <RadioGroup
-        android:id="@+id/radioGroupExcolherValoresCadastrados"
+        android:id="@+id/radioGroupEcolherValoresCadatradosNoProcessoDeVenda"
         android:layout_width="0dp"
-        android:layout_height="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="@+id/botaoParaEditarOValorNaHoraDaVenda"
+        app:layout_constraintStart_toStartOf="@+id/botaoParaEditarOValorNaHoraDaVenda"
+        app:layout_constraintTop_toBottomOf="@+id/botaoParaEditarOValorNaHoraDaVenda">
+
+        <RadioButton
+            android:id="@+id/radioButtonPrecoCadastradoParaVendaNaLojaNoProcessoDeVenda"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="RadioButton"
+            android:textStyle="bold" />
+
+        <RadioButton
+            android:id="@+id/radioButtonPrecoCadastradoParaVendaNoIfoodNoProcessoDeVenda"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="RadioButton"
+            android:textStyle="bold" />
+    </RadioGroup>
+
+
+    <Button
+        android:id="@+id/botaoConfirmarVendaNoProcessoDeVenda"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="96dp"
+        android:background="@drawable/btn"
+        android:fontFamily="sans-serif-smallcaps"
+        android:text="CONFIRMAR"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/radioGroupEcolherValoresCadatradosNoProcessoDeVenda"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroupEcolherValoresCadatradosNoProcessoDeVenda" />
+
+    <Button
+        android:id="@+id/botaoCancelarProcessoDeVendaId"
+        android:layout_width="130dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="96dp"
+        android:background="@drawable/btn"
+        android:fontFamily="sans-serif-smallcaps"
+        android:text="CANCELAR"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/botaoConfirmarVendaNoProcessoDeVenda"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/radioGroupEcolherValoresCadatradosNoProcessoDeVenda"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroupEcolherValoresCadatradosNoProcessoDeVenda" />
+
+    <Button
+        android:id="@+id/botaoParaEditarOValorNaHoraDaVenda"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="16dp"
+        android:background="@drawable/btn"
+        android:text="EDITAR VALOR PARA VENDA"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nomeDoProdutoExibidoNoProcessoDeVenda">
+        app:layout_constraintTop_toBottomOf="@+id/textoInformaParaEscolherUmDosValoresCadastradaosId" />
 
-        <RadioButton
-            android:id="@+id/idEscolherValoresCadastradosParaVenda"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="ESCOLHER VALORES CADASTRADOS" />
-    </RadioGroup>
+    <TextView
+        android:id="@+id/textoValorQueVaiSerVendidoMesmoId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-smallcaps"
+        android:text="Valor que será vendido é R$"
+        android:textColor="@color/azul_claro"
+        app:layout_constraintBottom_toTopOf="@+id/botaoCancelarProcessoDeVendaId"
+        app:layout_constraintEnd_toEndOf="@+id/radioGroupEcolherValoresCadatradosNoProcessoDeVenda"
+        app:layout_constraintStart_toStartOf="@+id/radioGroupEcolherValoresCadatradosNoProcessoDeVenda"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroupEcolherValoresCadatradosNoProcessoDeVenda" />
 
-    <RadioGroup
-        android:id="@+id/radioGroupEditarValorDeVenda"
-        android:layout_width="match_parent"
-        android:layout_height="250dp"
+    <TextView
+        android:id="@+id/textoInformaParaEscolherUmDosValoresCadastradaosId"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:fontFamily="sans-serif-smallcaps"
+        android:text="ESCOLHA UM DOS VALORES CADASTRADOS, OU"
+        android:textColor="@color/azul_claro"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroupExcolherValoresCadastrados">
-
-        <RadioButton
-            android:id="@+id/idEditarOValoParaVender"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="EDITAR VALOR PARA VENDER" />
-    </RadioGroup>
+        app:layout_constraintTop_toBottomOf="@+id/valorCadastradoParaVendaNaLojaProcessoDeVenda" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

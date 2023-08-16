@@ -9,6 +9,9 @@
     <uses-feature
         android:name="android.hardware.Camera"
         android:required="true" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
 
     <application
         android:allowBackup="true"
@@ -19,7 +22,8 @@
         android:theme="@style/Theme.Splash">
         <activity
             android:name=".activity.AdicionarProdutoComoVendidoNoSistema"
-            android:exported="false" />
+            android:parentActivityName=".activity.LojaActivityV2"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.LojaActivityV2"
             android:parentActivityName=".activity.PrincipalActivity"
