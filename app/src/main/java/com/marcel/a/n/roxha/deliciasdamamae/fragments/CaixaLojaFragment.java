@@ -288,7 +288,7 @@ public class CaixaLojaFragment extends Fragment {
             public void onClick(View view) {
 
                 AlertDialog.Builder alertaMostrarProdutosDaVetrinePoisFoiVendidoAlgo = new AlertDialog.Builder(getContext());
-                alertaMostrarProdutosDaVetrinePoisFoiVendidoAlgo.setTitle("TESTANDO");
+                alertaMostrarProdutosDaVetrinePoisFoiVendidoAlgo.setTitle("OPA VENDI");
 
                 alertaMostrarProdutosDaVetrinePoisFoiVendidoAlgo.setView(inflaterLayout.inflate(R.layout.alerta_opa_vendi_alguma_coisa, null));
                 View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.alerta_opa_vendi_alguma_coisa, null);

@@ -4,11 +4,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -44,22 +47,23 @@ public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
 
 
     private RadioGroup radioGroupEscolherValoresCadastrados;
+    private RadioGroup radioGroupEscolherMetodoDePagamento;
 
 
-    private RadioButton radioButtonEscolherValoresCadastrados;
-    private RadioButton radioButtonEditarValorParaVender;
     private RadioButton radioButtonSelecionarPrecoDeVendaNaLoja;
     private RadioButton radioButtonSelecionarPrecoDeVendaNoIfood;
+    private RadioButton radioButtonPagouNoDinheiroOuPix;
+    private RadioButton radioButtonPagouNoDebito;
+    private RadioButton radioButtonPagouNoCredito;
 
     private Button botaoConfirmar;
     private Button botaoCancelar;
     private TextView textoInformativoParaEscolherUmDosValoresCadastradosOu;
     private Button botaoParaEditarValorParaVenda;
 
-    private TextInputEditText editValorQueFoiVendidoOProdutoNaHoraDaVenda;
-
     public AlertDialog progressDialogCarregando;
 
+    private AlertDialog.Builder alertaEditarValorDoProdutoNoProcessoDeVenda;
 
 
     //INFO BANCO
@@ -114,16 +118,21 @@ public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
         radioButtonSelecionarPrecoDeVendaNaLoja = findViewById(R.id.radioButtonPrecoCadastradoParaVendaNaLojaNoProcessoDeVenda);
         radioButtonSelecionarPrecoDeVendaNoIfood = findViewById(R.id.radioButtonPrecoCadastradoParaVendaNoIfoodNoProcessoDeVenda);
 
+
+        radioGroupEscolherMetodoDePagamento = findViewById(R.id.radioGroupMetodoDePagamentoId);
+        radioButtonPagouNoDinheiroOuPix = findViewById(R.id.radioButtonPagouNoDinheiroOuPixId);
+        radioButtonPagouNoDebito = findViewById(R.id.radioButtonPagouNoDebitoId);
+        radioButtonPagouNoCredito = findViewById(R.id.radioButtonPagouNoCreditoId);
+
+
         botaoConfirmar = findViewById(R.id.botaoConfirmarVendaNoProcessoDeVenda);
         botaoCancelar = findViewById(R.id.botaoCancelarProcessoDeVendaId);
         carregarCargaDeDesaparecerConteudoDaTela();
-
 
         AlertDialog.Builder builder = new AlertDialog.Builder(AdicionarProdutoComoVendidoNoSistema.this);
 
         LayoutInflater inflaterLayout = AdicionarProdutoComoVendidoNoSistema.this.getLayoutInflater();
         builder.setView(inflaterLayout.inflate(R.layout.progress_dialog_carregando_informacoes_caixa_diario, null));
-        builder.setCancelable(true);
 
         this.progressDialogCarregando = builder.create();
         this.progressDialogCarregando.getWindow().setBackgroundDrawableResource(
@@ -141,7 +150,9 @@ public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
                         @Override
                         public void onSuccess(DocumentSnapshot documentSnapshot) {
                             carregarCargaDeAparecimentoDoConteudoDaTela();
+/*
                             progressDialogCarregando.dismiss();
+*/
 
                             produtoRecuperadoPraExibirNaTela = documentSnapshot.toObject(BolosModel.class);
 
@@ -180,12 +191,9 @@ public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
         botaoParaEditarValorParaVenda.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                oValorFoiEditado = true;
-                AlertDialog.Builder alert = new AlertDialog.Builder(AdicionarProdutoComoVendidoNoSistema.this);
-                alert.setTitle("EDITANDO O VALOR DE VENDA");
-                alert.setMessage("O valor editado aqui será processado nessa venda, digite o valor vendido e clique em CONFIRMAR");
-                alert.setIcon(R.drawable.ic_alertdialogatencao_24);
-                alert.setCancelable(false);
+
+                carregarAlertaParaEditarOValorDoProduto();
+
 
 
             }
@@ -212,6 +220,47 @@ public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
             }
         });
 
+        botaoCancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intentVoltaPorQueCancelouOProcesso = new Intent(AdicionarProdutoComoVendidoNoSistema.this, LojaActivityV2.class);
+                startActivity(intentVoltaPorQueCancelouOProcesso);
+                finish();
+            }
+        });
+
+    }
+
+    public void carregarAlertaParaEditarOValorDoProduto() {
+        alertaEditarValorDoProdutoNoProcessoDeVenda = new AlertDialog.Builder(AdicionarProdutoComoVendidoNoSistema.this);
+        LayoutInflater layoutAlertaEditarValorParaVenda = AdicionarProdutoComoVendidoNoSistema.this.getLayoutInflater();
+        alertaEditarValorDoProdutoNoProcessoDeVenda.setView(layoutAlertaEditarValorParaVenda.inflate(R.layout.alerta_editar_valor_de_venda_do_produto, null));
+        View viewAlert = getLayoutInflater().inflate(R.layout.alerta_editar_valor_de_venda_do_produto, null);
+
+        alertaEditarValorDoProdutoNoProcessoDeVenda.setView(viewAlert);
+        EditText editNomeReceitaCadastrando = viewAlert.findViewById(R.id.editValorDoProdutoNoProcessoDeVendaId);
+
+        alertaEditarValorDoProdutoNoProcessoDeVenda.setPositiveButton("CONFIRMAR", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                oValorFoiEditado = true;
+                String valorDigitado = editNomeReceitaCadastrando.getText().toString();
+                Toast.makeText(AdicionarProdutoComoVendidoNoSistema.this, "teste valor digitado " + valorDigitado, Toast.LENGTH_SHORT).show();
+                textoValorQueVaiSerVendidoMesmo = findViewById(R.id.textoValorQueVaiSerVendidoMesmoId);
+                textoValorQueVaiSerVendidoMesmo.setText("Valor que será vendido é R$: " + valorDigitado);
+            }
+        }).setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                oValorFoiEditado = true;
+
+            }
+        });
+
+        alertaEditarValorDoProdutoNoProcessoDeVenda.create();
+        alertaEditarValorDoProdutoNoProcessoDeVenda.show();
     }
 
     private void carregarCargaDeDesaparecerConteudoDaTela(){
@@ -225,6 +274,9 @@ public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
         valorVendaIfoodRecuperadoDoProdutoNoProcessoDeVenda.setVisibility(View.GONE);
         radioButtonSelecionarPrecoDeVendaNaLoja.setVisibility(View.GONE);
         radioButtonSelecionarPrecoDeVendaNoIfood.setVisibility(View.GONE);
+        radioButtonPagouNoDebito.setVisibility(View.GONE);
+        radioButtonPagouNoCredito.setVisibility(View.GONE);
+        radioButtonPagouNoDinheiroOuPix.setVisibility(View.GONE);
         botaoConfirmar.setVisibility(View.GONE);
         botaoCancelar.setVisibility(View.GONE);
 
@@ -243,7 +295,9 @@ public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
         radioGroupEscolherValoresCadastrados.setVisibility(View.VISIBLE);
         radioButtonSelecionarPrecoDeVendaNaLoja.setVisibility(View.VISIBLE);
         radioButtonSelecionarPrecoDeVendaNoIfood.setVisibility(View.VISIBLE);
-
+        radioButtonPagouNoDebito.setVisibility(View.VISIBLE);
+        radioButtonPagouNoCredito.setVisibility(View.VISIBLE);
+        radioButtonPagouNoDinheiroOuPix.setVisibility(View.VISIBLE);
     }
 
 }

@@ -5,6 +5,7 @@ import java.io.Serializable;
 public class ModeloMontanteDiario implements Serializable {
 
     private String idReferenciaMontanteDiarioDesseDia;
+    private String idReferenciaMontanteMensal;
     private String dataReferenciaMontanteDiarioDesseDia;
     private String valorQueOCaixaIniciouODia;
     private String valorTotalDeVendasNaLojaDesseDia;
@@ -18,8 +19,10 @@ public class ModeloMontanteDiario implements Serializable {
     public ModeloMontanteDiario() {
     }
 
-    public ModeloMontanteDiario(String idReferenciaMontanteDiarioDesseDia, String dataReferenciaMontanteDiarioDesseDia, String valorQueOCaixaIniciouODia, String valorTotalDeVendasNaLojaDesseDia, String valorTotalDeVendasNoIfoodDesseDia, String valorTotalDeVendasEmGeralDesseDia, String valorTotalDeVendasNoDinheiroDesseDia, String valorTotalDeVendasNoCreditoDesseDia, String valorTotalDeVendasNoDebitoDesseDia, String valorTotalDeTrocoDesseDia) {
+
+    public ModeloMontanteDiario(String idReferenciaMontanteDiarioDesseDia, String idReferenciaMontanteMensal, String dataReferenciaMontanteDiarioDesseDia, String valorQueOCaixaIniciouODia, String valorTotalDeVendasNaLojaDesseDia, String valorTotalDeVendasNoIfoodDesseDia, String valorTotalDeVendasEmGeralDesseDia, String valorTotalDeVendasNoDinheiroDesseDia, String valorTotalDeVendasNoCreditoDesseDia, String valorTotalDeVendasNoDebitoDesseDia, String valorTotalDeTrocoDesseDia) {
         this.idReferenciaMontanteDiarioDesseDia = idReferenciaMontanteDiarioDesseDia;
+        this.idReferenciaMontanteMensal = idReferenciaMontanteMensal;
         this.dataReferenciaMontanteDiarioDesseDia = dataReferenciaMontanteDiarioDesseDia;
         this.valorQueOCaixaIniciouODia = valorQueOCaixaIniciouODia;
         this.valorTotalDeVendasNaLojaDesseDia = valorTotalDeVendasNaLojaDesseDia;
@@ -37,6 +40,14 @@ public class ModeloMontanteDiario implements Serializable {
 
     public void setIdReferenciaMontanteDiarioDesseDia(String idReferenciaMontanteDiarioDesseDia) {
         this.idReferenciaMontanteDiarioDesseDia = idReferenciaMontanteDiarioDesseDia;
+    }
+
+    public String getIdReferenciaMontanteMensal() {
+        return idReferenciaMontanteMensal;
+    }
+
+    public void setIdReferenciaMontanteMensal(String idReferenciaMontanteMensal) {
+        this.idReferenciaMontanteMensal = idReferenciaMontanteMensal;
     }
 
     public String getDataReferenciaMontanteDiarioDesseDia() {
@@ -115,6 +126,7 @@ public class ModeloMontanteDiario implements Serializable {
     public String toString() {
         return "ModeloMontanteDiario{" +
                 "idReferenciaMontanteDiarioDesseDia='" + idReferenciaMontanteDiarioDesseDia + '\'' +
+                ", idReferenciaMontanteMensal='" + idReferenciaMontanteMensal + '\'' +
                 ", dataReferenciaMontanteDiarioDesseDia='" + dataReferenciaMontanteDiarioDesseDia + '\'' +
                 ", valorQueOCaixaIniciouODia='" + valorQueOCaixaIniciouODia + '\'' +
                 ", valorTotalDeVendasNaLojaDesseDia='" + valorTotalDeVendasNaLojaDesseDia + '\'' +
