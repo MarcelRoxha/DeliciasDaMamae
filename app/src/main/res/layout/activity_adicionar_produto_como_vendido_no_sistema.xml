@@ -172,13 +172,15 @@
 
         <TextView
             android:id="@+id/textoValorQueVaiSerVendidoMesmoId"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
+            android:layout_marginEnd="5dp"
             android:fontFamily="sans-serif-smallcaps"
             android:text="Valor que será vendido é R$"
-            android:textColor="@color/azul_claro"
-            app:layout_constraintEnd_toEndOf="@+id/radioGroupEcolherValoresCadatradosNoProcessoDeVenda"
+            android:textColor="@color/rosa"
+            app:layout_constraintEnd_toStartOf="@+id/textoMetodoDePagamentoId"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/radioGroupEcolherValoresCadatradosNoProcessoDeVenda"
             app:layout_constraintTop_toBottomOf="@+id/radioGroupMetodoDePagamentoId" />
 
@@ -195,6 +197,17 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/valorCadastradoParaVendaNaLojaProcessoDeVenda" />
+
+        <TextView
+            android:id="@+id/textoMetodoDePagamentoId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:fontFamily="sans-serif-smallcaps"
+            android:text="Pagou no:"
+            android:textColor="@color/azul_claro"
+            app:layout_constraintEnd_toEndOf="@+id/radioGroupMetodoDePagamentoId"
+            app:layout_constraintTop_toBottomOf="@+id/radioGroupMetodoDePagamentoId" />
 
         <RadioGroup
             android:id="@+id/radioGroupMetodoDePagamentoId"

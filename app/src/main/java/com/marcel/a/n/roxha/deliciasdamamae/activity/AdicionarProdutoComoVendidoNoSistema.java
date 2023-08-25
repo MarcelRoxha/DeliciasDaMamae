@@ -27,6 +27,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.marcel.a.n.roxha.deliciasdamamae.R;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
+import com.marcel.a.n.roxha.deliciasdamamae.controller.helper.ModeloProcessaVendaFeitaDAO;
 import com.marcel.a.n.roxha.deliciasdamamae.fragments.CaixaLojaFragment;
 import com.marcel.a.n.roxha.deliciasdamamae.model.BolosModel;
 
@@ -42,20 +43,14 @@ public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
     private TextView textoValorVendaIfoodDoProdutoNoProcessoDeVenda;
     private TextView valorVendaIfoodRecuperadoDoProdutoNoProcessoDeVenda;
     private TextView textoValorQueVaiSerVendidoMesmo;
-
-
-
-
+    private TextView textoMetodoDePagamento;
     private RadioGroup radioGroupEscolherValoresCadastrados;
     private RadioGroup radioGroupEscolherMetodoDePagamento;
-
-
     private RadioButton radioButtonSelecionarPrecoDeVendaNaLoja;
     private RadioButton radioButtonSelecionarPrecoDeVendaNoIfood;
     private RadioButton radioButtonPagouNoDinheiroOuPix;
     private RadioButton radioButtonPagouNoDebito;
     private RadioButton radioButtonPagouNoCredito;
-
     private Button botaoConfirmar;
     private Button botaoCancelar;
     private TextView textoInformativoParaEscolherUmDosValoresCadastradosOu;
@@ -64,7 +59,6 @@ public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
     public AlertDialog progressDialogCarregando;
 
     private AlertDialog.Builder alertaEditarValorDoProdutoNoProcessoDeVenda;
-
 
     //INFO BANCO
     private FirebaseFirestore firestoreProdutoRecuperadoParaProcessoDeVenda = ConfiguracaoFirebase.getFirestor();
@@ -79,9 +73,11 @@ public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
     private String nomeDoProdutoRecuperado;
     private String valorDoIfoodDoProdutoRecuperado;
     private String valorNaLojaDoProdutoRecuperado;
-    private String valoQueFoiVendidoOProdutoRecuperado;
+    private String valoQueFoiVendidoOProdutoRecuperado = "0";
     private boolean oValorFoiEditado = false;
 
+    private  String MEDOTO_DE_PAGAMENTO = "";
+    private  String PLATAFORMA_VENDIDA = "";
 
     //CLASSES
     private BolosModel produtoRecuperadoPraExibirNaTela;
@@ -101,6 +97,8 @@ public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
 
         textoValorVendaLojaDoProdutoNoProcessoDeVenda = findViewById(R.id.textView96);
         textoValorQueVaiSerVendidoMesmo = findViewById(R.id.textoValorQueVaiSerVendidoMesmoId);
+        textoMetodoDePagamento = findViewById(R.id.textoMetodoDePagamentoId);
+
         valorVendaLojaRecuperadoDoProdutoNoProcessoDeVenda = findViewById(R.id.valorCadastradoParaVendaNaLojaProcessoDeVenda);
 
 
@@ -150,9 +148,7 @@ public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
                         @Override
                         public void onSuccess(DocumentSnapshot documentSnapshot) {
                             carregarCargaDeAparecimentoDoConteudoDaTela();
-/*
                             progressDialogCarregando.dismiss();
-*/
 
                             produtoRecuperadoPraExibirNaTela = documentSnapshot.toObject(BolosModel.class);
 
@@ -166,8 +162,8 @@ public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
 
                             valorVendaIfoodRecuperadoDoProdutoNoProcessoDeVenda.setText("R$: " + valorDoIfoodDoProdutoRecuperado);
                             valorVendaLojaRecuperadoDoProdutoNoProcessoDeVenda.setText("R$: " + valorNaLojaDoProdutoRecuperado);
-                            radioButtonSelecionarPrecoDeVendaNaLoja.setText("Vendi pelo valor de R$: " + valorNaLojaDoProdutoRecuperado);
-                            radioButtonSelecionarPrecoDeVendaNoIfood.setText("Vendi pelo valor de R$: " + valorDoIfoodDoProdutoRecuperado);
+                            radioButtonSelecionarPrecoDeVendaNaLoja.setText("Vendi pela Loja no valor de R$: " + valorNaLojaDoProdutoRecuperado);
+                            radioButtonSelecionarPrecoDeVendaNoIfood.setText("Vendi pelo Ifood no valor de R$: " + valorDoIfoodDoProdutoRecuperado);
 
 
 
@@ -191,10 +187,9 @@ public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
         botaoParaEditarValorParaVenda.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                radioButtonSelecionarPrecoDeVendaNoIfood.setChecked(false);
+                radioButtonSelecionarPrecoDeVendaNaLoja.setChecked(false);
                 carregarAlertaParaEditarOValorDoProduto();
-
-
 
             }
         });
@@ -203,6 +198,26 @@ public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                try {
+                     String valorQueVaiSerVendidoMesmo = textoValorQueVaiSerVendidoMesmo.getText().toString();
+
+                    if(!radioButtonSelecionarPrecoDeVendaNaLoja.isChecked() && !radioButtonSelecionarPrecoDeVendaNoIfood.isChecked() && valoQueFoiVendidoOProdutoRecuperado == "0"){
+                        //Se cair nessa condição é por que não foi digitado um valor valido para ser processada a venda.
+
+                        Toast.makeText(AdicionarProdutoComoVendidoNoSistema.this, "É NECESSÁRIO QUE SEJA SELECIONADO UM DOS VALORES PARA VENDA, ESCOLHA ENTRE VALORES CADASTRADOS NA LOJA OU IFOOD OU EDITE O VALOR DE VENDA", Toast.LENGTH_LONG).show();
+
+                    }else{
+                        produtoRecuperadoPraExibirNaTela.setValorQueOBoloRealmenteFoiVendido(valoQueFoiVendidoOProdutoRecuperado);
+                        ModeloProcessaVendaFeitaDAO modeloProcessaVendaFeitaDAO = new ModeloProcessaVendaFeitaDAO(AdicionarProdutoComoVendidoNoSistema.this);
+                        modeloProcessaVendaFeitaDAO.processaVendaFeita(produtoRecuperadoPraExibirNaTela, PLATAFORMA_VENDIDA, MEDOTO_DE_PAGAMENTO);
+
+                    }
+
+
+                }catch (Exception e){
+
+                }
+
             }
         });
 
@@ -210,6 +225,8 @@ public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 textoValorQueVaiSerVendidoMesmo.setText("Valor que será vendido é R$: " + valorDoIfoodDoProdutoRecuperado);
+                PLATAFORMA_VENDIDA = "IFOOD";
+                valoQueFoiVendidoOProdutoRecuperado = valorDoIfoodDoProdutoRecuperado;
             }
         });
 
@@ -217,6 +234,8 @@ public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 textoValorQueVaiSerVendidoMesmo.setText("Valor que será vendido é R$: " + valorNaLojaDoProdutoRecuperado);
+                valoQueFoiVendidoOProdutoRecuperado = valorNaLojaDoProdutoRecuperado;
+                PLATAFORMA_VENDIDA = "LOJA";
             }
         });
 
@@ -227,6 +246,35 @@ public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
                 Intent intentVoltaPorQueCancelouOProcesso = new Intent(AdicionarProdutoComoVendidoNoSistema.this, LojaActivityV2.class);
                 startActivity(intentVoltaPorQueCancelouOProcesso);
                 finish();
+            }
+        });
+
+
+        radioButtonPagouNoCredito.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                textoMetodoDePagamento.setText("Pagou no: CRÉDITO" );
+                MEDOTO_DE_PAGAMENTO = "CREDITO";
+            }
+        });
+
+        radioButtonPagouNoDinheiroOuPix.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                textoMetodoDePagamento.setText("Pagou no: DINHEIRO OU PIX" );
+                MEDOTO_DE_PAGAMENTO = "DINHEIROOUPIX";
+            }
+        });
+
+        radioButtonPagouNoDebito.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                textoMetodoDePagamento.setText("Pagou no: DÉBITO" );
+                MEDOTO_DE_PAGAMENTO = "DEBITO";
+
             }
         });
 
@@ -246,10 +294,10 @@ public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
             public void onClick(DialogInterface dialogInterface, int i) {
 
                 oValorFoiEditado = true;
-                String valorDigitado = editNomeReceitaCadastrando.getText().toString();
-                Toast.makeText(AdicionarProdutoComoVendidoNoSistema.this, "teste valor digitado " + valorDigitado, Toast.LENGTH_SHORT).show();
+                valoQueFoiVendidoOProdutoRecuperado = editNomeReceitaCadastrando.getText().toString();
+                Toast.makeText(AdicionarProdutoComoVendidoNoSistema.this, "teste valor digitado " + valoQueFoiVendidoOProdutoRecuperado, Toast.LENGTH_SHORT).show();
                 textoValorQueVaiSerVendidoMesmo = findViewById(R.id.textoValorQueVaiSerVendidoMesmoId);
-                textoValorQueVaiSerVendidoMesmo.setText("Valor que será vendido é R$: " + valorDigitado);
+                textoValorQueVaiSerVendidoMesmo.setText("Valor que será vendido é R$: " + valoQueFoiVendidoOProdutoRecuperado);
             }
         }).setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
             @Override
@@ -268,7 +316,9 @@ public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
         imagemDoProdutoNoProcessoDeVenda.setVisibility(View.GONE);
         nomeRecuperadoDoProdutoNoProcessoDeVenda.setVisibility(View.GONE);
         textoNomeDoProdutoNoProcessoDeVenda.setVisibility(View.GONE);
+        textoValorQueVaiSerVendidoMesmo.setVisibility(View.GONE);
         textoValorVendaLojaDoProdutoNoProcessoDeVenda.setVisibility(View.GONE);
+        textoMetodoDePagamento.setVisibility(View.GONE);
         valorVendaLojaRecuperadoDoProdutoNoProcessoDeVenda.setVisibility(View.GONE);
         textoValorVendaIfoodDoProdutoNoProcessoDeVenda.setVisibility(View.GONE);
         valorVendaIfoodRecuperadoDoProdutoNoProcessoDeVenda.setVisibility(View.GONE);
@@ -286,6 +336,8 @@ public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
         imagemDoProdutoNoProcessoDeVenda.setVisibility(View.VISIBLE);
         nomeRecuperadoDoProdutoNoProcessoDeVenda.setVisibility(View.VISIBLE);
         textoNomeDoProdutoNoProcessoDeVenda.setVisibility(View.VISIBLE);
+        textoValorQueVaiSerVendidoMesmo.setVisibility(View.VISIBLE);
+        textoMetodoDePagamento.setVisibility(View.VISIBLE);
         textoValorVendaLojaDoProdutoNoProcessoDeVenda.setVisibility(View.VISIBLE);
         valorVendaLojaRecuperadoDoProdutoNoProcessoDeVenda.setVisibility(View.VISIBLE);
         textoValorVendaIfoodDoProdutoNoProcessoDeVenda.setVisibility(View.VISIBLE);
@@ -298,6 +350,8 @@ public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
         radioButtonPagouNoDebito.setVisibility(View.VISIBLE);
         radioButtonPagouNoCredito.setVisibility(View.VISIBLE);
         radioButtonPagouNoDinheiroOuPix.setVisibility(View.VISIBLE);
+        radioButtonPagouNoDinheiroOuPix.setChecked(true);
+        textoMetodoDePagamento.setText("Pagou no: DINHEIRO OU PIX");
     }
 
 }

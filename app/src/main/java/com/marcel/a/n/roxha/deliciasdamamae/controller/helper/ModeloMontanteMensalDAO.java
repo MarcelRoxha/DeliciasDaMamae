@@ -19,6 +19,7 @@ import java.util.Map;
 public class ModeloMontanteMensalDAO implements InterfaceModeloMontanteMensalDAO{
 
     private static final String COLLECTIO_MONTANTE_MENSAL = "MONTANTES_GERAL";
+    private static final String COLLECTION_MONTANTE_DIARIO = "CAIXAS_DIARIOS";
     private Context context;
     private FirebaseFirestore firestore = ConfiguracaoFirebase.getFirestor();
     private CollectionReference referenceItemEstoque = firestore.collection(COLLECTIO_MONTANTE_MENSAL);
@@ -26,20 +27,13 @@ public class ModeloMontanteMensalDAO implements InterfaceModeloMontanteMensalDAO
 
     public ModeloMontanteMensalDAO(Context context) {
         this.context = context;
+
+
     }
 
-    @Override
+ /*   @Override
     public ModeloMontanteMensalLoja modeloMontanteCriando(String idUsuario, ModeloMontanteMensalLoja modeloMontanteMensalLoja) {
 
-      /*   private String idMontante;
-    private String ;
-    private String ;
-    private String ;
-    private String ;
-    private String ;
-    private String ;
-    private String ;
-    */
 
         System.out.println("---------------------------------------- INICIANDO modeloMontanteCriandoDAO ----------------------------------------\"");
         System.out.println("---------------------------------------- idUsuario :" + idUsuario);
@@ -93,7 +87,7 @@ public class ModeloMontanteMensalDAO implements InterfaceModeloMontanteMensalDAO
                                 modeloMontanteMensalLojaParaAtualizarId.setQuantoDinheiroSaiuEsseMes(modeloMontanteMensalLoja.getQuantoDinheiroSaiuEsseMes());
                                 modeloMontanteMensalLojaParaAtualizarId.setValorQueOMontanteIniciouNegativo(modeloMontanteMensalLoja.getValorQueOMontanteIniciouNegativo());
 
-                                atualizandoIdDoMontanteMensalCriadoIniciandoOMontante(idRecuperado, modeloMontanteMensalLojaParaAtualizarId);
+                                atualizandoIdDoMontanteMensalCriadoIniciandoOMontante(idRecuperado, modeloMontanteMensalLojaParaAtualizarId, );
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -118,14 +112,14 @@ public class ModeloMontanteMensalDAO implements InterfaceModeloMontanteMensalDAO
 
         return null;
     }
-
+*/
     @Override
     public ModeloMontanteMensalLoja modeloMontanteEditando(ModeloMontanteMensalLoja modeloMontanteMensalLoja) {
         return null;
     }
 
     @Override
-    public ModeloMontanteMensalLoja modeloMontanteIniciarMes(ModeloMontanteMensalLoja modeloMontanteMensalLoja) {
+    public ModeloMontanteMensalLoja modeloMontanteIniciarMes(ModeloMontanteMensalLoja modeloMontanteMensalLoja, String dataReferenciaDiario) {
         String mesReferenciaParaCompletarONomeDaCollection = modeloMontanteMensalLoja.getMesReferenciaDesseMontante();
         String nomeCompletoDaCollectionMontanteMensalSendoIniciado = "MONTANTE_MENSAL_" + mesReferenciaParaCompletarONomeDaCollection;
         CollectionReference referenceMontanteMensalSendoIniciado = firestore.collection(nomeCompletoDaCollectionMontanteMensalSendoIniciado);
@@ -171,7 +165,7 @@ public class ModeloMontanteMensalDAO implements InterfaceModeloMontanteMensalDAO
                             modeloMontanteMensalLojaParaAtualizarId.setValorTotalDeVendasNoCreditoDesseMes(modeloMontanteMensalLoja.getValorTotalDeVendasNoCreditoDesseMes());
                             modeloMontanteMensalLojaParaAtualizarId.setValorTotalDeVendasNoDebitoDesseMes(modeloMontanteMensalLoja.getValorTotalDeVendasNoDebitoDesseMes());
 
-                            atualizandoIdDoMontanteMensalCriadoIniciandoOMontante(idRecuperado, modeloMontanteMensalLojaParaAtualizarId);
+                            atualizandoIdDoMontanteMensalCriadoIniciandoOMontante(idRecuperado, modeloMontanteMensalLojaParaAtualizarId, dataReferenciaDiario);
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -199,17 +193,18 @@ public class ModeloMontanteMensalDAO implements InterfaceModeloMontanteMensalDAO
     }
 
 
-    private void atualizandoIdDoMontanteMensalCriadoIniciandoOMontante(String idCriado, ModeloMontanteMensalLoja modeloMontanteMensalLoja){
+    private void atualizandoIdDoMontanteMensalCriadoIniciandoOMontante(String idCriado, ModeloMontanteMensalLoja modeloMontanteMensalLoja, String dataReferenciaDiario){
 
         if(idCriado != null) {
-
-
 
             FirebaseFirestore firestore = ConfiguracaoFirebase.getFirestor();
 
             String mesReferenciaParaCompletarONomeDaCollection = modeloMontanteMensalLoja.getMesReferenciaDesseMontante();
             String valorQueOMesFoiIniciado = modeloMontanteMensalLoja.getValorQueOMontanteIniciouPositivo();
+
             String nomeCompletoDaCollectionMontanteMensalSendoIniciado = "MONTANTE_MENSAL_" + mesReferenciaParaCompletarONomeDaCollection;
+            String nomeCompletoDaCollectionMontanteDiarioIniciado = COLLECTION_MONTANTE_DIARIO +dataReferenciaDiario;
+
             CollectionReference referenceMontanteMensalSendoIniciado = firestore.collection(nomeCompletoDaCollectionMontanteMensalSendoIniciado);
             try {
 
@@ -231,8 +226,19 @@ public class ModeloMontanteMensalDAO implements InterfaceModeloMontanteMensalDAO
                 referenceMontanteMensalSendoIniciado.document(idCriado).update(montanteMensalSendoIniciadoParaArmazenar).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        Toast.makeText(context, "MONTANTE REFERENTE AO MÊS " + mesReferenciaParaCompletarONomeDaCollection +" CRIADO COM SUCESSO \n + " +
+
+
+
+                        firestore.collection(nomeCompletoDaCollectionMontanteMensalSendoIniciado).document(idCriado).collection(nomeCompletoDaCollectionMontanteDiarioIniciado)
+
+
+
+
+                        Toast.makeText(context, "MONTANTE REFERENTE AO MÊS DIÁRIO E MENSAL" + mesReferenciaParaCompletarONomeDaCollection +" CRIADO COM SUCESSO \n + " +
                                 "VALOR INICIAL DO MÊS É DE R$ " + valorQueOMesFoiIniciado, Toast.LENGTH_SHORT).show();
+
+
+
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override

@@ -164,7 +164,7 @@ public class CaixaLojaFragment extends Fragment {
 
     private CollectionReference refBolosExpostosVitrine = firebaseFirestore.collection(COLLECTION_BOLOS_EXPOSTOS_VITRINE);
 
-
+    LayoutInflater inflaterLayout = getActivity().getLayoutInflater();
     //CLASSES
 
 
@@ -209,7 +209,7 @@ public class CaixaLojaFragment extends Fragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        LayoutInflater inflaterLayout = getActivity().getLayoutInflater();
+
         builder.setView(inflaterLayout.inflate(R.layout.progress_dialog_carregando_informacoes_caixa_diario, null));
         builder.setCancelable(true);
 
@@ -287,47 +287,7 @@ public class CaixaLojaFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                AlertDialog.Builder alertaMostrarProdutosDaVetrinePoisFoiVendidoAlgo = new AlertDialog.Builder(getContext());
-                alertaMostrarProdutosDaVetrinePoisFoiVendidoAlgo.setTitle("OPA VENDI");
-
-                alertaMostrarProdutosDaVetrinePoisFoiVendidoAlgo.setView(inflaterLayout.inflate(R.layout.alerta_opa_vendi_alguma_coisa, null));
-                View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.alerta_opa_vendi_alguma_coisa, null);
-                alertaMostrarProdutosDaVetrinePoisFoiVendidoAlgo.setView(dialogView);
-
-
-                recyclerView_itens_vitrine = dialogView.findViewById(R.id.recyclerView_opa_vendi_alguma_coisa_id);
-                Query query = refBolosExpostosVitrine.orderBy("nomeBoloCadastrado", Query.Direction.ASCENDING);
-
-                FirestoreRecyclerOptions<BolosModel> options = new FirestoreRecyclerOptions.Builder<BolosModel>()
-                        .setQuery(query, BolosModel.class)
-                        .build();
-
-                expostoAdapter = new BolosAdicionadosVitrineParaExibirQuandoVenderAdapter(options, getContext());
-
-                LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-
-                recyclerView_itens_vitrine.setHasFixedSize(true);
-                recyclerView_itens_vitrine.setLayoutManager(layoutManager);
-                recyclerView_itens_vitrine.setAdapter(expostoAdapter);
-                expostoAdapter.startListening();
-                expostoAdapter.setOnItemClickListerner(new BolosAdicionadosVitrineParaExibirQuandoVenderAdapter.OnItemClickLisener() {
-                    @Override
-                    public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
-
-                        String idRecuperadoDoBoloExpostoVitrine = documentSnapshot.getId();
-                        Intent intentAdicionarProdutoComoVendidoNoSistema = new Intent( getContext(), AdicionarProdutoComoVendidoNoSistema.class);
-                        intentAdicionarProdutoComoVendidoNoSistema.putExtra("itemKey", idRecuperadoDoBoloExpostoVitrine);
-                        startActivity(intentAdicionarProdutoComoVendidoNoSistema);
-
-
-//                        Toast.makeText(getContext(), "Id recuperado: " + idRecuperadoDoBoloExpostoVitrine, Toast.LENGTH_SHORT).show();
-
-                    }
-                });
-
-                alertaMostrarProdutosDaVetrinePoisFoiVendidoAlgo.create();
-                alertaMostrarProdutosDaVetrinePoisFoiVendidoAlgo.show();
-
+                verificaSeTemMontanteDiarioEMensalCriado();
             }
         });
 
@@ -346,7 +306,166 @@ public class CaixaLojaFragment extends Fragment {
 
     }
 
-    private void criarMontanteInicialMes(AlertDialog progressDialogCarregandoAsInformacoesDoCaixaDiario) {
+    private void verificaSeTemMontanteDiarioEMensalCriado(){
+
+        Date dataHoje = new Date();
+        diaAtual = simpleDateFormatCollectionReferenciaAtualModeloCaixaDiario.format(dataHoje);
+        anoAtual = simpleDateFormatCollectionReferenciaAnoAtual.format(dataHoje);
+        mesAtual = simpleDateFormatCollectionReferenciaAtual.format(dataHoje);
+
+        String referenciaDesseMesNoMontanteMensal = mesAtual + "_" + anoAtual;
+
+        String nomeCompletoColletion = COLLECTION_MONTANTE_DESSE_MES + "_" + referenciaDesseMesNoMontanteMensal;
+        String nomeCompletoCollectionDiario = COLLECTION_CAIXA_DIARIO+ "_" + diaAtual;
+        System.out.println("nomeCompletoColletion --" + nomeCompletoColletion);
+        firebaseFirestore.collection(nomeCompletoColletion).whereEqualTo("mesReferenciaDesseMontante", referenciaDesseMesNoMontanteMensal)
+                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        progressDialogCarregandoAsInformacoesDoCaixaDiario.dismiss();
+                        System.out.println("antes do snapshotList");
+                        List<DocumentSnapshot> snapshotList = queryDocumentSnapshots.getDocuments();
+
+                        if (snapshotList.size() > 0) {
+                            for (DocumentSnapshot listaCaixasDiariosCriados : snapshotList) {
+                                firebaseFirestore.collection(nomeCompletoColletion).document(listaCaixasDiariosCriados.getId())
+                                        .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                                                firebaseFirestore.collection(nomeCompletoColletion).document(documentSnapshot.getId()).collection(nomeCompletoCollectionDiario)
+                                                        .whereEqualTo("dataReferenciaMontanteDiarioDesseDia", diaAtual).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                                            @Override
+                                                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                                                                List<DocumentSnapshot> listCaixasDiario =queryDocumentSnapshots.getDocuments();
+
+                                                                if(listCaixasDiario.size() > 0){
+                                                                    AlertDialog.Builder alertaMostrarProdutosDaVetrinePoisFoiVendidoAlgo = new AlertDialog.Builder(getContext());
+                                                                    alertaMostrarProdutosDaVetrinePoisFoiVendidoAlgo.setTitle("OPA VENDI");
+
+                                                                    alertaMostrarProdutosDaVetrinePoisFoiVendidoAlgo.setView(inflaterLayout.inflate(R.layout.alerta_opa_vendi_alguma_coisa, null));
+                                                                    View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.alerta_opa_vendi_alguma_coisa, null);
+                                                                    alertaMostrarProdutosDaVetrinePoisFoiVendidoAlgo.setView(dialogView);
+
+
+                                                                    recyclerView_itens_vitrine = dialogView.findViewById(R.id.recyclerView_opa_vendi_alguma_coisa_id);
+                                                                    Query query = refBolosExpostosVitrine.orderBy("nomeBoloCadastrado", Query.Direction.ASCENDING);
+
+                                                                    FirestoreRecyclerOptions<BolosModel> options = new FirestoreRecyclerOptions.Builder<BolosModel>()
+                                                                            .setQuery(query, BolosModel.class)
+                                                                            .build();
+
+                                                                    expostoAdapter = new BolosAdicionadosVitrineParaExibirQuandoVenderAdapter(options, getContext());
+
+                                                                    LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+
+                                                                    recyclerView_itens_vitrine.setHasFixedSize(true);
+                                                                    recyclerView_itens_vitrine.setLayoutManager(layoutManager);
+                                                                    recyclerView_itens_vitrine.setAdapter(expostoAdapter);
+                                                                    expostoAdapter.startListening();
+                                                                    expostoAdapter.setOnItemClickListerner(new BolosAdicionadosVitrineParaExibirQuandoVenderAdapter.OnItemClickLisener() {
+                                                                        @Override
+                                                                        public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
+
+                                                                            String idRecuperadoDoBoloExpostoVitrine = documentSnapshot.getId();
+                                                                            Intent intentAdicionarProdutoComoVendidoNoSistema = new Intent( getContext(), AdicionarProdutoComoVendidoNoSistema.class);
+                                                                            intentAdicionarProdutoComoVendidoNoSistema.putExtra("itemKey", idRecuperadoDoBoloExpostoVitrine);
+                                                                            startActivity(intentAdicionarProdutoComoVendidoNoSistema);
+
+                                                                        }
+                                                                    });
+
+                                                                    alertaMostrarProdutosDaVetrinePoisFoiVendidoAlgo.create();
+                                                                    alertaMostrarProdutosDaVetrinePoisFoiVendidoAlgo.show();
+
+
+                                                                }else{
+                                                                    AlertDialog.Builder alertaPorQueNaoTemCaixaDiarioCriado = new AlertDialog.Builder(getContext());
+                                                                    alertaPorQueNaoTemCaixaDiarioCriado.setTitle("NECESSÁRIO CRIAR CAIXA DIÁRIO");
+                                                                    alertaPorQueNaoTemCaixaDiarioCriado.setMessage("Atenção, para efetuar uma venda é necessário que seja iniciado um caixa diário de hoje, você pode fazer isso clicando em iniciar dia ou pode digitar o valor que será iniciado o caixa na loja do dia de hoje");
+                                                                    alertaPorQueNaoTemCaixaDiarioCriado.setCancelable(false);
+
+
+                                                                }
+
+                                                            }
+                                                        }).addOnFailureListener(new OnFailureListener() {
+                                                            @Override
+                                                            public void onFailure(@NonNull Exception e) {
+                                                                Toast.makeText(getContext(), "Verifique sua conexão de internet e tente novamente", Toast.LENGTH_SHORT).show();
+                                                            }
+                                                        });
+
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+
+                                            }
+                                        });
+                            }
+                        } else {
+
+                            AlertDialog.Builder alertaCriarMontanteMensal = new AlertDialog.Builder(getActivity());
+                            LayoutInflater inflaterLayout = getActivity().getLayoutInflater();
+                            alertaCriarMontanteMensal.setView(inflaterLayout.inflate(R.layout.alerta_criar_um_montante_mensal, null));
+                            View view = getLayoutInflater().inflate(R.layout.alerta_criar_um_montante_mensal, null);
+
+                            EditText valorDigitadoPeloUsuario = view.findViewById(R.id.input_com_quanto_ira_iniciar_o_caixa_esse_mes);
+                            alertaCriarMontanteMensal.setView(view);
+
+                            alertaCriarMontanteMensal.setPositiveButton("CONFIRMAR", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+
+                                    String valorDigitadoParaIniciarOMontateDesseMes = valorDigitadoPeloUsuario.getText().toString().replace(",", ".");
+                                    ModeloMontanteMensalLoja modeloMontanteMensalLojaSendoIniciadoDesseMes = new ModeloMontanteMensalLoja();
+                                    ModeloMontanteMensalDAO modeloMontanteMensalDAOSendoIniciadoDesseMes = new ModeloMontanteMensalDAO(getContext());
+                                    modeloMontanteMensalLojaSendoIniciadoDesseMes.setIdMontante("N/D");
+                                    modeloMontanteMensalLojaSendoIniciadoDesseMes.setMesReferenciaDesseMontante(referenciaDesseMesNoMontanteMensal);
+                                    modeloMontanteMensalLojaSendoIniciadoDesseMes.setValorQueOMontanteIniciouPositivo(valorDigitadoParaIniciarOMontateDesseMes);
+                                    modeloMontanteMensalLojaSendoIniciadoDesseMes.setValorTotalVendasBoleriaMensal("0");
+                                    modeloMontanteMensalLojaSendoIniciadoDesseMes.setValorTotalVendasIfoodMensal("0");
+                                    modeloMontanteMensalLojaSendoIniciadoDesseMes.setValorTotalVendasEmGeralMensal("0");
+                                    modeloMontanteMensalLojaSendoIniciadoDesseMes.setQuantoDinheiroEntrouEsseMes("0");
+                                    modeloMontanteMensalLojaSendoIniciadoDesseMes.setQuantoDinheiroSaiuEsseMes("0");
+                                    modeloMontanteMensalLojaSendoIniciadoDesseMes.setValorQueOMontanteIniciouNegativo("0");
+                                    modeloMontanteMensalLojaSendoIniciadoDesseMes.setValorTotalDeVendasNoDinheiroDesseMes("0");
+                                    modeloMontanteMensalLojaSendoIniciadoDesseMes.setValorTotalDeVendasNoCreditoDesseMes("0");
+                                    modeloMontanteMensalLojaSendoIniciadoDesseMes.setValorTotalDeVendasNoDebitoDesseMes("0");
+
+
+                                    modeloMontanteMensalDAOSendoIniciadoDesseMes.modeloMontanteIniciarMes(modeloMontanteMensalLojaSendoIniciadoDesseMes, diaAtual);
+
+                                }
+                            }).setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //Toast.makeText(getContext(), "VALOR DIGITADO FOI:  " +valorDigitadoPeloUsuario.getText().toString() , Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), "Clicou no CANCELAR", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                            alertaCriarMontanteMensal.create();
+                            alertaCriarMontanteMensal.show();
+
+                            Toast.makeText(getContext(), "É possível fazer um montante mensal", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                });
+
+
+
+    }
+
+  /*  private void criarMontanteInicialMes(AlertDialog progressDialogCarregandoAsInformacoesDoCaixaDiario) {
 
         Date dataHoje = new Date();
         System.out.println("dataHoje = " + dataHoje.toString());
@@ -476,7 +595,7 @@ public class CaixaLojaFragment extends Fragment {
             }
         });
 
-    }
+    }*/
 
 
     private void iniciarCaixaDiario(AlertDialog progressDialogCarregandoAsInformacoesDoCaixaDiario) {
