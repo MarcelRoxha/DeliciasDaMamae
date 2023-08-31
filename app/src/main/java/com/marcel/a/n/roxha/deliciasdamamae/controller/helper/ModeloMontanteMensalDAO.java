@@ -229,7 +229,7 @@ public class ModeloMontanteMensalDAO implements InterfaceModeloMontanteMensalDAO
 
 
 
-                        firestore.collection(nomeCompletoDaCollectionMontanteMensalSendoIniciado).document(idCriado).collection(nomeCompletoDaCollectionMontanteDiarioIniciado)
+                        firestore.collection(nomeCompletoDaCollectionMontanteMensalSendoIniciado).document(idCriado).collection(nomeCompletoDaCollectionMontanteDiarioIniciado);
 
 
 

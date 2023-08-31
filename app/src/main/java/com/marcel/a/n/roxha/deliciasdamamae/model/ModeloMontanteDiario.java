@@ -16,11 +16,14 @@ public class ModeloMontanteDiario implements Serializable {
     private String valorTotalDeVendasNoDebitoDesseDia;
     private String valorTotalDeTrocoDesseDia;
 
+    private String comprasAvulsasDoDia;
+    private String valorQueOCaixaFinalizou;
+    private String valorTotalDeSaidaDoCaixa;
+
     public ModeloMontanteDiario() {
     }
 
-
-    public ModeloMontanteDiario(String idReferenciaMontanteDiarioDesseDia, String idReferenciaMontanteMensal, String dataReferenciaMontanteDiarioDesseDia, String valorQueOCaixaIniciouODia, String valorTotalDeVendasNaLojaDesseDia, String valorTotalDeVendasNoIfoodDesseDia, String valorTotalDeVendasEmGeralDesseDia, String valorTotalDeVendasNoDinheiroDesseDia, String valorTotalDeVendasNoCreditoDesseDia, String valorTotalDeVendasNoDebitoDesseDia, String valorTotalDeTrocoDesseDia) {
+    public ModeloMontanteDiario(String idReferenciaMontanteDiarioDesseDia, String idReferenciaMontanteMensal, String dataReferenciaMontanteDiarioDesseDia, String valorQueOCaixaIniciouODia, String valorTotalDeVendasNaLojaDesseDia, String valorTotalDeVendasNoIfoodDesseDia, String valorTotalDeVendasEmGeralDesseDia, String valorTotalDeVendasNoDinheiroDesseDia, String valorTotalDeVendasNoCreditoDesseDia, String valorTotalDeVendasNoDebitoDesseDia, String valorTotalDeTrocoDesseDia, String comprasAvulsasDoDia, String valorQueOCaixaFinalizou, String valorTotalDeSaidaDoCaixa) {
         this.idReferenciaMontanteDiarioDesseDia = idReferenciaMontanteDiarioDesseDia;
         this.idReferenciaMontanteMensal = idReferenciaMontanteMensal;
         this.dataReferenciaMontanteDiarioDesseDia = dataReferenciaMontanteDiarioDesseDia;
@@ -32,6 +35,9 @@ public class ModeloMontanteDiario implements Serializable {
         this.valorTotalDeVendasNoCreditoDesseDia = valorTotalDeVendasNoCreditoDesseDia;
         this.valorTotalDeVendasNoDebitoDesseDia = valorTotalDeVendasNoDebitoDesseDia;
         this.valorTotalDeTrocoDesseDia = valorTotalDeTrocoDesseDia;
+        this.comprasAvulsasDoDia = comprasAvulsasDoDia;
+        this.valorQueOCaixaFinalizou = valorQueOCaixaFinalizou;
+        this.valorTotalDeSaidaDoCaixa = valorTotalDeSaidaDoCaixa;
     }
 
     public String getIdReferenciaMontanteDiarioDesseDia() {
@@ -122,6 +128,30 @@ public class ModeloMontanteDiario implements Serializable {
         this.valorTotalDeTrocoDesseDia = valorTotalDeTrocoDesseDia;
     }
 
+    public String getComprasAvulsasDoDia() {
+        return comprasAvulsasDoDia;
+    }
+
+    public void setComprasAvulsasDoDia(String comprasAvulsasDoDia) {
+        this.comprasAvulsasDoDia = comprasAvulsasDoDia;
+    }
+
+    public String getValorQueOCaixaFinalizou() {
+        return valorQueOCaixaFinalizou;
+    }
+
+    public void setValorQueOCaixaFinalizou(String valorQueOCaixaFinalizou) {
+        this.valorQueOCaixaFinalizou = valorQueOCaixaFinalizou;
+    }
+
+    public String getValorTotalDeSaidaDoCaixa() {
+        return valorTotalDeSaidaDoCaixa;
+    }
+
+    public void setValorTotalDeSaidaDoCaixa(String valorTotalDeSaidaDoCaixa) {
+        this.valorTotalDeSaidaDoCaixa = valorTotalDeSaidaDoCaixa;
+    }
+
     @Override
     public String toString() {
         return "ModeloMontanteDiario{" +
@@ -136,6 +166,10 @@ public class ModeloMontanteDiario implements Serializable {
                 ", valorTotalDeVendasNoCreditoDesseDia='" + valorTotalDeVendasNoCreditoDesseDia + '\'' +
                 ", valorTotalDeVendasNoDebitoDesseDia='" + valorTotalDeVendasNoDebitoDesseDia + '\'' +
                 ", valorTotalDeTrocoDesseDia='" + valorTotalDeTrocoDesseDia + '\'' +
+                ", comprasAvulsasDoDia='" + comprasAvulsasDoDia + '\'' +
+                ", valorQueOCaixaFinalizou='" + valorQueOCaixaFinalizou + '\'' +
+                ", valorTotalDeSaidaDoCaixa='" + valorTotalDeSaidaDoCaixa + '\'' +
                 '}';
     }
 }
+
