@@ -9,18 +9,19 @@ public class ProdutoVendido implements Serializable {
     private String metodoDePagamento;
     private String plataformaVendida;
     private String dataDaVenda;
+    private String valorDaVenda;
 
-    public ProdutoVendido(String idDoProdutoVendido) {
+    public ProdutoVendido() {
         this.idDoProdutoVendido = idDoProdutoVendido;
     }
 
-    public ProdutoVendido(String idDoProdutoVendido, String idReferenciaDoProduto, String metodoDePagamento, String plataformaVendida, String dataDaVenda) {
+    public ProdutoVendido(String idDoProdutoVendido, String idReferenciaDoProduto, String metodoDePagamento, String plataformaVendida, String dataDaVenda, String valorDaVenda) {
         this.idDoProdutoVendido = idDoProdutoVendido;
         this.idReferenciaDoProduto = idReferenciaDoProduto;
         this.metodoDePagamento = metodoDePagamento;
         this.plataformaVendida = plataformaVendida;
         this.dataDaVenda = dataDaVenda;
-
+        this.valorDaVenda = valorDaVenda;
     }
 
     public String getIdDoProdutoVendido() {
@@ -63,6 +64,14 @@ public class ProdutoVendido implements Serializable {
         this.dataDaVenda = dataDaVenda;
     }
 
+    public String getValorDaVenda() {
+        return valorDaVenda;
+    }
+
+    public void setValorDaVenda(String valorDaVenda) {
+        this.valorDaVenda = valorDaVenda;
+    }
+
     @Override
     public String toString() {
         return "ProdutoVendido{" +
@@ -71,6 +80,7 @@ public class ProdutoVendido implements Serializable {
                 ", metodoDePagamento='" + metodoDePagamento + '\'' +
                 ", plataformaVendida='" + plataformaVendida + '\'' +
                 ", dataDaVenda='" + dataDaVenda + '\'' +
+                ", valorDaVenda='" + valorDaVenda + '\'' +
                 '}';
     }
 }

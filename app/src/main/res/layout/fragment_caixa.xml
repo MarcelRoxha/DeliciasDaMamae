@@ -258,6 +258,23 @@
 
 
         <Button
+            android:id="@+id/botao_iniciar_o_mes_boleria_id"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="7dp"
+            android:background="@drawable/btn"
+            android:enabled="true"
+            android:text="INICIAR O MÊS"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/botao_iniciar_o_dia_boleria_id" />
+
+        <Button
             android:id="@+id/botao_vendi_alguma_coisa_id"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -270,7 +287,7 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/botao_iniciar_o_dia_boleria_id" />
+            app:layout_constraintTop_toBottomOf="@+id/botao_iniciar_o_mes_boleria_id" />
 
         <Button
             android:id="@+id/botao_vitrine_loja_id"
@@ -312,7 +329,7 @@
             android:layout_marginStart="7dp"
             android:layout_marginTop="12dp"
             android:layout_marginEnd="7dp"
-            android:layout_marginBottom="24dp"
+            android:layout_marginBottom="12dp"
             android:background="@drawable/btn"
             android:text="FINALIZAR O DIA"
             android:textColor="@color/white"

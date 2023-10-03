@@ -87,9 +87,13 @@ public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        setTheme(R.style.Theme_DeliciasDaMamae);
         setContentView(R.layout.activity_adicionar_produto_como_vendido_no_sistema);
-
-
         imagemDoProdutoNoProcessoDeVenda = findViewById(R.id.imagemDoProdutoNoProcessoDeVenda);
         nomeRecuperadoDoProdutoNoProcessoDeVenda = findViewById(R.id.nomeDoProdutoExibidoNoProcessoDeVenda);
         textoNomeDoProdutoNoProcessoDeVenda = findViewById(R.id.textView89);
@@ -204,7 +208,7 @@ public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
                     if(!radioButtonSelecionarPrecoDeVendaNaLoja.isChecked() && !radioButtonSelecionarPrecoDeVendaNoIfood.isChecked() && valoQueFoiVendidoOProdutoRecuperado == "0"){
                         //Se cair nessa condição é por que não foi digitado um valor valido para ser processada a venda.
 
-                        Toast.makeText(AdicionarProdutoComoVendidoNoSistema.this, "É NECESSÁRIO QUE SEJA SELECIONADO UM DOS VALORES PARA VENDA, ESCOLHA ENTRE VALORES CADASTRADOS NA LOJA OU IFOOD OU EDITE O VALOR DE VENDA", Toast.LENGTH_LONG).show();
+                        Toast.makeText(AdicionarProdutoComoVendidoNoSistema.this, "É NECESSÁRIO QUE SEJA SELECIONADO UM DOS VALORES PARA VENDA, ESCOLHA ENTRE VALORES CADASTRADOS NA LOJA E/OU IFOOD OU EDITE O VALOR DE VENDA", Toast.LENGTH_LONG).show();
 
                     }else{
                         produtoRecuperadoPraExibirNaTela.setValorQueOBoloRealmenteFoiVendido(valoQueFoiVendidoOProdutoRecuperado);
