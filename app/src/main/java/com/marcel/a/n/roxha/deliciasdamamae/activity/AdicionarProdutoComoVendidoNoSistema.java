@@ -68,6 +68,9 @@ public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
 
     //VARIAVEIS DO PRODUTO
     private String itemKey;
+    private String itemKeyCadastrado;
+    private String itemKeyMontanteMensal;
+    private String itemKeyMontanteDiario;
 
     private String enderecoFotoProduto;
     private String nomeDoProdutoRecuperado;
@@ -144,7 +147,8 @@ public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
 
 
         itemKey = getIntent().getStringExtra("itemKey");
-
+        itemKeyMontanteMensal = getIntent().getStringExtra("itemKeyMontanteMensal");
+        itemKeyMontanteDiario = getIntent().getStringExtra("itemKeyMontanteDiario");
         if (itemKey != null){
 
             collectionReferenceProdutoRecuperadoParaProcessoDeVenda.document(itemKey).get()
@@ -201,7 +205,8 @@ public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
         botaoConfirmar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Toast.makeText(AdicionarProdutoComoVendidoNoSistema.this, "apertei o botão", Toast.LENGTH_SHORT).show();
+                System.out.println("produtoRecuperadoPraExibirNaTela " + produtoRecuperadoPraExibirNaTela.toString());
                 try {
                      String valorQueVaiSerVendidoMesmo = textoValorQueVaiSerVendidoMesmo.getText().toString();
 
@@ -212,6 +217,7 @@ public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
 
                     }else{
                         produtoRecuperadoPraExibirNaTela.setValorQueOBoloRealmenteFoiVendido(valoQueFoiVendidoOProdutoRecuperado);
+                        System.out.println("produtoRecuperadoPraExibirNaTela " + produtoRecuperadoPraExibirNaTela.toString());
                         ModeloProcessaVendaFeitaDAO modeloProcessaVendaFeitaDAO = new ModeloProcessaVendaFeitaDAO(AdicionarProdutoComoVendidoNoSistema.this);
                         modeloProcessaVendaFeitaDAO.processaVendaFeita(produtoRecuperadoPraExibirNaTela, PLATAFORMA_VENDIDA, MEDOTO_DE_PAGAMENTO);
 

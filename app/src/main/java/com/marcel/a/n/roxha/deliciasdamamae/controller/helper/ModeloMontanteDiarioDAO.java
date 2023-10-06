@@ -1,6 +1,7 @@
 package com.marcel.a.n.roxha.deliciasdamamae.controller.helper;
 
 import android.content.Context;
+import android.content.Intent;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -10,6 +11,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.marcel.a.n.roxha.deliciasdamamae.activity.LojaActivityV2;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloMontanteDiario;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloMontanteMensalLoja;
@@ -49,6 +51,7 @@ public class ModeloMontanteDiarioDAO implements InterfaceModeloMontanteDiarioDAO
             montanteMensalSendoIniciadoParaArmazenar.put("idReferenciaMontanteMensal", modeloMontanteDiario.getIdReferenciaMontanteMensal());
             montanteMensalSendoIniciadoParaArmazenar.put("dataReferenciaMontanteDiarioDesseDia", modeloMontanteDiario.getDataReferenciaMontanteDiarioDesseDia());
             montanteMensalSendoIniciadoParaArmazenar.put("valorQueOCaixaIniciouODia", modeloMontanteDiario.getValorQueOCaixaIniciouODia());
+            montanteMensalSendoIniciadoParaArmazenar.put("valorQueOCaixaFinalizou", modeloMontanteDiario.getValorTotalDeVendasNaLojaDesseDia());
             montanteMensalSendoIniciadoParaArmazenar.put("valorTotalDeVendasNaLojaDesseDia", modeloMontanteDiario.getValorTotalDeVendasNaLojaDesseDia());
             montanteMensalSendoIniciadoParaArmazenar.put("valorTotalDeVendasNoIfoodDesseDia", modeloMontanteDiario.getValorTotalDeVendasNoIfoodDesseDia());
             montanteMensalSendoIniciadoParaArmazenar.put("valorTotalDeVendasEmGeralDesseDia", modeloMontanteDiario.getValorTotalDeVendasEmGeralDesseDia());
@@ -127,6 +130,9 @@ public class ModeloMontanteDiarioDAO implements InterfaceModeloMontanteDiarioDAO
             this.referenceMontanteDiarioHoje.document(idCriado).update(montanteMensalJaIniciadoAtualizandoIdParaArmazenar).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void unused) {
+
+//                    Intent intentVoltaCaixa = new Intent(context, LojaActivityV2.class);
+//                    context.startActivity(intentVoltaCaixa);
                     Toast.makeText(context, mensagemRetornoToast, Toast.LENGTH_LONG).show();
 
                 }

@@ -132,8 +132,8 @@ public class CaixaLojaFragment extends Fragment {
     private String anoAtual = "";
     private Date dataHoje = new Date();
     private String idRecuperadoMontanteCasoExista = "";
-    private String idRecuperadoMontanteDiarioCasoExista = "";
-    private String idRecuperadoCaixaDiarioCasoExista = "";
+    private String idRecuperadoMontanteDiario = "";
+    private String idRecuperadoCaixaDiario = "";
     private String idRecuperadoMontanteColect = "";
     private int numMesReferencia;
     private int verificaCaixaMensalCriado = 0;
@@ -152,8 +152,6 @@ public class CaixaLojaFragment extends Fragment {
     private Date dataCollectionReferenciaMontanteMensal = new Date();
     private String hojeString = "";
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
-    private SimpleDateFormat simpleDateFormatVerificaDiaAnterior = new SimpleDateFormat("dd/MM/yy");
-    private SimpleDateFormat simpleDateFormatVerificaDiaAnteriorConcatenaRestante = new SimpleDateFormat("MM/yy");
     private SimpleDateFormat simpleDateFormatCollectionReferenciaAtual = new SimpleDateFormat("MM");
     private SimpleDateFormat simpleDateFormatCollectionReferenciaAnoAtual = new SimpleDateFormat("yyyy");
     private SimpleDateFormat simpleDateFormatCollectionReferenciaAtualModeloCaixaDiario = new SimpleDateFormat("dd/MM/yyyy");
@@ -284,8 +282,8 @@ public class CaixaLojaFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-               /* progressDialogCarregandoAsInformacoesDoCaixaDiario.show();
-                progressDialogCarregandoAsInformacoesDoCaixaDiario.setCancelable(false);*/
+                progressDialogCarregandoAsInformacoesDoCaixaDiario.show();
+                progressDialogCarregandoAsInformacoesDoCaixaDiario.setCancelable(false);
                 iniciarCaixaDiario(progressDialogCarregandoAsInformacoesDoCaixaDiario);
 
             }
@@ -355,6 +353,9 @@ public class CaixaLojaFragment extends Fragment {
                 String idRecuperadoDoBoloExpostoVitrine = documentSnapshot.getId();
                 Intent intentAdicionarProdutoComoVendidoNoSistema = new Intent(getContext(), AdicionarProdutoComoVendidoNoSistema.class);
                 intentAdicionarProdutoComoVendidoNoSistema.putExtra("itemKey", idRecuperadoDoBoloExpostoVitrine);
+                intentAdicionarProdutoComoVendidoNoSistema.putExtra("itemKeyMontanteMensal", idRecuperadoCaixaDiario);
+                intentAdicionarProdutoComoVendidoNoSistema.putExtra("itemKeyMontanteDiario", idRecuperadoDoBoloExpostoVitrine);
+
                 startActivity(intentAdicionarProdutoComoVendidoNoSistema);
 
             }
@@ -475,80 +476,80 @@ public class CaixaLojaFragment extends Fragment {
                 List<DocumentSnapshot> listaDeMontanteParaVerificar = queryDocumentSnapshots.getDocuments();
 
                 if (listaDeMontanteParaVerificar.size() > 0) {
+
                     // Se cair nessa condição então eu já tenho um montante mensal criado então preciso recuperar seu id
-
                     for(DocumentSnapshot listaRecuperada: listaDeMontanteParaVerificar){
-                        String idRecuperadoDoMontanteDesseMes = listaRecuperada.getId();
+                        String idRecuperado = listaRecuperada.getId();
+                        System.out.println("idRecuperado###################### " + idRecuperado);
+                        firebaseFirestore.collection(nomeCompletoColletionMontanteDiario).whereEqualTo("dataReferenciaMontanteDiarioDesseDia", dataReferenciaCaixaDiario)
+                                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
 
-                        CollectionReference collectionReferenceMontantesDiarios = firebaseFirestore.collection(nomeCompletoColletionMontanteDiario);
-                        Query query = collectionReferenceMontantesDiarios.orderBy("dataReferenciaMontanteDiarioDesseDia", Query.Direction.DESCENDING).limit(1);
+                                        List<DocumentSnapshot> listaRecuperada = queryDocumentSnapshots.getDocuments();
 
-                        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if(listaRecuperada.size() > 0){
+                                            progressDialogCarregandoAsInformacoesDoCaixaDiario.dismiss();
+                                            String titulo = "AÇÃO NÃO PERMITIDA";
+                                            String corpodaMensagem = "Não é possível criar um montante diário do mesmo dia";
+                                            criarAlertaPrecisaCriarMontanteMensalOuDiario(titulo, corpodaMensagem);
+                                        }else{
+                                            progressDialogCarregandoAsInformacoesDoCaixaDiario.dismiss();
+                                            CollectionReference collectionReferenceMontantesDiarios = firebaseFirestore.collection(nomeCompletoColletionMontanteDiario);
+                                            Query query = collectionReferenceMontantesDiarios.orderBy("dataReferenciaMontanteDiarioDesseDia", Query.Direction.DESCENDING).limit(1);
 
-                                if (task.isSuccessful()) {
-                                    if (!task.getResult().isEmpty()) {
-                                        progressDialogCarregandoAsInformacoesDoCaixaDiario.dismiss();
-                                        DocumentSnapshot document = task.getResult().getDocuments().get(0);
-                                        String valorQueOCaixaFinalizou = document.getString("valorQueOCaixaFinalizou");
-                                        criandoAlertaDoMontanteQuandoPrecisaCriarApenasDeMontanteDiario("DIARIO-COM-DIA-ANTERIOR",valorQueOCaixaFinalizou);
+                                            query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
-                                    } else {
-                                        criandoAlertaDoMontanteQuandoPrecisaCriarApenasDeMontanteDiario("DIARIO", null);
-                                        /*firebaseFirestore.collection(nomeCompletoColletionMontanteMensal).whereEqualTo("mesReferenciaDesseMontante", mesReferenciaDesseMontante).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                                            @Override
-                                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                                    if (task.isSuccessful()) {
+                                                        if (!task.getResult().isEmpty()) {
+                                                            progressDialogCarregandoAsInformacoesDoCaixaDiario.dismiss();
+                                                            DocumentSnapshot document = task.getResult().getDocuments().get(0);
+                                                            String valorQueOCaixaFinalizou = document.get("valorQueOCaixaFinalizou").toString();
+                                                            System.out.println("idRecuperado------------------------" + idRecuperado);
+                                                            criandoAlertaDoMontanteQuandoPrecisaCriarApenasDeMontanteDiario("DIARIO-COM-DIA-ANTERIOR",valorQueOCaixaFinalizou, idRecuperado);
 
-                                                List<DocumentSnapshot> listaVerificaSePrecisaCriarMontanteMensal = queryDocumentSnapshots.getDocuments();
+                                                        } else {
+                                                            criandoAlertaDoMontanteQuandoPrecisaCriarApenasDeMontanteDiario("DIARIO", null, idRecuperado);
 
-                                                if (listaVerificaSePrecisaCriarMontanteMensal.size() > 0) {
-                                                    //Precisa criar apenas o montante diario
+                                                            // A coleção está vazia
+                                                        }
 
-                                                } else {
-                                                    criandoAlertaDoMontanteQuandoPrecisaCriarApenasDeMontanteDiario("MENSAL", null);
+
+                                                    } else {
+                                                        Toast.makeText(getContext(), "Verifique a conexão e tente novamente mais tarde!", Toast.LENGTH_SHORT).show();
+                                                        Log.i("taskError: " , task.getException().getMessage().toString());
+                                                    }
+
                                                 }
-
-                                            }
-                                        }).addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                Toast.makeText(getContext(), "Verifique a conexão e tente novamente mais tarde!", Toast.LENGTH_SHORT).show();
-                                                Log.i("Erro no inicia caixa diario criado", e.getMessage());
-                                            }
-                                        });*/
-
-                                        // A coleção está vazia
+                                            }).addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Toast.makeText(getContext(), "Verifique a conexão e tente novamente mais tarde!", Toast.LENGTH_SHORT).show();
+                                                    Log.i("Erro no inicia caixa diario criado", e.getMessage());
+                                                }
+                                            });
+                                        }
                                     }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
 
-
-                                } else {
-                                    Toast.makeText(getContext(), "Verifique a conexão e tente novamente mais tarde!", Toast.LENGTH_SHORT).show();
-                                    Log.i("taskError: " , task.getException().getMessage().toString());
-                                }
-
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(getContext(), "Verifique a conexão e tente novamente mais tarde!", Toast.LENGTH_SHORT).show();
-                                Log.i("Erro no inicia caixa diario criado", e.getMessage());
-                            }
-                        });
+                                    }
+                                });
                     }
                 } else {
-                    criandoAlertaDoMontanteQuandoPrecisaCriarApenasDeMontanteDiario("MENSAL", null);
+                    progressDialogCarregandoAsInformacoesDoCaixaDiario.dismiss();
+                    criandoAlertaDoMontanteQuandoPrecisaCriarApenasDeMontanteDiario("MENSAL", null, null);
 
-                  /*  String mensagemQueApareceNoTituloDoAlerta = "AÇÃO NECESSÁRIA!";
-                    String mensagemDeExemplo = "Foi identificado que não tem um montante criado para esse mês, para iniciar o processo de analise do caixa para obter resultados futuros concretos, é preciso criar o montante mensal antes de iniciar o dia, clique em iniciar mês e após o processo tente iniciar o dia novamente.";
-                    criarAlertaPrecisaCriarMontanteMensalOuDiario(mensagemQueApareceNoTituloDoAlerta,  mensagemDeExemplo);*/
                 }
 
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-
+                progressDialogCarregandoAsInformacoesDoCaixaDiario.dismiss();
                 Toast.makeText(getContext(), "Verifique a conexão e tente novamente mais tarde!", Toast.LENGTH_SHORT).show();
                 Log.i("Erro no verifica se tem montante criado", e.getMessage());
 
@@ -572,7 +573,7 @@ public class CaixaLojaFragment extends Fragment {
                     criarAlertaPrecisaCriarMontanteMensalOuDiario(mensagemQueApareceNoTituloDoAlerta,  mensagemDeExemplo);
 
                 } else {
-                    criandoAlertaDoMontanteQuandoPrecisaCriarApenasDeMontanteDiario("MENSAL", null);
+                    criandoAlertaDoMontanteQuandoPrecisaCriarApenasDeMontanteDiario("MENSAL", null, null);
                 }
 
             }
@@ -588,13 +589,15 @@ public class CaixaLojaFragment extends Fragment {
 
     }
 
-    private void insertCaixaDiarioCreated(String dataAtual, String valorDigitadoParaIniciarOMontateDiaio) {
-
+    private void insertCaixaDiarioCreated(String dataAtual, String valorDigitadoParaIniciarOMontateDiaio, String idMontanteMensal) {
+        progressDialogCarregandoAsInformacoesDoCaixaDiario.show();
         ModeloMontanteDiario modeloMontanteDiarioIniciado = new ModeloMontanteDiario();
         ModeloMontanteDiarioDAO modeloMontanteDiarioDAOSendoIniciadoDesseMes = new ModeloMontanteDiarioDAO(getContext());
         modeloMontanteDiarioIniciado.setIdReferenciaMontanteDiarioDesseDia("N/D");
+        modeloMontanteDiarioIniciado.setIdReferenciaMontanteMensal(idMontanteMensal);
         modeloMontanteDiarioIniciado.setDataReferenciaMontanteDiarioDesseDia(dataAtual);
         modeloMontanteDiarioIniciado.setValorQueOCaixaIniciouODia(valorDigitadoParaIniciarOMontateDiaio);
+        modeloMontanteDiarioIniciado.setValorQueOCaixaFinalizou("0");
         modeloMontanteDiarioIniciado.setValorTotalDeVendasNaLojaDesseDia("0");
         modeloMontanteDiarioIniciado.setValorTotalDeVendasNoIfoodDesseDia("0");
         modeloMontanteDiarioIniciado.setValorTotalDeVendasEmGeralDesseDia("0");
@@ -603,6 +606,7 @@ public class CaixaLojaFragment extends Fragment {
         modeloMontanteDiarioIniciado.setValorTotalDeVendasNoDebitoDesseDia("0");
         modeloMontanteDiarioIniciado.setValorTotalDeTrocoDesseDia("0");
         modeloMontanteDiarioDAOSendoIniciadoDesseMes.modeloMontanteDiarioIniciandoODia(modeloMontanteDiarioIniciado);
+        verificaSeJaTemCaixaDiarioCriado(progressDialogCarregandoAsInformacoesDoCaixaDiario, nomeCompletoColletionMontanteDiario);
     }
 
     private void insertCaixaMensalCreated(String valorDigitadoParaIniciarOMontateDiaio, String mesReferenciaMontanteMensal) {
@@ -625,8 +629,9 @@ public class CaixaLojaFragment extends Fragment {
         modeloMontanteDiarioDAOSendoIniciadoDesseMes.modeloMontanteIniciarMesEDiario(modeloMontanteMensalLojaIniciandoMes, diaAtual);
     }
 
-    private void criandoAlertaDoMontanteQuandoPrecisaCriarApenasDeMontanteDiario(String tipoDeAlerta, String valorDoDiaAnterior) {
+    private void criandoAlertaDoMontanteQuandoPrecisaCriarApenasDeMontanteDiario(String tipoDeAlerta, String valorDoDiaAnterior, String idReferenciaMontanteMensal) {
 
+        System.out.println("idReferenciaMontanteMensal " + idReferenciaMontanteMensal);
         String tipoDeAlertaRecebido = tipoDeAlerta;
         if (tipoDeAlertaRecebido.equals("DIARIO")) {
             String informativoDoValorQueOCaixaDiarioIraIniciar = "DIGITE ABAIXO O VALOR QUE O CAIXA DE HOJE IRÁ INICIAR";
@@ -651,7 +656,7 @@ public class CaixaLojaFragment extends Fragment {
 
                     if (!valorDigitado.equals("0") || valorDigitado != null || !valorDigitado.isEmpty()) {
                         String valorDigitadoParaIniciarOMontateDesseMes = valorDigitado;
-                        insertCaixaDiarioCreated(diaAtual, valorDigitadoParaIniciarOMontateDesseMes);
+                        insertCaixaDiarioCreated(diaAtual, valorDigitadoParaIniciarOMontateDesseMes, idReferenciaMontanteMensal);
                     } else {
                         Toast.makeText(getContext(), "ATENÇÃO O VALOR DIGITADO PRECISA SER MAIOR QUE 0 E UM VALOR VÁLIDO EX: 100,00 OU 100.00", Toast.LENGTH_SHORT).show();
                     }
@@ -688,11 +693,11 @@ public class CaixaLojaFragment extends Fragment {
 
                     if (!valorDigitado.isEmpty() || !valorDigitado.equals("")) {
                         String valorDigitadoParaIniciarOMontateDesseMes = valorQueOCaixaFinalizou.replace(",", ".");
-                        insertCaixaDiarioCreated(diaAtual, valorDigitadoParaIniciarOMontateDesseMes);
+                        insertCaixaDiarioCreated(diaAtual, valorDigitadoParaIniciarOMontateDesseMes, idReferenciaMontanteMensal);
 
                     } else if (!valorDigitado.equals("0") || valorDigitado != null) {
                         String valorDigitadoParaIniciarOMontateDesseMes = valorDigitado;
-                        insertCaixaDiarioCreated(diaAtual, valorDigitadoParaIniciarOMontateDesseMes);
+                        insertCaixaDiarioCreated(diaAtual, valorDigitadoParaIniciarOMontateDesseMes, idReferenciaMontanteMensal);
                     } else {
                         Toast.makeText(getContext(), "ATENÇÃO O VALOR DIGITADO PRECISA SER MAIOR QUE 0 (Zero) E UM VALOR VÁLIDO EX: 100,00 OU 100.00", Toast.LENGTH_SHORT).show();
                     }
@@ -732,20 +737,6 @@ public class CaixaLojaFragment extends Fragment {
                         insertCaixaMensalCreated(valorDigitado,mesReferenciaDesseMontante);
 
 
-                        /*String valorDigitadoParaIniciarOMontateDesseMes = valorDigitado;
-                        ModeloMontanteDiario modeloMontanteDiarioIniciado = new ModeloMontanteDiario();
-                        ModeloMontanteDiarioDAO modeloMontanteDiarioDAOSendoIniciadoDesseMes = new ModeloMontanteDiarioDAO(getContext());
-                        modeloMontanteDiarioIniciado.setIdReferenciaMontanteDiarioDesseDia("N/D");
-                        modeloMontanteDiarioIniciado.setDataReferenciaMontanteDiarioDesseDia(diaAtual);
-                        modeloMontanteDiarioIniciado.setValorQueOCaixaIniciouODia(valorDigitadoParaIniciarOMontateDesseMes);
-                        modeloMontanteDiarioIniciado.setValorTotalDeVendasNaLojaDesseDia("0");
-                        modeloMontanteDiarioIniciado.setValorTotalDeVendasNoIfoodDesseDia("0");
-                        modeloMontanteDiarioIniciado.setValorTotalDeVendasEmGeralDesseDia("0");
-                        modeloMontanteDiarioIniciado.setValorTotalDeVendasNoDinheiroDesseDia("0");
-                        modeloMontanteDiarioIniciado.setValorTotalDeVendasNoCreditoDesseDia("0");
-                        modeloMontanteDiarioIniciado.setValorTotalDeVendasNoDebitoDesseDia("0");
-                        modeloMontanteDiarioIniciado.setValorTotalDeTrocoDesseDia("0");
-                        modeloMontanteDiarioDAOSendoIniciadoDesseMes.modeloMontanteDiarioIniciandoODia(modeloMontanteDiarioIniciado);*/
                     } else {
                         Toast.makeText(getContext(), "ATENÇÃO O VALOR DIGITADO PRECISA SER MAIOR QUE 0 E UM VALOR VÁLIDO EX: 100,00 OU 100.00", Toast.LENGTH_SHORT).show();
                     }
@@ -765,62 +756,6 @@ public class CaixaLojaFragment extends Fragment {
 
         }
 
-
-    }
-
-    private void criarAlertaDoMontanteMensalEDiario(){
-        String informativoDoValorQueOCaixaDiarioIraIniciar = "DIGITE ABAIXO O VALOR QUE O CAIXA DE HOJE IRÁ INICIAR, ESSE VALOR SERÁ CONTABILIZADO COMO O VALOR INICIAL DO MÊS TAMBÉM";
-        String informativoExDeValoresValidos = "DIGITE UM VALOR VALIDO E ACIMA DE 0 EX: 100,00 OU 100.00";
-        AlertDialog.Builder alertaCriarMontanteDiarioEMensal = new AlertDialog.Builder(getActivity());
-        LayoutInflater inflaterLayout = getActivity().getLayoutInflater();
-        alertaCriarMontanteDiarioEMensal.setView(inflaterLayout.inflate(R.layout.alerta_iniciando_o_dia_quando_tem_caixa_diario_do_dia_anterior, null));
-        View view = getLayoutInflater().inflate(R.layout.alerta_iniciando_o_dia_quando_tem_caixa_diario_do_dia_anterior, null);
-        EditText valorDigitadoPeloUsuario = view.findViewById(R.id.input_caixa_iniciou_o_dia_com_calculo_do_dia_anterior);
-        TextView textoInformativoInserirValorMontanteDiarioEMensal = view.findViewById(R.id.texto_informativo_iniciando_o_dia_quando_tem_dia_anterior);
-        TextView textoInformativoExDeValoresValidos = view.findViewById(R.id.textoInformativoDigiteOValorEditadoId);
-
-        textoInformativoInserirValorMontanteDiarioEMensal.setText(informativoDoValorQueOCaixaDiarioIraIniciar);
-        textoInformativoExDeValoresValidos.setText(informativoExDeValoresValidos);
-        alertaCriarMontanteDiarioEMensal.setView(view);
-
-        alertaCriarMontanteDiarioEMensal.setPositiveButton("CONFIRMAR", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-                String valorDigitado = valorDigitadoPeloUsuario.getText().toString().replace(",", ".");
-
-                if (!valorDigitado.equals("0") || valorDigitado != null || !valorDigitado.isEmpty()) {
-                    String valorDigitadoParaIniciarOMontateDesseMes = valorDigitado;
-                    insertCaixaMensalCreated(valorDigitadoParaIniciarOMontateDesseMes, mesReferenciaDesseMontante);
-
-/*
-                    ModeloMontanteDiarioDAO modeloMontanteDiarioDAOSendoIniciadoDesseMes = new ModeloMontanteDiarioDAO(getContext());
-                    modeloMontanteDiarioIniciando.setIdReferenciaMontanteDiarioDesseDia("N/D");
-                    modeloMontanteDiarioIniciando.setDataReferenciaMontanteDiarioDesseDia(diaAtual);
-                    modeloMontanteDiarioIniciando.setValorQueOCaixaIniciouODia(valorDigitadoParaIniciarOMontateDesseMes);
-                    modeloMontanteDiarioIniciando.setValorTotalDeVendasNaLojaDesseDia("0");
-                    modeloMontanteDiarioIniciando.setValorTotalDeVendasNoIfoodDesseDia("0");
-                    modeloMontanteDiarioIniciando.setValorTotalDeVendasEmGeralDesseDia("0");
-                    modeloMontanteDiarioIniciando.setValorTotalDeVendasNoDinheiroDesseDia("0");
-                    modeloMontanteDiarioIniciando.setValorTotalDeVendasNoCreditoDesseDia("0");
-                    modeloMontanteDiarioIniciando.setValorTotalDeVendasNoDebitoDesseDia("0");
-                    modeloMontanteDiarioIniciando.setValorTotalDeTrocoDesseDia("0");
-                    modeloMontanteDiarioDAOSendoIniciadoDesseMes.modeloMontanteDiarioIniciandoODia(modeloMontanteDiarioIniciado);*/
-                } else {
-                    Toast.makeText(getContext(), "ATENÇÃO O VALOR DIGITADO PRECISA SER MAIOR QUE 0 E UM VALOR VÁLIDO EX: 100,00 OU 100.00", Toast.LENGTH_SHORT).show();
-                }
-
-
-            }
-        }).setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                //Toast.makeText(getContext(), "VALOR DIGITADO FOI:  " +valorDigitadoPeloUsuario.getText().toString() , Toast.LENGTH_SHORT).show();
-                Toast.makeText(getContext(), "PROCESSO CANCELADOs", Toast.LENGTH_SHORT).show();
-            }
-        });
-        alertaCriarMontanteDiarioEMensal.create();
-        alertaCriarMontanteDiarioEMensal.show();
 
     }
 
@@ -854,12 +789,15 @@ public class CaixaLojaFragment extends Fragment {
                 if (snapshotList.size() > 0) {
                     //Significa que existe o documento com a data de hoje então já tem um caixa diario referente a esse dia
                     for (DocumentSnapshot listaCaixasDiariosCriados : snapshotList) {
+
                         firebaseFirestore.collection(nomeCollectionCaixaDiario).document(listaCaixasDiariosCriados.getId()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                             @Override
                             public void onSuccess(DocumentSnapshot documentSnapshot) {
 
                                 ModeloMontanteDiario modeloMontanteDiarioRecuperadoJaCriado = documentSnapshot.toObject(ModeloMontanteDiario.class);
-                                String idDocumento = modeloMontanteDiarioRecuperadoJaCriado.getIdReferenciaMontanteDiarioDesseDia();
+//                                String idDocumento = modeloMontanteDiarioRecuperadoJaCriado.getIdReferenciaMontanteDiarioDesseDia();
+                                idRecuperadoCaixaDiario = modeloMontanteDiarioRecuperadoJaCriado.getIdReferenciaMontanteDiarioDesseDia();
+                                idRecuperadoMontanteDiario = modeloMontanteDiarioRecuperadoJaCriado.getIdReferenciaMontanteMensal();
                                 String valorQueOCaixaIniciouODia = modeloMontanteDiarioRecuperadoJaCriado.getValorQueOCaixaIniciouODia();
                                 String totalDeVendasNoCaixaHoje = modeloMontanteDiarioRecuperadoJaCriado.getValorTotalDeVendasNaLojaDesseDia();
                                 String totalDeVendasEmDinheiro = modeloMontanteDiarioRecuperadoJaCriado.getValorTotalDeVendasNoDinheiroDesseDia();
@@ -920,8 +858,6 @@ public class CaixaLojaFragment extends Fragment {
                     }
 
                 } else {
-
-                    //Não existe documento então não tem montante diario criado, só precisa carregar os componentes da tela
                     carregarComponentesDeTelaParaVizualizar();
                     progressDialogCarregandoAsInformacoesDoCaixaDiario.dismiss();
 
