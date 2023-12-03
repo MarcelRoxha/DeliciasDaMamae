@@ -30,6 +30,11 @@ import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
 import com.marcel.a.n.roxha.deliciasdamamae.controller.helper.ModeloProcessaVendaFeitaDAO;
 import com.marcel.a.n.roxha.deliciasdamamae.fragments.CaixaLojaFragment;
 import com.marcel.a.n.roxha.deliciasdamamae.model.BolosModel;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloProdutoVendido;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ProdutoVendido;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
 
@@ -58,6 +63,10 @@ public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
 
     public AlertDialog progressDialogCarregando;
 
+    public Date dataAtual = new Date();
+    private SimpleDateFormat formatoDataDiaMesAno = new SimpleDateFormat("dd/MM/yyyy");
+
+    private String dataRegistroDoProcessoDeVenda = "";
     private AlertDialog.Builder alertaEditarValorDoProdutoNoProcessoDeVenda;
 
     //INFO BANCO
@@ -71,6 +80,7 @@ public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
     private String itemKeyCadastrado;
     private String itemKeyMontanteMensal;
     private String itemKeyMontanteDiario;
+    private String itemKeyIdProdutoCadastrado;
 
     private String enderecoFotoProduto;
     private String nomeDoProdutoRecuperado;
@@ -79,11 +89,12 @@ public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
     private String valoQueFoiVendidoOProdutoRecuperado = "0";
     private boolean oValorFoiEditado = false;
 
-    private  String MEDOTO_DE_PAGAMENTO = "";
+    private  String METODO_DE_PAGAMENTO = "";
     private  String PLATAFORMA_VENDIDA = "";
 
     //CLASSES
     private BolosModel produtoRecuperadoPraExibirNaTela;
+    private ModeloProdutoVendido produtoVendidoProcessado;
 
 
 
@@ -149,8 +160,11 @@ public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
         itemKey = getIntent().getStringExtra("itemKey");
         itemKeyMontanteMensal = getIntent().getStringExtra("itemKeyMontanteMensal");
         itemKeyMontanteDiario = getIntent().getStringExtra("itemKeyMontanteDiario");
+        itemKeyIdProdutoCadastrado = getIntent().getStringExtra("itemKeyIdProdutoCadastrado");
         if (itemKey != null){
-
+            produtoVendidoProcessado = new ModeloProdutoVendido();
+            produtoVendidoProcessado.setIdDoProdutoVendido(itemKey);
+            produtoVendidoProcessado.setIdDoProdutoCadastrado(itemKeyIdProdutoCadastrado);
             collectionReferenceProdutoRecuperadoParaProcessoDeVenda.document(itemKey).get()
                     .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                         @Override
@@ -172,9 +186,6 @@ public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
                             valorVendaLojaRecuperadoDoProdutoNoProcessoDeVenda.setText("R$: " + valorNaLojaDoProdutoRecuperado);
                             radioButtonSelecionarPrecoDeVendaNaLoja.setText("Vendi pela Loja no valor de R$: " + valorNaLojaDoProdutoRecuperado);
                             radioButtonSelecionarPrecoDeVendaNoIfood.setText("Vendi pelo Ifood no valor de R$: " + valorDoIfoodDoProdutoRecuperado);
-
-
-
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
@@ -205,8 +216,6 @@ public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
         botaoConfirmar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(AdicionarProdutoComoVendidoNoSistema.this, "apertei o botão", Toast.LENGTH_SHORT).show();
-                System.out.println("produtoRecuperadoPraExibirNaTela " + produtoRecuperadoPraExibirNaTela.toString());
                 try {
                      String valorQueVaiSerVendidoMesmo = textoValorQueVaiSerVendidoMesmo.getText().toString();
 
@@ -216,10 +225,32 @@ public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
                         Toast.makeText(AdicionarProdutoComoVendidoNoSistema.this, "É NECESSÁRIO QUE SEJA SELECIONADO UM DOS VALORES PARA VENDA, ESCOLHA ENTRE VALORES CADASTRADOS NA LOJA E/OU IFOOD OU EDITE O VALOR DE VENDA", Toast.LENGTH_LONG).show();
 
                     }else{
-                        produtoRecuperadoPraExibirNaTela.setValorQueOBoloRealmenteFoiVendido(valoQueFoiVendidoOProdutoRecuperado);
+
+                        if(radioButtonSelecionarPrecoDeVendaNoIfood.isChecked()){
+                            PLATAFORMA_VENDIDA = "IFOOD";
+                            valoQueFoiVendidoOProdutoRecuperado = valorDoIfoodDoProdutoRecuperado;
+                        }else if(radioButtonSelecionarPrecoDeVendaNaLoja.isChecked()){
+                            valoQueFoiVendidoOProdutoRecuperado = valorNaLojaDoProdutoRecuperado;
+                            PLATAFORMA_VENDIDA = "LOJA";
+                        }
+                        if(radioButtonPagouNoCredito.isChecked()){
+                            METODO_DE_PAGAMENTO = "CREDITO";
+                        }else if(radioButtonPagouNoDinheiroOuPix.isChecked()){
+                            METODO_DE_PAGAMENTO = "DINHEIROOUPIX";
+                        }else if(radioButtonPagouNoDebito.isChecked()){
+                            METODO_DE_PAGAMENTO = "DEBITO";
+                        }
+
+                        dataRegistroDoProcessoDeVenda = formatoDataDiaMesAno.format(dataAtual);
+
+                        produtoVendidoProcessado.setPlataformaVendida(PLATAFORMA_VENDIDA);
+                        produtoVendidoProcessado.setMetodoDePagamento(METODO_DE_PAGAMENTO);
+                        produtoVendidoProcessado.setValorQueOBoloFoiVendido(valoQueFoiVendidoOProdutoRecuperado);
+                        produtoVendidoProcessado.setRegistroDaVenda(dataRegistroDoProcessoDeVenda);
                         System.out.println("produtoRecuperadoPraExibirNaTela " + produtoRecuperadoPraExibirNaTela.toString());
                         ModeloProcessaVendaFeitaDAO modeloProcessaVendaFeitaDAO = new ModeloProcessaVendaFeitaDAO(AdicionarProdutoComoVendidoNoSistema.this);
-                        modeloProcessaVendaFeitaDAO.processaVendaFeita(produtoRecuperadoPraExibirNaTela, PLATAFORMA_VENDIDA, MEDOTO_DE_PAGAMENTO);
+                        System.out.println("produtoVendidoProcessado " + produtoVendidoProcessado.toString());
+                        modeloProcessaVendaFeitaDAO.processaNoMontanteMensalVendaFeita(produtoVendidoProcessado, itemKeyMontanteMensal, itemKeyMontanteDiario);
 
                     }
 
@@ -231,12 +262,14 @@ public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
             }
         });
 
+
+
+
         radioButtonSelecionarPrecoDeVendaNoIfood.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 textoValorQueVaiSerVendidoMesmo.setText("Valor que será vendido é R$: " + valorDoIfoodDoProdutoRecuperado);
-                PLATAFORMA_VENDIDA = "IFOOD";
-                valoQueFoiVendidoOProdutoRecuperado = valorDoIfoodDoProdutoRecuperado;
+
             }
         });
 
@@ -244,8 +277,7 @@ public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 textoValorQueVaiSerVendidoMesmo.setText("Valor que será vendido é R$: " + valorNaLojaDoProdutoRecuperado);
-                valoQueFoiVendidoOProdutoRecuperado = valorNaLojaDoProdutoRecuperado;
-                PLATAFORMA_VENDIDA = "LOJA";
+
             }
         });
 
@@ -265,7 +297,7 @@ public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
             public void onClick(View view) {
 
                 textoMetodoDePagamento.setText("Pagou no: CRÉDITO" );
-                MEDOTO_DE_PAGAMENTO = "CREDITO";
+
             }
         });
 
@@ -274,7 +306,7 @@ public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
             public void onClick(View view) {
 
                 textoMetodoDePagamento.setText("Pagou no: DINHEIRO OU PIX" );
-                MEDOTO_DE_PAGAMENTO = "DINHEIROOUPIX";
+
             }
         });
 
@@ -283,7 +315,7 @@ public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
             public void onClick(View view) {
 
                 textoMetodoDePagamento.setText("Pagou no: DÉBITO" );
-                MEDOTO_DE_PAGAMENTO = "DEBITO";
+
 
             }
         });

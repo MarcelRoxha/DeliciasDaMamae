@@ -22,7 +22,7 @@
         android:theme="@style/Theme.DeliciasDaMamae.PopupOverlay">
         <activity
             android:name=".activity.AdicionarProdutoComoVendidoNoSistema"
-            android:parentActivityName=".activity.LojaActivityV2"
+            android:parentActivityName=".activity.BolosActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.LojaActivityV2"
@@ -44,7 +44,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.AdicionarBoloVitrineActivity2"
-            android:parentActivityName=".activity.ReceitasProntasActivity"
+            android:parentActivityName=".activity.LojaActivityV2"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.FornoActivity"

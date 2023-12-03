@@ -40,7 +40,6 @@ public class LojaActivityV2 extends AppCompatActivity {
                 getSupportFragmentManager(),
                 FragmentPagerItems.with(this)
                         .add("CAIXA", CaixaLojaFragment.class)
-                        .add("VITRINE", VitrineFragment.class)
                         .add("FINANCEIRO", FinanceiroFragment.class)
                         .create()
         );
