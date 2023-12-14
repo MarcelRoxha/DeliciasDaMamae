@@ -7,9 +7,11 @@ public class ModeloProdutoVendido implements Serializable {
     private String idDoProdutoVendido;
     private String idDoProdutoCadastrado;
     private String valorQueOBoloFoiVendido;
+    private String nomeDoProdutoVendido;
     private String metodoDePagamento;
     private String plataformaVendida;
     private String registroDaVenda;
+    private double custoProduto;
 
     public ModeloProdutoVendido() {
 
@@ -39,6 +41,13 @@ public class ModeloProdutoVendido implements Serializable {
         this.valorQueOBoloFoiVendido = valorQueOBoloFoiVendido;
     }
 
+    public void setNomeDoProdutoVendido(String nomeDoProdutoVendido){
+        this.nomeDoProdutoVendido = nomeDoProdutoVendido;
+    }
+    public String getNomeDoProdutoVendido(){
+        return nomeDoProdutoVendido;
+    }
+
     public String getMetodoDePagamento() {
         return metodoDePagamento;
     }
@@ -63,15 +72,25 @@ public class ModeloProdutoVendido implements Serializable {
         this.registroDaVenda = registroDaVenda;
     }
 
+    public double getCustoProduto() {
+        return custoProduto;
+    }
+
+    public void setCustoProduto(double custoProduto) {
+        this.custoProduto = custoProduto;
+    }
+
     @Override
     public String toString() {
         return "ModeloProdutoVendido{" +
                 "idDoProdutoVendido='" + idDoProdutoVendido + '\'' +
                 ", idDoProdutoCadastrado='" + idDoProdutoCadastrado + '\'' +
                 ", valorQueOBoloFoiVendido='" + valorQueOBoloFoiVendido + '\'' +
+                ", nomeDoProdutoVendido='" + nomeDoProdutoVendido + '\'' +
                 ", metodoDePagamento='" + metodoDePagamento + '\'' +
                 ", plataformaVendida='" + plataformaVendida + '\'' +
                 ", registroDaVenda='" + registroDaVenda + '\'' +
+                ", custoProduto=" + custoProduto +
                 '}';
     }
 }

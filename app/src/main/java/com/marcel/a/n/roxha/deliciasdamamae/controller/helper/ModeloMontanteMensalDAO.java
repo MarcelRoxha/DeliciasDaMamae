@@ -11,6 +11,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloControleRelatorioMensal;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloMontanteDiario;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloMontanteMensalLoja;
 
@@ -51,7 +52,6 @@ public class ModeloMontanteMensalDAO implements InterfaceModeloMontanteMensalDAO
 
     @Override
     public ModeloMontanteMensalLoja modeloMontanteIniciarMesEDiario(ModeloMontanteMensalLoja modeloMontanteMensalLoja, String diaAtual) {
-        System.out.println("modeloMontanteMensalLoja: " + modeloMontanteMensalLoja.toString());
 
 
         modeloRecuperaValorDigitado = modeloMontanteMensalLoja;
@@ -69,6 +69,8 @@ public class ModeloMontanteMensalDAO implements InterfaceModeloMontanteMensalDAO
             montanteMensalSendoIniciadoParaArmazenar.put("valorTotalDeVendasNoDinheiroDesseMes", modeloMontanteMensalLoja.getValorTotalDeVendasNoDinheiroDesseMes());
             montanteMensalSendoIniciadoParaArmazenar.put("valorTotalDeVendasNoCreditoDesseMes", modeloMontanteMensalLoja.getValorTotalDeVendasNoCreditoDesseMes());
             montanteMensalSendoIniciadoParaArmazenar.put("valorTotalDeVendasNoDebitoDesseMes", modeloMontanteMensalLoja.getValorTotalDeVendasNoDebitoDesseMes());
+            montanteMensalSendoIniciadoParaArmazenar.put("quantidadeDeVendasDesseMes", modeloMontanteMensalLoja.getQuantidadeDeVendasDesseMes());
+
 
             this.referenciaMontanteMensal.add(montanteMensalSendoIniciadoParaArmazenar)
                     .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -79,18 +81,6 @@ public class ModeloMontanteMensalDAO implements InterfaceModeloMontanteMensalDAO
 
                             String idRecuperado = documentReference.getId();
                             String valorRecuperadoParaAdicionarNoMontanteDiario = modeloRecuperaValorDigitado.getValorQueOMontanteIniciouPositivo();
-                          /*  modeloMontanteMensalLojaParaAtualizarId.setIdMontante(idRecuperado);
-                            modeloMontanteMensalLojaParaAtualizarId.setMesReferenciaDesseMontante(modeloMontanteMensalLoja.getMesReferenciaDesseMontante());
-                            modeloMontanteMensalLojaParaAtualizarId.setValorQueOMontanteIniciouPositivo(modeloMontanteMensalLoja.getValorQueOMontanteIniciouPositivo());
-                            modeloMontanteMensalLojaParaAtualizarId.setValorTotalVendasBoleriaMensal(modeloMontanteMensalLoja.getValorTotalVendasBoleriaMensal());
-                            modeloMontanteMensalLojaParaAtualizarId.setValorTotalVendasIfoodMensal(modeloMontanteMensalLoja.getValorTotalVendasIfoodMensal());
-                            modeloMontanteMensalLojaParaAtualizarId.setValorTotalVendasEmGeralMensal(modeloMontanteMensalLoja.getValorTotalVendasEmGeralMensal());
-                            modeloMontanteMensalLojaParaAtualizarId.setQuantoDinheiroEntrouEsseMes(modeloMontanteMensalLoja.getQuantoDinheiroEntrouEsseMes());
-                            modeloMontanteMensalLojaParaAtualizarId.setQuantoDinheiroSaiuEsseMes(modeloMontanteMensalLoja.getQuantoDinheiroSaiuEsseMes());
-                            modeloMontanteMensalLojaParaAtualizarId.setValorQueOMontanteIniciouNegativo(modeloMontanteMensalLoja.getValorQueOMontanteIniciouNegativo());
-                            modeloMontanteMensalLojaParaAtualizarId.setValorTotalDeVendasNoDinheiroDesseMes(modeloMontanteMensalLoja.getValorTotalDeVendasNoDinheiroDesseMes());
-                            modeloMontanteMensalLojaParaAtualizarId.setValorTotalDeVendasNoCreditoDesseMes(modeloMontanteMensalLoja.getValorTotalDeVendasNoCreditoDesseMes());
-                            modeloMontanteMensalLojaParaAtualizarId.setValorTotalDeVendasNoDebitoDesseMes(modeloMontanteMensalLoja.getValorTotalDeVendasNoDebitoDesseMes());*/
                             atualizandoIdDoMontanteMensalCriadoIniciandoOMontante(idRecuperado, valorRecuperadoParaAdicionarNoMontanteDiario, diaAtual);
                         }
                     }).addOnFailureListener(new OnFailureListener() {
@@ -143,6 +133,9 @@ public class ModeloMontanteMensalDAO implements InterfaceModeloMontanteMensalDAO
                         modeloMontanteDiarioIniciado.setValorTotalDeTrocoDesseDia("0");
                         modeloMontanteDiarioDAOSendoIniciadoDesseMes.modeloMontanteDiarioSendoIniciadoJuntoComMes(modeloMontanteDiarioIniciado);
 
+                        ModeloControleRelatorioMensalDAO modeloControleRelatorioMensalIniciandoDAO = new ModeloControleRelatorioMensalDAO(context);
+                        modeloControleRelatorioMensalIniciandoDAO.adicionarRelatorio(idCriado);
+
                         System.out.println("Void unused");
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -166,8 +159,4 @@ public class ModeloMontanteMensalDAO implements InterfaceModeloMontanteMensalDAO
 
     }
 
-    private void atualizandoECriandoOCaixaDiarioAPartirDoMontanteMensalCriado(String idCriado, ModeloMontanteDiario modeloMontanteDiario, String valorInicial){
-
-
-    }
 }

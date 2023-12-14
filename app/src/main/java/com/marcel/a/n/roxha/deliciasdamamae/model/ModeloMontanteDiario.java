@@ -16,6 +16,7 @@ public class ModeloMontanteDiario implements Serializable {
     private String valorTotalDeVendasNoDebitoDesseDia;
     private String valorTotalDeTrocoDesseDia;
 
+    private int quantidadeDeVendasFeitasDesseDia;
     private String comprasAvulsasDoDia;
     private String valorQueOCaixaFinalizou;
     private String valorTotalDeSaidaDoCaixa;
@@ -128,6 +129,15 @@ public class ModeloMontanteDiario implements Serializable {
         this.valorTotalDeTrocoDesseDia = valorTotalDeTrocoDesseDia;
     }
 
+    public int getQuantidadeDeVendasFeitasDesseDia() {
+        return quantidadeDeVendasFeitasDesseDia;
+    }
+
+    public void setQuantidadeDeVendasFeitasDesseDia(int quantidadeDeVendasFeitasDesseDia) {
+        this.quantidadeDeVendasFeitasDesseDia = quantidadeDeVendasFeitasDesseDia;
+    }
+
+
     public String getComprasAvulsasDoDia() {
         return comprasAvulsasDoDia;
     }
@@ -166,6 +176,7 @@ public class ModeloMontanteDiario implements Serializable {
                 ", valorTotalDeVendasNoCreditoDesseDia='" + valorTotalDeVendasNoCreditoDesseDia + '\'' +
                 ", valorTotalDeVendasNoDebitoDesseDia='" + valorTotalDeVendasNoDebitoDesseDia + '\'' +
                 ", valorTotalDeTrocoDesseDia='" + valorTotalDeTrocoDesseDia + '\'' +
+                ", quantidadeDeVendasFeitasDesseDia=" + quantidadeDeVendasFeitasDesseDia +
                 ", comprasAvulsasDoDia='" + comprasAvulsasDoDia + '\'' +
                 ", valorQueOCaixaFinalizou='" + valorQueOCaixaFinalizou + '\'' +
                 ", valorTotalDeSaidaDoCaixa='" + valorTotalDeSaidaDoCaixa + '\'' +

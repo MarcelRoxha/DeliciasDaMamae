@@ -19,8 +19,13 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.marcel.a.n.roxha.deliciasdamamae.R;
 import com.marcel.a.n.roxha.deliciasdamamae.adapter.BolosVendidosAdapter;
+import com.marcel.a.n.roxha.deliciasdamamae.adapter.ModeloProdutoVendidoAdapter;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
 import com.marcel.a.n.roxha.deliciasdamamae.model.BoloVendidoModel;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloProdutoVendido;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class BolosVendidosActivity2 extends AppCompatActivity {
 
@@ -30,19 +35,28 @@ public class BolosVendidosActivity2 extends AppCompatActivity {
 
     //Banco de dados
     FirebaseFirestore firebaseFirestore = ConfiguracaoFirebase.getFirestor();
-    CollectionReference reference = firebaseFirestore.collection("BOLOS_VENDIDOS");
+    CollectionReference reference;
+    private static final String COLLECTION_CAIXA_DIARIO = "CAIXAS_DIARIO_";
+
 
     //Classes
 
     BolosVendidosAdapter bolosVendidosAdapter;
+    ModeloProdutoVendidoAdapter modeloProdutoVendidoAdapter;
 
 
 
     //Variáveis
-
+    private Date hoje;
     private String idMontanteAtual;
+    private SimpleDateFormat simpleDateFormatCollectionDataCaixaDiario = new SimpleDateFormat("dd/MM/yyyy");
+    private SimpleDateFormat simpleDateFormatCollectionReferenciaAtual = new SimpleDateFormat("MM");
+    private SimpleDateFormat simpleDateFormatCollectionReferenciaAnoAtual = new SimpleDateFormat("yyyy");
 
-
+    private String nomeCollectionNomeCaixaDiario = "";
+    private String mesAtual = "";
+    private String anoAtual = "";
+    private String dataCompleta = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,36 +69,30 @@ public class BolosVendidosActivity2 extends AppCompatActivity {
         setContentView(R.layout.activity_bolos_vendidos2);
 
         recyclerView_lista_bolos_vendidos = findViewById(R.id.recyclerview_lista_bolos_vendidos_id);
-
-        idMontanteAtual = getIntent().getStringExtra("idMontanteRecuperado");
-
+        hoje = new Date();
+        idMontanteAtual = getIntent().getStringExtra("idMontanteDiario");
+        dataCompleta = simpleDateFormatCollectionDataCaixaDiario.format(hoje.getTime());
+        mesAtual = simpleDateFormatCollectionReferenciaAtual.format(hoje.getTime());
+        anoAtual = simpleDateFormatCollectionReferenciaAnoAtual.format(hoje.getTime());
+        String mesReferenciaDesseMontante = mesAtual + "_" + anoAtual;
+        nomeCollectionNomeCaixaDiario = COLLECTION_CAIXA_DIARIO + mesReferenciaDesseMontante;
 
     }
 
     public void carregarlistabolosvendidos() {
 
-        Query query = reference.orderBy("nomeBolo", Query.Direction.ASCENDING);
+        Query query = firebaseFirestore.collection(nomeCollectionNomeCaixaDiario).document(idMontanteAtual).collection("RELATORIOS").orderBy("nomeDoProdutoVendido", Query.Direction.ASCENDING);
 
-        FirestoreRecyclerOptions<BoloVendidoModel> options = new FirestoreRecyclerOptions.Builder<BoloVendidoModel>()
-                .setQuery(query, BoloVendidoModel.class)
+        FirestoreRecyclerOptions<ModeloProdutoVendido> options = new FirestoreRecyclerOptions.Builder<ModeloProdutoVendido>()
+                .setQuery(query, ModeloProdutoVendido.class)
                 .build();
-
-        bolosVendidosAdapter = new BolosVendidosAdapter(options);
+        modeloProdutoVendidoAdapter = new ModeloProdutoVendidoAdapter(options);
 
         recyclerView_lista_bolos_vendidos.setHasFixedSize(true);
-        recyclerView_lista_bolos_vendidos.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView_lista_bolos_vendidos.setAdapter(bolosVendidosAdapter);
+        recyclerView_lista_bolos_vendidos.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        recyclerView_lista_bolos_vendidos.setAdapter(modeloProdutoVendidoAdapter);
         recyclerView_lista_bolos_vendidos.addItemDecoration(new DividerItemDecoration(getApplicationContext(), LinearLayout.VERTICAL));
 
-        bolosVendidosAdapter.setOnItemClickListerner(new BolosVendidosAdapter.OnItemClickLisener() {
-            @Override
-            public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
-
-                String idBoloVendido = documentSnapshot.getId();
-
-                carregarAlertaSettingsBoloVendido(idBoloVendido);
-            }
-        });
 
     }
 
@@ -135,13 +143,13 @@ public class BolosVendidosActivity2 extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         carregarlistabolosvendidos();
-        bolosVendidosAdapter.startListening();
+        modeloProdutoVendidoAdapter.startListening();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        bolosVendidosAdapter.stopListening();
+        modeloProdutoVendidoAdapter.stopListening();
     }
 
 

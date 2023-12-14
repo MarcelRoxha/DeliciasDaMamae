@@ -19,6 +19,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.marcel.a.n.roxha.deliciasdamamae.activity.LojaActivityV2;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
 import com.marcel.a.n.roxha.deliciasdamamae.model.BolosModel;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloControleRelatorioDiario;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloControleRelatorioMensal;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloMontanteDiario;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloMontanteMensalLoja;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloProdutoVendido;
@@ -97,11 +99,8 @@ public class ModeloProcessaVendaFeitaDAO implements InterfaceModeloProcessaVenda
         String mesReferenciaDesseMontante = mesAtual + "_" + anoAtual;
         valorQueOProdutoFoiVendido = modeloProdutoVendido.getValorQueOBoloFoiVendido();
         Map<String, Object> montanteMensalAtualizandoDevidoAVendaMensal = new HashMap<>();
-        Map<String, Object> montanteDiarioAtualizandoDevidoAVendaDiario = new HashMap<>();
         nomeCollectionNomeMontanteMensal = COLLECTION_MONTANTE_MENSAL + mesReferenciaDesseMontante;
         nomeCollectionNomeCaixaDiario = COLLECTION_CAIXA_DIARIO + mesReferenciaDesseMontante;
-        System.out.println("nomeCollectionNomeMontanteMensal " + nomeCollectionNomeMontanteMensal);
-        System.out.println("nomeCollectionNomeCaixaDiario " + nomeCollectionNomeCaixaDiario);
         ModeloMontanteMensalLoja montanteMensalLojaAtualizar = new ModeloMontanteMensalLoja();
 
         try {
@@ -113,12 +112,18 @@ public class ModeloProcessaVendaFeitaDAO implements InterfaceModeloProcessaVenda
                         public void onSuccess(DocumentSnapshot documentSnapshot) {
                             modeloMontanteMensalLoja = documentSnapshot.toObject(ModeloMontanteMensalLoja.class);
                             valorQuePrecisaraSerSomadoEmGeralMontanteMensal = modeloMontanteMensalLoja.getValorTotalVendasEmGeralMensal().replace(",", ".");
+                            int quantidadeDeVendasEsseMes = modeloMontanteMensalLoja.getQuantidadeDeVendasDesseMes();
+                            int somaQuantidade = quantidadeDeVendasEsseMes + 1;
+                            montanteMensalAtualizandoDevidoAVendaMensal.put("quantidadeDeVendasDesseMes", somaQuantidade);
+
                             double valorQuePrecisaSerSomadoEmGeralMontanteMensal = Double.parseDouble(valorQuePrecisaraSerSomadoEmGeralMontanteMensal);
                             double valorQueOProdutoFoiVendidoConvert = Double.parseDouble(valorQueOProdutoFoiVendido);
                             double resultadoEmGeralMontanteMensal = valorQuePrecisaSerSomadoEmGeralMontanteMensal + valorQueOProdutoFoiVendidoConvert;
                             String resultadoConvertido = String.format("%.2f", resultadoEmGeralMontanteMensal);
                             montanteMensalAtualizandoDevidoAVendaMensal.put("valorTotalVendasEmGeralMensal", resultadoConvertido);
-                            montanteMensalLojaAtualizar.setValorTotalVendasEmGeralMensal(resultadoConvertido);//
+                            montanteMensalLojaAtualizar.setValorTotalVendasEmGeralMensal(resultadoConvertido);
+
+
                             if (modeloProdutoVendido.getPlataformaVendida().equals("IFOOD")) {
                                 valorQuePrecisaraSerSomadoDependendoDeOndeSaiuAVendaMensal = modeloMontanteMensalLoja.getValorTotalVendasIfoodMensal().replace(",", ".");
                                 double valorQuePrecisaAtualizarDeVendasDependendoDaPlataformaConvert = Double.parseDouble(valorQuePrecisaraSerSomadoDependendoDeOndeSaiuAVendaMensal);
@@ -175,7 +180,8 @@ public class ModeloProcessaVendaFeitaDAO implements InterfaceModeloProcessaVenda
                                         @Override
                                         public void onSuccess(Void unused) {
                                             Toast.makeText(context, "MONTANTE MENSAL ATUALIZADO", Toast.LENGTH_SHORT).show();
-                                            processaNoMontanteDiarioVendaFeita(modeloProdutoVendido, idMontanteDiario);
+                                            adicionarVendaNoRelatorioMensal(modeloProdutoVendido, idMontanteMensal, idMontanteDiario);
+
                                         }
                                     }).addOnFailureListener(new OnFailureListener() {
                                         @Override
@@ -217,6 +223,9 @@ public class ModeloProcessaVendaFeitaDAO implements InterfaceModeloProcessaVenda
 
                             modeloMontanteDiario = documentSnapshot.toObject(ModeloMontanteDiario.class);
                             double valorQueOProdutoFoiVendidoConvert = Double.parseDouble(valorQueOProdutoFoiVendido);
+                            int quantiadeRecuperada = modeloMontanteDiario.getQuantidadeDeVendasFeitasDesseDia();
+                            int soma = quantiadeRecuperada + 1;
+                            montanteDiarioAtualizandoDevidoAVendaDiario.put("quantidadeDeVendasFeitasDesseDia", soma);
                            // System.out.println("valorQuePrecisaraSerSomadoEmGeralMontanteDiario" + modeloMontanteDiario.getValorTotalDeVendasEmGeralDesseDia().replace(",", "."));
                             valorQuePrecisaraSerSomadoEmGeralMontanteDiario = modeloMontanteDiario.getValorTotalDeVendasEmGeralDesseDia().replace(",", ".");
 
@@ -263,7 +272,7 @@ public class ModeloProcessaVendaFeitaDAO implements InterfaceModeloProcessaVenda
 
                                 valorQuePrecisaSerSomadoDependendoDoTipoDeMetodoDePagamentoDiario = modeloMontanteDiario.getValorTotalDeVendasNoCreditoDesseDia().replace(",", ".");
 
-                                double valorQuePrecisaAtualizarDeVendasDependendoDaPlataformaConvertDiario = Double.parseDouble(valorQuePrecisaraSerSomadoDependendoDeOndeSaiuAVendaMontanteDiario);
+                                double valorQuePrecisaAtualizarDeVendasDependendoDaPlataformaConvertDiario = Double.parseDouble(valorQuePrecisaSerSomadoDependendoDoTipoDeMetodoDePagamentoDiario);
                                 double resultadoDeVendasDependendoDaPlataformDiario = valorQuePrecisaAtualizarDeVendasDependendoDaPlataformaConvertDiario + valorQueOProdutoFoiVendidoConvert;
                                 String vendasDependendoDaFormaDePagamentoConvertDiario = String.format("%.2f", resultadoDeVendasDependendoDaPlataformDiario);
                                 montanteDiarioAtualizandoDevidoAVendaDiario.put("valorTotalDeVendasNoCreditoDesseDia", vendasDependendoDaFormaDePagamentoConvertDiario);
@@ -317,11 +326,13 @@ public class ModeloProcessaVendaFeitaDAO implements InterfaceModeloProcessaVenda
     }
 
     private boolean adicionarVendaNoRelatorio(ModeloProdutoVendido modeloProdutoVendido, String idMontanteDiarioRelatorios){
+
         Map<String, Object> produtoVendidoAdicionandoParaRelatorios = new HashMap<>();
 
         produtoVendidoAdicionandoParaRelatorios.put("idDoProdutoVendido", modeloProdutoVendido.getIdDoProdutoVendido());
         produtoVendidoAdicionandoParaRelatorios.put("idDoProdutoCadastrado", modeloProdutoVendido.getIdDoProdutoCadastrado());
         produtoVendidoAdicionandoParaRelatorios.put("valorQueOBoloFoiVendido", modeloProdutoVendido.getValorQueOBoloFoiVendido());
+        produtoVendidoAdicionandoParaRelatorios.put("nomeDoProdutoVendido", modeloProdutoVendido.getNomeDoProdutoVendido());
         produtoVendidoAdicionandoParaRelatorios.put("metodoDePagamento", modeloProdutoVendido.getMetodoDePagamento());
         produtoVendidoAdicionandoParaRelatorios.put("plataformaVendida", modeloProdutoVendido.getPlataformaVendida());
         produtoVendidoAdicionandoParaRelatorios.put("registroDaVenda", modeloProdutoVendido.getRegistroDaVenda());
@@ -329,9 +340,103 @@ public class ModeloProcessaVendaFeitaDAO implements InterfaceModeloProcessaVenda
         firestore.collection(nomeCollectionNomeCaixaDiario).document(idMontanteDiarioRelatorios).collection("RELATORIOS").add(produtoVendidoAdicionandoParaRelatorios).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
-                Toast.makeText(context, "RELATÓRIOS ATUALIZADO", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "VENDA ADICIONADA NO RELATÓRIO DIÁRIO", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(context, LojaActivityV2.class);
                 context.startActivity(intent);
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(context, "Algo deu errado verifique sua internet e tente novamente mais tarde", Toast.LENGTH_SHORT).show();
+                System.out.println("Erro*&888888888" + e.getMessage());
+            }
+        });
+
+
+        return false;
+    }
+
+
+    private boolean adicionarVendaNoRelatorioMensal(ModeloProdutoVendido modeloProdutoVendido, String idMontanteMensal, String idMontanteDiario){
+
+        firestore.collection(nomeCollectionNomeMontanteMensal).document(idMontanteMensal).collection("RELATORIOS").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                List<DocumentSnapshot> listRelatorio = queryDocumentSnapshots.getDocuments();
+
+                if(listRelatorio.size() > 0 ){
+                    for (DocumentSnapshot list: listRelatorio){
+                        String idRecuperado = list.getId();
+                        firestore.collection(nomeCollectionNomeMontanteMensal).document(idMontanteMensal).collection("RELATORIOS").document(idRecuperado)
+                                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                        ModeloControleRelatorioMensal modeloControleRelatorioMensal = documentSnapshot.toObject(ModeloControleRelatorioMensal.class);
+
+                                        long quantidadeDeVendasNesseMesRecuperado = modeloControleRelatorioMensal.getQuantidadeDeVendasNesseMes();
+                                        double valorDeVendasNesseMesRecuperado =modeloControleRelatorioMensal.getValorDeVendasNesseMes();
+                                        double lucroAproximadoDeVendasNesseMesRecuperado =modeloControleRelatorioMensal.getLucroAproximadoDeVendasNesseMes();
+                                        double despesasDeVendasNesseMesRecuperado =modeloControleRelatorioMensal.getDespesasDeVendasNesseMes();
+
+                                        double valorConvertidoDaVenda = Double.parseDouble(modeloProdutoVendido.getValorQueOBoloFoiVendido().replace(",", "."));
+                                        double custoTemp = modeloProdutoVendido.getCustoProduto();
+                                        double calculaLucroDessaVenda=valorConvertidoDaVenda - custoTemp;
+
+
+
+                                        long somaQuantidade = quantidadeDeVendasNesseMesRecuperado + 1;
+                                        double somaValorDeVendas =valorDeVendasNesseMesRecuperado + valorConvertidoDaVenda;
+                                        double somaLucroVenda=lucroAproximadoDeVendasNesseMesRecuperado + calculaLucroDessaVenda;
+                                        double somaDespesasDessaVenda=despesasDeVendasNesseMesRecuperado + custoTemp;
+
+                                        ModeloControleRelatorioMensal modeloControleRelatorioMensalAtualizadoParaOBanco = new ModeloControleRelatorioMensal();
+
+                                        modeloControleRelatorioMensalAtualizadoParaOBanco.setQuantidadeDeVendasNesseMes(somaQuantidade);
+                                        modeloControleRelatorioMensalAtualizadoParaOBanco.setValorDeVendasNesseMes(somaValorDeVendas);
+                                        modeloControleRelatorioMensalAtualizadoParaOBanco.setLucroAproximadoDeVendasNesseMes(somaLucroVenda);
+                                        modeloControleRelatorioMensalAtualizadoParaOBanco.setDespesasDeVendasNesseMes(somaDespesasDessaVenda);
+
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+
+                                    }
+                                });
+
+
+                    }
+                }
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+
+
+
+
+        Map<String, Object> produtoVendidoAdicionandoParaRelatorios = new HashMap<>();
+
+        produtoVendidoAdicionandoParaRelatorios.put("idDoProdutoVendido", modeloProdutoVendido.getIdDoProdutoVendido());
+        produtoVendidoAdicionandoParaRelatorios.put("idDoProdutoCadastrado", modeloProdutoVendido.getIdDoProdutoCadastrado());
+        produtoVendidoAdicionandoParaRelatorios.put("valorQueOBoloFoiVendido", modeloProdutoVendido.getValorQueOBoloFoiVendido());
+        produtoVendidoAdicionandoParaRelatorios.put("nomeDoProdutoVendido", modeloProdutoVendido.getNomeDoProdutoVendido());
+        produtoVendidoAdicionandoParaRelatorios.put("metodoDePagamento", modeloProdutoVendido.getMetodoDePagamento());
+        produtoVendidoAdicionandoParaRelatorios.put("plataformaVendida", modeloProdutoVendido.getPlataformaVendida());
+        produtoVendidoAdicionandoParaRelatorios.put("registroDaVenda", modeloProdutoVendido.getRegistroDaVenda());
+
+        firestore.collection(nomeCollectionNomeMontanteMensal).document(idMontanteMensal).collection("RELATORIOS").add(produtoVendidoAdicionandoParaRelatorios).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
+                Toast.makeText(context, "RELATÓRIO MENSAL ATUALIZADO", Toast.LENGTH_SHORT).show();
+                processaNoMontanteDiarioVendaFeita(modeloProdutoVendido, idMontanteDiario);
+
 
             }
         }).addOnFailureListener(new OnFailureListener() {

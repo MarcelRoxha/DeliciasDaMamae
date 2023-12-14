@@ -17,6 +17,8 @@ public class ModeloMontanteMensalLoja implements Serializable {
     private String valorTotalDeVendasNoCreditoDesseMes;
     private String valorTotalDeVendasNoDebitoDesseMes;
 
+    private int quantidadeDeVendasDesseMes;
+
     public ModeloMontanteMensalLoja() {
     }
 
@@ -131,6 +133,14 @@ public class ModeloMontanteMensalLoja implements Serializable {
         this.valorTotalDeVendasNoDebitoDesseMes = valorTotalDeVendasNoDebitoDesseMes;
     }
 
+    public int getQuantidadeDeVendasDesseMes() {
+        return quantidadeDeVendasDesseMes;
+    }
+
+    public void setQuantidadeDeVendasDesseMes(int quantidadeDeVendasDesseMes) {
+        this.quantidadeDeVendasDesseMes = quantidadeDeVendasDesseMes;
+    }
+
     @Override
     public String toString() {
         return "ModeloMontanteMensalLoja{" +
@@ -143,6 +153,10 @@ public class ModeloMontanteMensalLoja implements Serializable {
                 ", quantoDinheiroSaiuEsseMes='" + quantoDinheiroSaiuEsseMes + '\'' +
                 ", valorQueOMontanteIniciouPositivo='" + valorQueOMontanteIniciouPositivo + '\'' +
                 ", valorQueOMontanteIniciouNegativo='" + valorQueOMontanteIniciouNegativo + '\'' +
+                ", valorTotalDeVendasNoDinheiroDesseMes='" + valorTotalDeVendasNoDinheiroDesseMes + '\'' +
+                ", valorTotalDeVendasNoCreditoDesseMes='" + valorTotalDeVendasNoCreditoDesseMes + '\'' +
+                ", valorTotalDeVendasNoDebitoDesseMes='" + valorTotalDeVendasNoDebitoDesseMes + '\'' +
+                ", quantidadeDeVendasDesseMes=" + quantidadeDeVendasDesseMes +
                 '}';
     }
 }

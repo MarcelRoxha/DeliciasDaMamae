@@ -13,6 +13,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.marcel.a.n.roxha.deliciasdamamae.activity.LojaActivityV2;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloControleRelatorioDiario;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloMontanteDiario;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloMontanteMensalLoja;
 
@@ -59,6 +60,7 @@ public class ModeloMontanteDiarioDAO implements InterfaceModeloMontanteDiarioDAO
             montanteMensalSendoIniciadoParaArmazenar.put("valorTotalDeVendasNoCreditoDesseDia", modeloMontanteDiario.getValorTotalDeVendasNoCreditoDesseDia());
             montanteMensalSendoIniciadoParaArmazenar.put("valorTotalDeVendasNoDebitoDesseDia", modeloMontanteDiario.getValorTotalDeVendasNoDebitoDesseDia());
             montanteMensalSendoIniciadoParaArmazenar.put("valorTotalDeTrocoDesseDia", modeloMontanteDiario.getValorTotalDeTrocoDesseDia());
+            montanteMensalSendoIniciadoParaArmazenar.put("quantidadeDeVendasFeitasDesseDia", modeloMontanteDiario.getQuantidadeDeVendasFeitasDesseDia());
             this.referenceMontanteDiarioHoje.add(montanteMensalSendoIniciadoParaArmazenar).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                 @Override
                 public void onSuccess(DocumentReference documentReference) {
@@ -131,8 +133,7 @@ public class ModeloMontanteDiarioDAO implements InterfaceModeloMontanteDiarioDAO
                 @Override
                 public void onSuccess(Void unused) {
 
-//                    Intent intentVoltaCaixa = new Intent(context, LojaActivityV2.class);
-//                    context.startActivity(intentVoltaCaixa);
+
                     Toast.makeText(context, mensagemRetornoToast, Toast.LENGTH_LONG).show();
 
                 }

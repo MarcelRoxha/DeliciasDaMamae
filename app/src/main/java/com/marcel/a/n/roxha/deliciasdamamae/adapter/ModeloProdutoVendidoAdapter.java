@@ -12,53 +12,35 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.marcel.a.n.roxha.deliciasdamamae.R;
-import com.marcel.a.n.roxha.deliciasdamamae.model.BoloVendidoModel;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloProdutoVendido;
 
-public class BolosVendidosAdapter extends FirestoreRecyclerAdapter<ModeloProdutoVendido, BolosVendidosAdapter.BolosVendidoViewHolder> {
-
+public class ModeloProdutoVendidoAdapter extends FirestoreRecyclerAdapter<ModeloProdutoVendido, ModeloProdutoVendidoAdapter.ModeloProdutoVendidoViewHolder> {
     private OnItemClickLisener listener;
-
-
-    public BolosVendidosAdapter(@NonNull FirestoreRecyclerOptions<ModeloProdutoVendido> options) {
+    public ModeloProdutoVendidoAdapter(@NonNull FirestoreRecyclerOptions<ModeloProdutoVendido> options) {
         super(options);
-        System.out.println("dentro do BolosVendidosAdapter");
-
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull BolosVendidoViewHolder holder, int position, @NonNull ModeloProdutoVendido model) {
-        System.out.println("dentro do onBindViewHolder");
+    protected void onBindViewHolder(@NonNull ModeloProdutoVendidoAdapter.ModeloProdutoVendidoViewHolder holder, int position, @NonNull ModeloProdutoVendido model) {
         holder.textoNome.setText(model.getNomeDoProdutoVendido());
         holder.textoValorVenda.setText(String.valueOf(model.getValorQueOBoloFoiVendido()));
-      // holder.textoCusto.setText(String.valueOf(model.getCustoQueOProdutoTeveAoSerConfeccionado()));
-
-
     }
 
     @NonNull
     @Override
-    public BolosVendidoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        System.out.println("dentro-- do BolosVendidoViewHolder");
+    public ModeloProdutoVendidoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_bolos_vendidos_adapter, parent, false);
-
-        return new BolosVendidoViewHolder(view);
+        return new ModeloProdutoVendidoViewHolder(view);
     }
 
-    public class BolosVendidoViewHolder extends RecyclerView.ViewHolder {
+    public class ModeloProdutoVendidoViewHolder extends RecyclerView.ViewHolder {
 
         TextView textoNome;
         TextView textoValorVenda;
-        TextView textoCusto;
-
-
-        public BolosVendidoViewHolder(@NonNull View itemView) {
+        public ModeloProdutoVendidoViewHolder(@NonNull View itemView) {
             super(itemView);
-
             textoNome = itemView.findViewById(R.id.nome_bolo_vendido_id);
             textoValorVenda = itemView.findViewById(R.id.valor_venda_bolo_vendido_id);
-            textoCusto = itemView.findViewById(R.id.valor_custo_bolo_vendido_id);
-            System.out.println("dentro----- do BolosVendidoViewHolder");
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -70,14 +52,11 @@ public class BolosVendidosAdapter extends FirestoreRecyclerAdapter<ModeloProduto
             });
         }
     }
-
     public interface OnItemClickLisener{
         void onItemClick(DocumentSnapshot documentSnapshot, int position);
 
     }
     public void setOnItemClickListerner(OnItemClickLisener listerner){
-
         this.listener =  listerner;
-
     }
 }

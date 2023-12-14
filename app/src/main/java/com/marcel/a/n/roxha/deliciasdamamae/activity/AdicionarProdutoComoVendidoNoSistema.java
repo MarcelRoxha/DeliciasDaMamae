@@ -77,10 +77,11 @@ public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
 
     //VARIAVEIS DO PRODUTO
     private String itemKey;
-    private String itemKeyCadastrado;
+    private String nomeRecuperadoExpostoVitrine;
     private String itemKeyMontanteMensal;
     private String itemKeyMontanteDiario;
     private String itemKeyIdProdutoCadastrado;
+    private String custoDoProdutoRecuperadoExpostoVitrine;
 
     private String enderecoFotoProduto;
     private String nomeDoProdutoRecuperado;
@@ -161,6 +162,9 @@ public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
         itemKeyMontanteMensal = getIntent().getStringExtra("itemKeyMontanteMensal");
         itemKeyMontanteDiario = getIntent().getStringExtra("itemKeyMontanteDiario");
         itemKeyIdProdutoCadastrado = getIntent().getStringExtra("itemKeyIdProdutoCadastrado");
+        nomeRecuperadoExpostoVitrine = getIntent().getStringExtra("nomeRecuperadoExpostoVitrine");
+        custoDoProdutoRecuperadoExpostoVitrine = getIntent().getStringExtra("custoDoProdutoRecuperadoExpostoVitrine");
+
         if (itemKey != null){
             produtoVendidoProcessado = new ModeloProdutoVendido();
             produtoVendidoProcessado.setIdDoProdutoVendido(itemKey);
@@ -242,14 +246,16 @@ public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
                         }
 
                         dataRegistroDoProcessoDeVenda = formatoDataDiaMesAno.format(dataAtual);
+                        String custoPreper=custoDoProdutoRecuperadoExpostoVitrine.replace(",", ".");
+                        double custoConvertidoDoProdutoVendido = Double.parseDouble(custoPreper);
 
                         produtoVendidoProcessado.setPlataformaVendida(PLATAFORMA_VENDIDA);
                         produtoVendidoProcessado.setMetodoDePagamento(METODO_DE_PAGAMENTO);
+                        produtoVendidoProcessado.setNomeDoProdutoVendido(nomeRecuperadoExpostoVitrine);
                         produtoVendidoProcessado.setValorQueOBoloFoiVendido(valoQueFoiVendidoOProdutoRecuperado);
                         produtoVendidoProcessado.setRegistroDaVenda(dataRegistroDoProcessoDeVenda);
-                        System.out.println("produtoRecuperadoPraExibirNaTela " + produtoRecuperadoPraExibirNaTela.toString());
+                        produtoVendidoProcessado.setCustoProduto(custoConvertidoDoProdutoVendido);
                         ModeloProcessaVendaFeitaDAO modeloProcessaVendaFeitaDAO = new ModeloProcessaVendaFeitaDAO(AdicionarProdutoComoVendidoNoSistema.this);
-                        System.out.println("produtoVendidoProcessado " + produtoVendidoProcessado.toString());
                         modeloProcessaVendaFeitaDAO.processaNoMontanteMensalVendaFeita(produtoVendidoProcessado, itemKeyMontanteMensal, itemKeyMontanteDiario);
 
                     }

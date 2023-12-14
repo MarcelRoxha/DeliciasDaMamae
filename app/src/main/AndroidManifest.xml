@@ -34,7 +34,9 @@
             android:screenOrientation="portrait" />
         <activity android:name=".activity.DeletarBoloVendidoBancoActivity" />
         <activity android:name=".activity.EditarBoloVendidoBancoActivity" />
-        <activity android:name=".activity.BolosVendidosActivity2" />
+        <activity android:name=".activity.BolosVendidosActivity2"
+            android:parentActivityName=".activity.BolosActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.FinalizarVendaBoloExpostoVitrineActivity"
             android:screenOrientation="portrait" />
