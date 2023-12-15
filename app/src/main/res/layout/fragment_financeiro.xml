@@ -7,25 +7,436 @@
     tools:context=".fragments.CaixaLojaFragment"
     tools:ignore="SpeakableTextPresentCheck">
 
-
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        tools:ignore="MissingClass">
-        <com.github.mikephil.charting.charts.BarChart
-            android:id="@+id/grafico_geral_id"
-            android:layout_width="match_parent"
-            android:layout_height="366dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintEnd_toEndOf="@+id/toolbar_home_id"
+        android:layout_height="wrap_content"
+        android:padding="7sp">
+
+        <TextView
+            android:id="@+id/textoInformaNaoTemDadosParaExibir"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="AINDA NÃO FOI REGISTRADO DADOS MENSAIS PARA SEREM CARREGADOS"
+            android:textColor="@color/rosa"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/linearLayout2"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar_home_id" >
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible"/>
 
-        </com.github.mikephil.charting.charts.BarChart>
+        <TextView
+            android:id="@+id/textoInfoDataUltimaAtualizacaoFragmentFinanceiro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="3dp"
+            android:layout_marginTop="24dp"
+            android:text="ÚLTIMO CARREGAMENTO DOS DADOS:"
+            android:textColor="@color/rosa"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/texto_ultima_atualizacao_financeiro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:text="50.00"
+            app:layout_constraintBottom_toBottomOf="@+id/textoInfoDataUltimaAtualizacaoFragmentFinanceiro"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textoInfoDataUltimaAtualizacaoFragmentFinanceiro" />
+
+        <TextView
+            android:id="@+id/textoInformacoesMensaisFragmentFinanceiro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="INFORMAÇOES MENSAIS"
+            android:textColor="@color/rosa"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textoInfoDataUltimaAtualizacaoFragmentFinanceiro" />
 
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/textoTotalDeVendasLojaFragmentFinanceiro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="3dp"
+            android:layout_marginTop="16dp"
+            android:text="TOTAL DE VENDAS NA LOJA R$:"
+            android:textColor="@color/rosa"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textoInformacoesMensaisFragmentFinanceiro" />
+
+        <TextView
+            android:id="@+id/texto_total_vendas_loja_esse_mes_financeiro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:text="TextView"
+            app:layout_constraintBottom_toBottomOf="@+id/textoTotalDeVendasLojaFragmentFinanceiro"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textoTotalDeVendasLojaFragmentFinanceiro"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/textoTotalDeIfoodFragmentFinanceiro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="3dp"
+            android:layout_marginTop="5dp"
+            android:text="TOTAL DE VENDAS NO IFOOD R$:"
+            android:textColor="@color/rosa"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textoTotalDeVendasLojaFragmentFinanceiro" />
+
+        <TextView
+            android:id="@+id/texto_total_vendas_ifood_esse_mes_financeiro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:text="TextView"
+            app:layout_constraintBottom_toBottomOf="@+id/textoTotalDeIfoodFragmentFinanceiro"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textoTotalDeIfoodFragmentFinanceiro" />
+
+        <TextView
+            android:id="@+id/textoTotalDeVendasNoDinheiroFragmentFinanceiro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="3dp"
+            android:layout_marginTop="5dp"
+            android:text="TOTAL DE VENDAS NO DINHEIRO R$:"
+            android:textColor="@color/rosa"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textoTotalDeIfoodFragmentFinanceiro" />
+
+        <TextView
+            android:id="@+id/texto_total_vendas_no_dinheiro_esse_mes_financeiro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:text="TextView"
+            app:layout_constraintBottom_toBottomOf="@+id/textoTotalDeVendasNoDinheiroFragmentFinanceiro"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textoTotalDeVendasNoDinheiroFragmentFinanceiro" />
+
+        <TextView
+            android:id="@+id/textoTotalDeVendasNoDebitoFragmentFinanceiro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="3dp"
+            android:layout_marginTop="5dp"
+            android:text="TOTAL DE VENDAS NO DÉBITO R$:"
+            android:textColor="@color/rosa"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textoTotalDeVendasNoDinheiroFragmentFinanceiro" />
+
+        <TextView
+            android:id="@+id/texto_total_vendas_no_debito_esse_mes_financeiro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:text="TextView"
+            app:layout_constraintBottom_toBottomOf="@+id/textoTotalDeVendasNoDebitoFragmentFinanceiro"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textoTotalDeVendasNoDebitoFragmentFinanceiro" />
+
+        <TextView
+            android:id="@+id/textoTotalDeVendasNoCreditoFragmentFinanceiro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="3dp"
+            android:layout_marginTop="5dp"
+            android:text="TOTAL DE VENDAS NO CRÉDITO R$:"
+            android:textColor="@color/rosa"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textoTotalDeVendasNoDebitoFragmentFinanceiro" />
+
+        <TextView
+            android:id="@+id/texto_total_vendas_no_credito_esse_mes_financeiro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:text="TextView"
+            app:layout_constraintBottom_toBottomOf="@+id/textoTotalDeVendasNoCreditoFragmentFinanceiro"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textoTotalDeVendasNoCreditoFragmentFinanceiro" />
+
+
+        <TextView
+            android:id="@+id/textoQuantidadeTotalDeVendasFragmentFinanceiro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="3dp"
+            android:layout_marginTop="5dp"
+            android:text="QUANTIDADE TOTAL DE VENDAS"
+            android:textColor="@color/rosa"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textoTotalDeVendasNoCreditoFragmentFinanceiro" />
+
+        <TextView
+            android:id="@+id/texto_quantidade_total_de_vendas_esse_mes_financeiro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:text="TextView"
+            app:layout_constraintBottom_toBottomOf="@+id/textoQuantidadeTotalDeVendasFragmentFinanceiro"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textoQuantidadeTotalDeVendasFragmentFinanceiro" />
+
+
+        <TextView
+            android:id="@+id/textoGraficoMensalFragmentFinanceiro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="GRÁFICO DESSE MÊS"
+            android:textColor="@color/rosa"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textoQuantidadeTotalDeVendasFragmentFinanceiro" />
+
+
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="3dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="3dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textoGraficoMensalFragmentFinanceiro"
+            tools:ignore="MissingClass">
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/grafico_mensal_id"
+                android:layout_width="match_parent"
+                android:layout_height="366dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="@+id/toolbar_home_id"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/toolbar_home_id"/>
+
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textoInformaNaoTemDadosParaExibirDiario"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="AINDA NÃO FOI REGISTRADO DADOS MENSAIS PARA SEREM CARREGADOS"
+            android:textColor="@color/rosa"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/linearLayout3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textoInformacoesDeHojeFragmentFinanceiro"
+            tools:visibility="gone" />
+
+        <TextView
+            android:id="@+id/textoInformacoesDeHojeFragmentFinanceiro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="INFORMAÇÕES DE HOJE"
+            android:textColor="@color/rosa"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+        <TextView
+            android:id="@+id/textoTotalDeVendasLojaDeHojeFragmentFinanceiro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="3dp"
+            android:layout_marginTop="16dp"
+            android:text="TOTAL DE VENDAS NA LOJA R$:"
+            android:textColor="@color/rosa"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textoInformacoesDeHojeFragmentFinanceiro" />
+
+        <TextView
+            android:id="@+id/texto_total_vendas_loja_de_hoje_financeiro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:text="TextView"
+            app:layout_constraintBottom_toBottomOf="@+id/textoTotalDeVendasLojaDeHojeFragmentFinanceiro"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textoTotalDeVendasLojaDeHojeFragmentFinanceiro" />
+
+        <TextView
+            android:id="@+id/textoTotalDeIfoodDeHojeFragmentFinanceiro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="3dp"
+            android:layout_marginTop="5dp"
+            android:text="TOTAL DE VENDAS NO IFOOD R$:"
+            android:textColor="@color/rosa"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textoTotalDeVendasLojaDeHojeFragmentFinanceiro" />
+
+        <TextView
+            android:id="@+id/texto_total_vendas_ifood_de_hoje_financeiro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:text="TextView"
+            app:layout_constraintBottom_toBottomOf="@+id/textoTotalDeIfoodDeHojeFragmentFinanceiro"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textoTotalDeIfoodDeHojeFragmentFinanceiro" />
+
+        <TextView
+            android:id="@+id/textoTotalDeVendasNoDinheiroHojeFragmentFinanceiro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="3dp"
+            android:layout_marginTop="5dp"
+            android:text="TOTAL DE VENDAS NO DINHEIRO R$:"
+            android:textColor="@color/rosa"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textoTotalDeIfoodDeHojeFragmentFinanceiro" />
+
+        <TextView
+            android:id="@+id/texto_total_vendas_no_dinheiro_de_hoje_financeiro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:text="TextView"
+            app:layout_constraintBottom_toBottomOf="@+id/textoTotalDeVendasNoDinheiroHojeFragmentFinanceiro"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textoTotalDeVendasNoDinheiroHojeFragmentFinanceiro" />
+
+        <TextView
+            android:id="@+id/textoTotalDeVendasNoDebitoHojeFragmentFinanceiro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="3dp"
+            android:layout_marginTop="5dp"
+            android:text="TOTAL DE VENDAS NO DÉBITO R$:"
+            android:textColor="@color/rosa"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textoTotalDeVendasNoDinheiroHojeFragmentFinanceiro" />
+
+        <TextView
+            android:id="@+id/texto_total_vendas_no_debito_de_hoje_financeiro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:text="TextView"
+            app:layout_constraintBottom_toBottomOf="@+id/textoTotalDeVendasNoDebitoHojeFragmentFinanceiro"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textoTotalDeVendasNoDebitoHojeFragmentFinanceiro" />
+
+        <TextView
+            android:id="@+id/textoTotalDeVendasNoCreditoHojeFragmentFinanceiro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="3dp"
+            android:layout_marginTop="5dp"
+            android:text="TOTAL DE VENDAS NO CRÉDITO R$:"
+            android:textColor="@color/rosa"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textoTotalDeVendasNoDebitoHojeFragmentFinanceiro" />
+
+        <TextView
+            android:id="@+id/texto_total_vendas_no_credito_de_hoje_financeiro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:text="TextView"
+            app:layout_constraintBottom_toBottomOf="@+id/textoTotalDeVendasNoCreditoHojeFragmentFinanceiro"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textoTotalDeVendasNoCreditoHojeFragmentFinanceiro" />
+
+
+        <TextView
+            android:id="@+id/textoQuantidadeTotalDeVendasHojeFragmentFinanceiro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="3dp"
+            android:layout_marginTop="5dp"
+            android:text="QUANTIDADE DE VENDAS:"
+            android:textColor="@color/rosa"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textoTotalDeVendasNoCreditoHojeFragmentFinanceiro" />
+
+        <TextView
+            android:id="@+id/texto_quantidade_total_de_vendas_de_hoje_financeiro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:text="TextView"
+            app:layout_constraintBottom_toBottomOf="@+id/textoQuantidadeTotalDeVendasHojeFragmentFinanceiro"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textoQuantidadeTotalDeVendasHojeFragmentFinanceiro" />
+
+
+        <TextView
+            android:id="@+id/textoGraficoHojeFragmentFinanceiro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="GRÁFICO DE HOJE"
+            android:textColor="@color/rosa"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textoQuantidadeTotalDeVendasHojeFragmentFinanceiro" />
+
+
+        <LinearLayout
+            android:id="@+id/linearLayout3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="3dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="3dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textoGraficoHojeFragmentFinanceiro"
+            tools:ignore="MissingClass">
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/grafico_hoje_id"
+                android:layout_width="match_parent"
+                android:layout_height="366dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="@+id/toolbar_home_id"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/toolbar_home_id">
+
+            </com.github.mikephil.charting.charts.BarChart>
+
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
