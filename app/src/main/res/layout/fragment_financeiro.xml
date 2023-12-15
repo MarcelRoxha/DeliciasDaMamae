@@ -1,14 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.FinanceiroFragment">
+    tools:context=".fragments.CaixaLojaFragment"
+    tools:ignore="SpeakableTextPresentCheck">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="FIINANCEIRO" />
+        android:orientation="horizontal"
+        tools:ignore="MissingClass">
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/grafico_geral_id"
+            android:layout_width="match_parent"
+            android:layout_height="366dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="@+id/toolbar_home_id"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar_home_id" >
 
-</FrameLayout>
+        </com.github.mikephil.charting.charts.BarChart>
+
+
+    </LinearLayout>
+</ScrollView>

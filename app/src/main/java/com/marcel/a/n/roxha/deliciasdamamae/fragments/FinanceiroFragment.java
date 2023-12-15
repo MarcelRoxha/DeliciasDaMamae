@@ -1,13 +1,17 @@
 package com.marcel.a.n.roxha.deliciasdamamae.fragments;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
 import com.marcel.a.n.roxha.deliciasdamamae.R;
 
 /**
@@ -25,6 +29,25 @@ public class FinanceiroFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+
+    //Componentes de tela
+    public AlertDialog progressDialogCarregandoAsInformacoesDoCaixaDiario;
+    private RecyclerView recyclerView_relatorios_mensal;
+    private RecyclerView recyclerView_relatorios_Diario;
+
+
+
+    //Variaveis
+    private String valorQueOCaixaIniciouODia = "0";
+    private String totalDeVendasNoCaixaHoje = "0";
+    private String totalDeVendasNoIfood = "0";
+    private String totalDeVendasEmGeral = "0";
+    private String totalDeVendasEmDinheiro = "0";
+    private String totalDeSaidaCaixaHoje = "0";
+    private String totalDeVendasNoCreditoHoje = "0";
+    private String totalDeVendasNoDebitoNoCaixHoje = "0";
+
 
     public FinanceiroFragment() {
         // Required empty public constructor
@@ -60,6 +83,11 @@ public class FinanceiroFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        BarChart barChart;
+        BarData barData;
+        BarDataSet barDataSet;
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_financeiro, container, false);
     }

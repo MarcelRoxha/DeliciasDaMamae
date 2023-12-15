@@ -47,7 +47,9 @@ import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloMontanteMensalLoja;
 import java.text.SimpleDateFormat;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -329,6 +331,18 @@ public class CaixaLojaFragment extends Fragment {
 
             }
         });
+
+
+        botaoFinalizarDia.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                progressDialogCarregandoAsInformacoesDoCaixaDiario.show();
+                progressDialogCarregandoAsInformacoesDoCaixaDiario.setCancelable(false);
+                finalizarDia(idRecuperadoCaixaDiario);
+            }
+        });
+
+
         progressDialogCarregandoAsInformacoesDoCaixaDiario.dismiss();
         return viewCaixaFragment;
 
@@ -1038,6 +1052,66 @@ public class CaixaLojaFragment extends Fragment {
         infoTextoTotalDeVendasNoDebitoNoCaixaHoje.setVisibility(View.GONE);
         infoTextoTotalDeVendasEmGeral.setVisibility(View.GONE);
         infoTextoTotalDeVendasNoIfoofHoje.setVisibility(View.GONE);
+
+    }
+
+    private void finalizarDia(String idRecuperado){
+
+        System.out.println("finalizarDia   idRecuperado " + idRecuperado);
+        firebaseFirestore.collection(nomeCompletoColletionMontanteDiario).document(idRecuperado).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                ModeloMontanteDiario modeloMontanteDiarioRecuperadoParaFinalizar = documentSnapshot.toObject(ModeloMontanteDiario.class);
+                System.out.println("modeloMontanteDiarioRecuperadoParaFinalizar " + modeloMontanteDiarioRecuperadoParaFinalizar.toString());
+                String retiradoDoCaixaHoje = modeloMontanteDiarioRecuperadoParaFinalizar.getValorTotalDeTrocoDesseDia().replace(",",".");
+                String totalDeVendasDoCaixaHoje = modeloMontanteDiarioRecuperadoParaFinalizar.getValorTotalDeVendasEmGeralDesseDia().replace(",",".");
+                System.out.println("retiradoDoCaixaHoje " + retiradoDoCaixaHoje);
+                System.out.println("totalDeVendasDoCaixaHoje " + totalDeVendasDoCaixaHoje);
+                double retiradoDoCaixaHojeConvert = Double.parseDouble(retiradoDoCaixaHoje);
+                double totalDeVendasDoCaixaHojeConvert = Double.parseDouble(totalDeVendasDoCaixaHoje);
+
+                double resultadoAoFinalizarODiaHoje = totalDeVendasDoCaixaHojeConvert - retiradoDoCaixaHojeConvert;
+
+                String resultadoConvert = String.valueOf(resultadoAoFinalizarODiaHoje);
+
+                registraFinalizaçãoDoDia(resultadoConvert, idRecuperado);
+
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+
+    }
+
+    private void registraFinalizaçãoDoDia(String resultadoDaConta, String idRecuperado){
+
+        Map<String, Object> finalizaDiaCaixaDiario = new HashMap<>();
+        finalizaDiaCaixaDiario.put("valorQueOCaixaFinalizou",resultadoDaConta);
+
+
+
+
+        firebaseFirestore.collection(nomeCompletoColletionMontanteDiario).document(idRecuperado).update(finalizaDiaCaixaDiario).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+
+                Toast.makeText(getContext(), "Finalização efetuada com sucesso", Toast.LENGTH_SHORT).show();
+                progressDialogCarregandoAsInformacoesDoCaixaDiario.dismiss();
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                System.out.println("Eroooooo121545 " + e.getMessage());
+                Toast.makeText(getContext(), "Verifique sua conexão e tente novamente!", Toast.LENGTH_SHORT).show();
+
+            }
+        });
 
     }
 
