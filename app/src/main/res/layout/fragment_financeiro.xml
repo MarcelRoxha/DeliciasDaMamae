@@ -16,15 +16,14 @@
             android:id="@+id/textoInformaNaoTemDadosParaExibir"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
             android:text="AINDA NÃO FOI REGISTRADO DADOS MENSAIS PARA SEREM CARREGADOS"
             android:textColor="@color/rosa"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/linearLayout2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="visible"/>
+            app:layout_constraintTop_toBottomOf="@+id/textoGraficoMensalFragmentFinanceiro"
+            tools:visibility="visible" />
 
         <TextView
             android:id="@+id/textoInfoDataUltimaAtualizacaoFragmentFinanceiro"
@@ -43,7 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="5dp"
-            android:text="50.00"
+            android:text="TextView"
             app:layout_constraintBottom_toBottomOf="@+id/textoInfoDataUltimaAtualizacaoFragmentFinanceiro"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/textoInfoDataUltimaAtualizacaoFragmentFinanceiro" />
@@ -200,7 +199,7 @@
             android:id="@+id/textoGraficoMensalFragmentFinanceiro"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="6dp"
             android:text="GRÁFICO DESSE MÊS"
             android:textColor="@color/rosa"
             android:textSize="12sp"
@@ -215,7 +214,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="3dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="6dp"
             android:layout_marginEnd="3dp"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
@@ -232,7 +231,7 @@
                 android:layout_marginEnd="16dp"
                 app:layout_constraintEnd_toEndOf="@+id/toolbar_home_id"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/toolbar_home_id"/>
+                app:layout_constraintTop_toBottomOf="@+id/toolbar_home_id" />
 
 
         </LinearLayout>
@@ -241,14 +240,16 @@
             android:id="@+id/textoInformaNaoTemDadosParaExibirDiario"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
             android:text="AINDA NÃO FOI REGISTRADO DADOS MENSAIS PARA SEREM CARREGADOS"
             android:textColor="@color/rosa"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/linearLayout3"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textoInformacoesDeHojeFragmentFinanceiro"
-            tools:visibility="gone" />
+            app:layout_constraintTop_toBottomOf="@+id/textoGraficoHojeFragmentFinanceiro"
+            tools:visibility="visible" />
 
         <TextView
             android:id="@+id/textoInformacoesDeHojeFragmentFinanceiro"

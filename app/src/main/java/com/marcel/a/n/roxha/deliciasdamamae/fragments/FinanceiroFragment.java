@@ -36,6 +36,7 @@ import com.marcel.a.n.roxha.deliciasdamamae.R;
 import com.marcel.a.n.roxha.deliciasdamamae.adapter.BolosAdicionadosVitrineParaExibirQuandoVenderAdapter;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloMontanteDiario;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloMontanteMensalLoja;
 
 import org.w3c.dom.Text;
 
@@ -85,7 +86,7 @@ public class FinanceiroFragment extends Fragment {
     private TextView textoInformativoTotalDeVendasNoCreditoMensal, valorTotalDeVendasNoCreditoMensal;
     private TextView textoInformativoQuantidadeTotalDeVendasMensal, quantidadeDeVendasMensal;
     private TextView textoInformaQueNaoTemDadosMensaisParaSeremExibidos;
-
+    private TextView textoGraficoDesseMes;
 
     //Diario
     private TextView textoInformativoTotalDeVendasLojaHoje, valorTotalDeVendasLojaHoje;
@@ -95,6 +96,7 @@ public class FinanceiroFragment extends Fragment {
     private TextView textoInformativoTotalDeVendasNoCreditoHoje, valorTotalDeVendasNoCreditoHoje;
     private TextView textoInformativoQuantidadeTotalDeVendasHoje, quantidadeDeVendasHoje;
     private TextView textoInformaQueNaoTemDadosDiarioParaSeremExibidos;
+    private TextView textoGraficoDeHoje;
 
 
     //Variaveis globais
@@ -196,13 +198,11 @@ public class FinanceiroFragment extends Fragment {
         nomeCompletoColletionMontanteMensal = COLLECTION_MONTANTE_DESSE_MES + "_" + mesReferenciaDesseMontante;
         nomeCompletoColletionMontanteDiario = COLLECTION_CAIXA_DIARIO + "_" + mesReferenciaDesseMontante;
         this.progressDialogCarregandoAsInformacoesDoCaixaDiario.show();
-        verificaSeJaTemDadosParaSeremExibidos(this.progressDialogCarregandoAsInformacoesDoCaixaDiario, nomeCompletoColletionMontanteDiario);
+        verificaSeJaTemDadosParaSeremExibidos(this.progressDialogCarregandoAsInformacoesDoCaixaDiario);
 
         //Graficos
         barChart = viewFinanceiroFragment.findViewById(R.id.grafico_mensal_id);
         barChartHoje = viewFinanceiroFragment.findViewById(R.id.grafico_hoje_id);
-        this.carregaGraficoMensal();
-        this.carregaGraficoDeHoje();
 
 
         //Componentes de tela
@@ -220,6 +220,8 @@ public class FinanceiroFragment extends Fragment {
         valorTotalDeVendasNoCreditoMensal = viewFinanceiroFragment.findViewById(R.id.texto_total_vendas_no_credito_esse_mes_financeiro);
         textoInformativoQuantidadeTotalDeVendasMensal = viewFinanceiroFragment.findViewById(R.id.textoQuantidadeTotalDeVendasFragmentFinanceiro);
         quantidadeDeVendasMensal = viewFinanceiroFragment.findViewById(R.id.texto_quantidade_total_de_vendas_esse_mes_financeiro);
+        textoInformaQueNaoTemDadosMensaisParaSeremExibidos = viewFinanceiroFragment.findViewById(R.id.textoInformaNaoTemDadosParaExibir);
+        textoGraficoDesseMes = viewFinanceiroFragment.findViewById(R.id.textoGraficoMensalFragmentFinanceiro);
 
         //Diario
         textoInformativoTotalDeVendasLojaHoje = viewFinanceiroFragment.findViewById(R.id.textoTotalDeVendasLojaDeHojeFragmentFinanceiro);
@@ -233,76 +235,35 @@ public class FinanceiroFragment extends Fragment {
         textoInformativoTotalDeVendasNoCreditoHoje = viewFinanceiroFragment.findViewById(R.id.textoTotalDeVendasNoCreditoHojeFragmentFinanceiro);
         valorTotalDeVendasNoCreditoHoje = viewFinanceiroFragment.findViewById(R.id.texto_total_vendas_no_credito_de_hoje_financeiro);
         textoInformativoQuantidadeTotalDeVendasHoje = viewFinanceiroFragment.findViewById(R.id.textoQuantidadeTotalDeVendasHojeFragmentFinanceiro);
-        textoInformaQueNaoTemDadosDiarioParaSeremExibidos = viewFinanceiroFragment.findViewById(R.id.textoInformaNaoTemDadosParaExibir);
         quantidadeDeVendasHoje = viewFinanceiroFragment.findViewById(R.id.texto_quantidade_total_de_vendas_de_hoje_financeiro);
+        textoInformaQueNaoTemDadosDiarioParaSeremExibidos = viewFinanceiroFragment.findViewById(R.id.textoInformaNaoTemDadosParaExibirDiario);
+        textoGraficoDeHoje = viewFinanceiroFragment.findViewById(R.id.textoGraficoHojeFragmentFinanceiro);
 
-        this.carregaCargaParaDesaparecerComponentesDaTela();
+        hoje = new Date();
+        hojeString = simpleDateFormat.format(hoje.getTime());
+        textoInformativoUltimaAtualizacaoDoPainel.setText(hojeString);
         // Inflate the layout for this fragment
         return viewFinanceiroFragment;
     }
 
-    private void verificaSeJaTemDadosParaSeremExibidos(AlertDialog progressDialogCarregandoAsInformacoesDoCaixaDiario, String nomeCompletoColletionMontanteDiario) {
-
-        firebaseFirestore.collection(nomeCompletoColletionMontanteDiario).whereEqualTo("dataReferenciaMontanteDiarioDesseDia", diaAtual).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+    private void verificaSeJaTemDadosParaSeremExibidos(AlertDialog progressDialogCarregandoAsInformacoesDoCaixaDiario) {
+        progressDialogCarregandoAsInformacoesDoCaixaDiario.show();
+        firebaseFirestore.collection(nomeCompletoColletionMontanteMensal).whereEqualTo("mesReferenciaDesseMontante", mesReferenciaDesseMontante).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots){
+                List<DocumentSnapshot> listaDeMontanteMensal = queryDocumentSnapshots.getDocuments();
 
-                List<DocumentSnapshot> snapshotList = queryDocumentSnapshots.getDocuments();
+                if(listaDeMontanteMensal.size() > 0){
 
-                if (snapshotList.size() > 0) {
-                    //Significa que existe o documento com a data de hoje então já tem um caixa diario referente a esse dia
-                    for (DocumentSnapshot listaCaixasDiariosCriados : snapshotList) {
+                    for(DocumentSnapshot list: listaDeMontanteMensal){
 
-                        firebaseFirestore.collection(nomeCompletoColletionMontanteDiario).document(listaCaixasDiariosCriados.getId()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                            @Override
-                            public void onSuccess(DocumentSnapshot documentSnapshot) {
-
-                                ModeloMontanteDiario modeloMontanteDiarioRecuperadoJaCriado = documentSnapshot.toObject(ModeloMontanteDiario.class);
-//                                String idDocumento = modeloMontanteDiarioRecuperadoJaCriado.getIdReferenciaMontanteDiarioDesseDia();
-                                idRecuperadoCaixaDiario = modeloMontanteDiarioRecuperadoJaCriado.getIdReferenciaMontanteDiarioDesseDia();
-                                idRecuperadoMontanteMensal = modeloMontanteDiarioRecuperadoJaCriado.getIdReferenciaMontanteMensal();
-                                String valorQueOCaixaIniciouODia = modeloMontanteDiarioRecuperadoJaCriado.getValorQueOCaixaIniciouODia();
-                                String totalDeVendasNoCaixaHoje = modeloMontanteDiarioRecuperadoJaCriado.getValorTotalDeVendasNaLojaDesseDia();
-                                String totalDeVendasEmDinheiro = modeloMontanteDiarioRecuperadoJaCriado.getValorTotalDeVendasNoDinheiroDesseDia();
-                                String totalDeSaidaCaixaHoje = modeloMontanteDiarioRecuperadoJaCriado.getValorTotalDeTrocoDesseDia();
-                                String totalDeVendasNoCreditoHoje = modeloMontanteDiarioRecuperadoJaCriado.getValorTotalDeVendasNoCreditoDesseDia();
-                                String totalDeVendasNoDebitoNoCaixHoje = modeloMontanteDiarioRecuperadoJaCriado.getValorTotalDeVendasNoDebitoDesseDia();
-                                String valorTotalDeVendasNoIfoodDesseDia = modeloMontanteDiarioRecuperadoJaCriado.getValorTotalDeVendasNoIfoodDesseDia();
-                                String valorTotalDeVendasEmGeralDesseDia = modeloMontanteDiarioRecuperadoJaCriado.getValorTotalDeVendasEmGeralDesseDia();
-                                int quantidadeTotalDeVendas = modeloMontanteDiarioRecuperadoJaCriado.getQuantidadeDeVendasFeitasDesseDia();
-
-
-                                ModeloMontanteDiario modeloMontanteDiarioExibe = new ModeloMontanteDiario();
-
-                                modeloMontanteDiarioExibe.setValorQueOCaixaIniciouODia(valorQueOCaixaIniciouODia);
-                                modeloMontanteDiarioExibe.setValorQueOCaixaIniciouODia(totalDeVendasNoCaixaHoje);
-                                modeloMontanteDiarioExibe.setValorQueOCaixaIniciouODia(totalDeVendasEmDinheiro);
-                                modeloMontanteDiarioExibe.setValorQueOCaixaIniciouODia(totalDeSaidaCaixaHoje);
-                                modeloMontanteDiarioExibe.setValorQueOCaixaIniciouODia(totalDeVendasNoCreditoHoje);
-                                modeloMontanteDiarioExibe.setValorQueOCaixaIniciouODia(totalDeVendasNoDebitoNoCaixHoje);
-                                modeloMontanteDiarioExibe.setValorQueOCaixaIniciouODia(valorTotalDeVendasNoIfoodDesseDia);
-                                modeloMontanteDiarioExibe.setValorQueOCaixaIniciouODia(valorTotalDeVendasEmGeralDesseDia);
-                                modeloMontanteDiarioExibe.setQuantidadeDeVendasFeitasDesseDia(quantidadeTotalDeVendas);
-                                progressDialogCarregandoAsInformacoesDoCaixaDiario.show();
-                                carregaCargaInformacoesDiariaDoBancoParaATela(progressDialogCarregandoAsInformacoesDoCaixaDiario, modeloMontanteDiarioExibe);
-
-
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-
-                            }
-                        });
+                        String idRecuperadoDoMontanteMensal = list.getId();
+                        carregaDadosDoMontanteMensal(idRecuperadoDoMontanteMensal);
                     }
+                }else{
 
-                } else {
-                    carregaCargaParaAparecerComponentesDaTela();
-                    progressDialogCarregandoAsInformacoesDoCaixaDiario.dismiss();
-
-
+                    carregaCargaParaDesaparecerComponentesDaTelaQuandoNaoTemMontanteMensalCriado();
                 }
-
 
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -314,28 +275,134 @@ public class FinanceiroFragment extends Fragment {
 
        // carregaCargaParaAparecerComponentesDaTela();
     }
+    private void carregaDadosDoMontanteMensal(String idRecuperadoDoMontanteMensal) {
+        firebaseFirestore.collection(nomeCompletoColletionMontanteMensal).document(idRecuperadoDoMontanteMensal).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                System.out.println("dentro documentSnapshot");
+                ModeloMontanteMensalLoja modeloMontanteMensalLojaRecuperaDados = documentSnapshot.toObject(ModeloMontanteMensalLoja.class);
+                String totalDeVendasBoleriaRecuperada = modeloMontanteMensalLojaRecuperaDados.getValorTotalVendasBoleriaMensal().replace(",", ".");
+                String totalDeVendasNoIfoodRecuperado = modeloMontanteMensalLojaRecuperaDados.getValorTotalVendasIfoodMensal().replace(",", ",");
+                String totalDeVendasNoDinheiroRecuperado = modeloMontanteMensalLojaRecuperaDados.getValorTotalDeVendasNoDinheiroDesseMes().replace(",", ",");
+                String totalDeVendasNoDebitoRecuperado = modeloMontanteMensalLojaRecuperaDados.getValorTotalDeVendasNoDebitoDesseMes().replace(",", ",");
+                String totalDeVendasNoCreditoRecuperado = modeloMontanteMensalLojaRecuperaDados.getValorTotalDeVendasNoCreditoDesseMes().replace(",", ",");
+                int quantidadeTotalDeVendas = modeloMontanteMensalLojaRecuperaDados.getQuantidadeDeVendasDesseMes();
+                ModeloMontanteMensalLoja modeloMontanteMensalLojaExibeDadosTela = new ModeloMontanteMensalLoja();
+                modeloMontanteMensalLojaExibeDadosTela.setValorTotalVendasBoleriaMensal(totalDeVendasBoleriaRecuperada);
+                modeloMontanteMensalLojaExibeDadosTela.setValorTotalVendasIfoodMensal(totalDeVendasNoIfoodRecuperado);
+                modeloMontanteMensalLojaExibeDadosTela.setValorTotalDeVendasNoDinheiroDesseMes(totalDeVendasNoDinheiroRecuperado);
+                modeloMontanteMensalLojaExibeDadosTela.setValorTotalDeVendasNoDebitoDesseMes(totalDeVendasNoDebitoRecuperado);
+                modeloMontanteMensalLojaExibeDadosTela.setValorTotalDeVendasNoCreditoDesseMes(totalDeVendasNoCreditoRecuperado);
+                modeloMontanteMensalLojaExibeDadosTela.setQuantidadeDeVendasDesseMes(quantidadeTotalDeVendas);
 
-    private void carregaGraficoMensal(){
-        List<String> xValues = Arrays.asList("Vendas na Loja", "Vendas Ifood", "Gastos");
+                cargaDeDadosPraExibirReferenteAoMes(modeloMontanteMensalLojaExibeDadosTela);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                System.out.println("Errorrr++++ " + e.getMessage());
+                Toast.makeText(getContext(), "Verifique sua internet e tente novamente", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void cargaDeDadosPraExibirReferenteAoMes(ModeloMontanteMensalLoja modeloMontanteMensalLojaExibeDadosTela) {
+        progressDialogCarregandoAsInformacoesDoCaixaDiario.show();
+        textoInformativoUltimaAtualizacaoDoPainel.setVisibility(View.VISIBLE);
+        textoInformativoTotalDeVendasLojaMensal.setVisibility(View.VISIBLE);
+        valorTotalDeVendasLojaMensal.setVisibility(View.VISIBLE);
+        textoInformativoTotalDeVendasIfoodMensal.setVisibility(View.VISIBLE);
+        valorTotalDeVendasIfoodMensal.setVisibility(View.VISIBLE);
+        textoInformativoTotalDeVendasNoDinheiroMensal.setVisibility(View.VISIBLE);
+        valorTotalDeVendasNoDinheiroMensal.setVisibility(View.VISIBLE);
+        textoInformativoTotalDeVendasNoDebitoMensal.setVisibility(View.VISIBLE);
+        valorTotalDeVendasNoDebitoMensal.setVisibility(View.VISIBLE);
+        textoInformativoTotalDeVendasNoCreditoMensal.setVisibility(View.VISIBLE);
+        valorTotalDeVendasNoCreditoMensal.setVisibility(View.VISIBLE);
+        textoInformativoQuantidadeTotalDeVendasMensal.setVisibility(View.VISIBLE);
+        quantidadeDeVendasMensal.setVisibility(View.VISIBLE);
+        textoInformativoUltimaAtualizacaoDoPainel.setVisibility(View.VISIBLE);
+        textoInformaQueNaoTemDadosMensaisParaSeremExibidos.setVisibility(View.GONE);
+        barChart.setVisibility(View.VISIBLE);
+        carregaGraficoMensal(modeloMontanteMensalLojaExibeDadosTela);
+        valorTotalDeVendasLojaMensal.setText(modeloMontanteMensalLojaExibeDadosTela.getValorTotalVendasBoleriaMensal());
+        valorTotalDeVendasIfoodMensal.setText(modeloMontanteMensalLojaExibeDadosTela.getValorTotalVendasIfoodMensal());
+        valorTotalDeVendasNoDinheiroMensal.setText(modeloMontanteMensalLojaExibeDadosTela.getValorTotalDeVendasNoDinheiroDesseMes());
+        valorTotalDeVendasNoDebitoMensal.setText(modeloMontanteMensalLojaExibeDadosTela.getValorTotalDeVendasNoDebitoDesseMes());
+        valorTotalDeVendasNoCreditoMensal.setText(modeloMontanteMensalLojaExibeDadosTela.getValorTotalDeVendasNoCreditoDesseMes());
+        String quantidadeConvert = String.valueOf(modeloMontanteMensalLojaExibeDadosTela.getQuantidadeDeVendasDesseMes());
+        quantidadeDeVendasMensal.setText(quantidadeConvert);
+
+        verificaSeTemMontanteDiarioParaDadosSeremExibidos(progressDialogCarregandoAsInformacoesDoCaixaDiario);
+
+
+    }
+
+    private void verificaSeTemMontanteDiarioParaDadosSeremExibidos(AlertDialog progressDialogCarregandoAsInformacoesDoCaixaDiario) {
+        progressDialogCarregandoAsInformacoesDoCaixaDiario.show();
+
+        System.out.println("verificaSeTemMontanteDiarioParaDadosSeremExibidos");
+        System.out.println("nomeCompletoColletionMontanteDiario " + nomeCompletoColletionMontanteDiario);
+        System.out.println("diaAtual " + diaAtual);
+        firebaseFirestore.collection(nomeCompletoColletionMontanteDiario).whereEqualTo("dataReferenciaMontanteDiarioDesseDia", diaAtual).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                List<DocumentSnapshot> listaCaixasDiarios = queryDocumentSnapshots.getDocuments();
+                System.out.println("verificaSeTemMontanteDiarioParaDadosSeremExibidos listaCaixasDiarios");
+                if(listaCaixasDiarios.size()>0){
+                    for(DocumentSnapshot list: listaCaixasDiarios){
+                        String idRecuperado = list.getId();
+                        System.out.println("idRecuperado " + idRecuperado);
+                        corregaDadosParaSeremExibidosNaTelaMontateDiario(idRecuperado);
+                    }
+                }else{
+                    carregaCargaDeNaoTemInformacoesDiario(progressDialogCarregandoAsInformacoesDoCaixaDiario);
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+    }
+
+    private void carregaGraficoMensal(ModeloMontanteMensalLoja modeloMontanteMensalLojaRecuperado){
+
+        Float floatTotalLoja = Float.parseFloat(modeloMontanteMensalLojaRecuperado.getValorTotalVendasBoleriaMensal().replace(",", "."));
+        Float floatTotalIfood = Float.parseFloat(modeloMontanteMensalLojaRecuperado.getValorTotalVendasIfoodMensal().replace(",", "."));
+        Float floatTotalDinheiro = Float.parseFloat(modeloMontanteMensalLojaRecuperado.getValorTotalDeVendasNoDinheiroDesseMes().replace(",", "."));
+        Float floatTotalDebito = Float.parseFloat(modeloMontanteMensalLojaRecuperado.getValorTotalDeVendasNoDebitoDesseMes().replace(",", "."));
+        Float floatTotalCredito= Float.parseFloat(modeloMontanteMensalLojaRecuperado.getValorTotalDeVendasNoCreditoDesseMes().replace(",", "."));
+
+        Float determinaTetoGrafico = floatTotalLoja + floatTotalIfood;
+
+        List<String> xValues = Arrays.asList("Boleria", "Ifood", "Dinheiro", "Débito", "Crédito");
         barChart.getAxisRight().setDrawLabels(false);
 
         ArrayList<BarEntry> entries = new ArrayList<>();
-        entries.add(new BarEntry(0, 45f));
-        entries.add(new BarEntry(1, 80f));
-        entries.add(new BarEntry(2, 60f));
-        entries.add(new BarEntry(3, 35));
-        entries.add(new BarEntry(4, 21));
+        entries.add(new BarEntry(0, floatTotalLoja));
+        entries.add(new BarEntry(1, floatTotalIfood));
+        entries.add(new BarEntry(2, floatTotalDinheiro));
+        entries.add(new BarEntry(3, floatTotalDebito));
+        entries.add(new BarEntry(4, floatTotalCredito));
 
         YAxis yAxis = barChart.getAxisLeft();
         yAxis.setAxisMaximum(0f);
-        yAxis.setAxisMaximum(100f);
+        yAxis.setAxisMaximum(determinaTetoGrafico);
         yAxis.setAxisLineWidth(2f);
         yAxis.setAxisLineColor(Color.BLACK);
         yAxis.setLabelCount(10);
 
 
-        barDataSet = new BarDataSet(entries, "Valores ao longo do mês");
+        barDataSet = new BarDataSet(entries, "Vendas ao longo do mês");
         barDataSet.setColors(ColorTemplate.MATERIAL_COLORS);
+        barChart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getContext(), "Cliquei aqui", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         barData = new BarData(barDataSet);
         barChart.setData(barData);
@@ -350,20 +417,30 @@ public class FinanceiroFragment extends Fragment {
         barChart.getXAxis().setGranularityEnabled(true);
     }
 
-    private void carregaGraficoDeHoje(){
-        List<String> xValues = Arrays.asList("Vendas na Loja", "Vendas Ifood", "Gastos");
+    private void carregaGraficoDeHoje(ModeloMontanteDiario modeloMontanteDiario){
+
+        Float floatTotalLoja = Float.parseFloat(modeloMontanteDiario.getValorTotalDeVendasNaLojaDesseDia().replace(",", "."));
+        Float floatTotalIfood = Float.parseFloat(modeloMontanteDiario.getValorTotalDeVendasNoIfoodDesseDia().replace(",", "."));
+        Float floatTotalDinheiro = Float.parseFloat(modeloMontanteDiario.getValorTotalDeVendasNoDinheiroDesseDia().replace(",", "."));
+        Float floatTotalDebito = Float.parseFloat(modeloMontanteDiario.getValorTotalDeVendasNoDebitoDesseDia().replace(",", "."));
+        Float floatTotalCredito= Float.parseFloat(modeloMontanteDiario.getValorTotalDeVendasNoCreditoDesseDia().replace(",", "."));
+
+        Float determinaTetoGrafico = floatTotalLoja + floatTotalIfood + 10;
+
+
+        List<String> xValuesDiario = Arrays.asList("Boleria", "Ifood", "Dinheiro", "Débito", "Crédito");
         barChartHoje.getAxisRight().setDrawLabels(false);
 
         ArrayList<BarEntry> entries = new ArrayList<>();
-        entries.add(new BarEntry(0, 45f));
-        entries.add(new BarEntry(1, 80f));
-        entries.add(new BarEntry(2, 60f));
-        entries.add(new BarEntry(3, 35));
-        entries.add(new BarEntry(4, 21));
+        entries.add(new BarEntry(0, floatTotalLoja));
+        entries.add(new BarEntry(1, floatTotalIfood));
+        entries.add(new BarEntry(2, floatTotalDinheiro));
+        entries.add(new BarEntry(3, floatTotalDebito));
+        entries.add(new BarEntry(4, floatTotalCredito));
 
         YAxis yAxis = barChartHoje.getAxisLeft();
         yAxis.setAxisMaximum(0f);
-        yAxis.setAxisMaximum(100f);
+        yAxis.setAxisMaximum(determinaTetoGrafico);
         yAxis.setAxisLineWidth(2f);
         yAxis.setAxisLineColor(Color.BLACK);
         yAxis.setLabelCount(10);
@@ -379,84 +456,59 @@ public class FinanceiroFragment extends Fragment {
 
         barChartHoje.invalidate();
 
-        barChartHoje.getXAxis().setValueFormatter(new IndexAxisValueFormatter(xValues));
+        barChartHoje.getXAxis().setValueFormatter(new IndexAxisValueFormatter(xValuesDiario));
         barChartHoje.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
-        barChartHoje.getXAxis().setGranularity(4f);
+        barChartHoje.getXAxis().setGranularity(1f);
         barChartHoje.getXAxis().setGranularityEnabled(true);
         this.progressDialogCarregandoAsInformacoesDoCaixaDiario.dismiss();
     }
 
-    private void carregaCargaParaDesaparecerComponentesDaTela(){
+    private void carregaCargaParaDesaparecerComponentesDaTelaQuandoNaoTemMontanteMensalCriado(){
         //Componentes de tela
 
         //Mensal
-        textoInformativoUltimaAtualizacaoDoPainel.setVisibility(View.GONE);
-        textoInformativoTotalDeVendasLojaMensal.setVisibility(View.GONE);
-        valorTotalDeVendasLojaMensal.setVisibility(View.GONE);
-        textoInformativoTotalDeVendasIfoodMensal.setVisibility(View.GONE);
-        valorTotalDeVendasIfoodMensal.setVisibility(View.GONE);
-        textoInformativoTotalDeVendasNoDinheiroMensal.setVisibility(View.GONE);
-        valorTotalDeVendasNoDinheiroMensal.setVisibility(View.GONE);
-        textoInformativoTotalDeVendasNoDebitoMensal.setVisibility(View.GONE);
-        valorTotalDeVendasNoDebitoMensal.setVisibility(View.GONE);
-        textoInformativoTotalDeVendasNoCreditoMensal.setVisibility(View.GONE);
-        valorTotalDeVendasNoCreditoMensal.setVisibility(View.GONE);
-        textoInformativoQuantidadeTotalDeVendasMensal.setVisibility(View.GONE);
-        quantidadeDeVendasMensal.setVisibility(View.GONE);
-        textoInformativoUltimaAtualizacaoDoPainel.setVisibility(View.GONE);
-        textoInformativoUltimaAtualizacaoDoPainel.setVisibility(View.GONE);
-        textoInformativoUltimaAtualizacaoDoPainel.setVisibility(View.GONE);
-        textoInformativoUltimaAtualizacaoDoPainel.setVisibility(View.GONE);
-        textoInformativoUltimaAtualizacaoDoPainel.setVisibility(View.GONE);
-        textoInformativoUltimaAtualizacaoDoPainel.setVisibility(View.GONE);
+        textoInformativoUltimaAtualizacaoDoPainel.setVisibility(View.INVISIBLE);
+        textoInformativoTotalDeVendasLojaMensal.setVisibility(View.INVISIBLE);
+        valorTotalDeVendasLojaMensal.setVisibility(View.INVISIBLE);
+        textoInformativoTotalDeVendasIfoodMensal.setVisibility(View.INVISIBLE);
+        valorTotalDeVendasIfoodMensal.setVisibility(View.INVISIBLE);
+        textoInformativoTotalDeVendasNoDinheiroMensal.setVisibility(View.INVISIBLE);
+        valorTotalDeVendasNoDinheiroMensal.setVisibility(View.INVISIBLE);
+        textoInformativoTotalDeVendasNoDebitoMensal.setVisibility(View.INVISIBLE);
+        valorTotalDeVendasNoDebitoMensal.setVisibility(View.INVISIBLE);
+        textoInformativoTotalDeVendasNoCreditoMensal.setVisibility(View.INVISIBLE);
+        valorTotalDeVendasNoCreditoMensal.setVisibility(View.INVISIBLE);
+        textoInformativoQuantidadeTotalDeVendasMensal.setVisibility(View.INVISIBLE);
+        quantidadeDeVendasMensal.setVisibility(View.INVISIBLE);
+        textoInformativoUltimaAtualizacaoDoPainel.setVisibility(View.INVISIBLE);
+        textoGraficoDesseMes.setVisibility(View.INVISIBLE);
 
-
-
+        barChart.setVisibility(View.GONE);
         //Diario
 
-        textoInformativoTotalDeVendasLojaHoje.setVisibility(View.GONE);
-        valorTotalDeVendasLojaHoje.setVisibility(View.GONE);
-        textoInformativoTotalDeVendasIfoodHoje.setVisibility(View.GONE);
-        valorTotalDeVendasIfoodHoje.setVisibility(View.GONE);
-        textoInformativoTotalDeVendasNoDinheiroHoje.setVisibility(View.GONE);
-        valorTotalDeVendasNoDinheiroHoje.setVisibility(View.GONE);
-        textoInformativoTotalDeVendasNoDebitoHoje.setVisibility(View.GONE);
-        valorTotalDeVendasNoDebitoHoje.setVisibility(View.GONE);
-        textoInformativoTotalDeVendasNoCreditoHoje.setVisibility(View.GONE);
-        valorTotalDeVendasNoCreditoHoje.setVisibility(View.GONE);
-        textoInformativoQuantidadeTotalDeVendasHoje.setVisibility(View.GONE);
-        quantidadeDeVendasHoje.setVisibility(View.GONE);
+        textoInformativoTotalDeVendasLojaHoje.setVisibility(View.INVISIBLE);
+        valorTotalDeVendasLojaHoje.setVisibility(View.INVISIBLE);
+        textoInformativoTotalDeVendasIfoodHoje.setVisibility(View.INVISIBLE);
+        valorTotalDeVendasIfoodHoje.setVisibility(View.INVISIBLE);
+        textoInformativoTotalDeVendasNoDinheiroHoje.setVisibility(View.INVISIBLE);
+        valorTotalDeVendasNoDinheiroHoje.setVisibility(View.INVISIBLE);
+        textoInformativoTotalDeVendasNoDebitoHoje.setVisibility(View.INVISIBLE);
+        valorTotalDeVendasNoDebitoHoje.setVisibility(View.INVISIBLE);
+        textoInformativoTotalDeVendasNoCreditoHoje.setVisibility(View.INVISIBLE);
+        valorTotalDeVendasNoCreditoHoje.setVisibility(View.INVISIBLE);
+        textoInformativoQuantidadeTotalDeVendasHoje.setVisibility(View.INVISIBLE);
+        quantidadeDeVendasHoje.setVisibility(View.INVISIBLE);
+        textoGraficoDeHoje.setVisibility(View.INVISIBLE);
+        barChartHoje.setVisibility(View.INVISIBLE);
+
+        textoInformaQueNaoTemDadosDiarioParaSeremExibidos.setVisibility(View.VISIBLE);
+        textoInformaQueNaoTemDadosMensaisParaSeremExibidos.setVisibility(View.VISIBLE);
 
     }
 
-    private void carregaCargaParaAparecerComponentesDaTela(){
-        //Componentes de tela
+    private void carregaCargaInformacoesDiariaDoBancoParaATela(AlertDialog progressDialogCarregandoAsInformacoesDoCaixaDiario, ModeloMontanteDiario modeloMontanteDiario){
 
-        //Mensal
-        textoInformativoUltimaAtualizacaoDoPainel.setVisibility(View.VISIBLE);
-        textoInformativoTotalDeVendasLojaMensal.setVisibility(View.VISIBLE);
-        valorTotalDeVendasLojaMensal.setVisibility(View.VISIBLE);
-        textoInformativoTotalDeVendasIfoodMensal.setVisibility(View.VISIBLE);
-        valorTotalDeVendasIfoodMensal.setVisibility(View.VISIBLE);
-        textoInformativoTotalDeVendasNoDinheiroMensal.setVisibility(View.VISIBLE);
-        valorTotalDeVendasNoDinheiroMensal.setVisibility(View.VISIBLE);
-        textoInformativoTotalDeVendasNoDebitoMensal.setVisibility(View.VISIBLE);
-        valorTotalDeVendasNoDebitoMensal.setVisibility(View.VISIBLE);
-        textoInformativoTotalDeVendasNoCreditoMensal.setVisibility(View.VISIBLE);
-        valorTotalDeVendasNoCreditoMensal.setVisibility(View.VISIBLE);
-        textoInformativoQuantidadeTotalDeVendasMensal.setVisibility(View.VISIBLE);
-        quantidadeDeVendasMensal.setVisibility(View.VISIBLE);
-        textoInformativoUltimaAtualizacaoDoPainel.setVisibility(View.VISIBLE);
-        textoInformativoUltimaAtualizacaoDoPainel.setVisibility(View.VISIBLE);
-        textoInformativoUltimaAtualizacaoDoPainel.setVisibility(View.VISIBLE);
-        textoInformativoUltimaAtualizacaoDoPainel.setVisibility(View.VISIBLE);
-        textoInformativoUltimaAtualizacaoDoPainel.setVisibility(View.VISIBLE);
-        textoInformativoUltimaAtualizacaoDoPainel.setVisibility(View.VISIBLE);
-
-
-
-        //Diario
-
+        System.out.println("modeloMontanteDiario " + modeloMontanteDiario.toString());
         textoInformativoTotalDeVendasLojaHoje.setVisibility(View.VISIBLE);
         valorTotalDeVendasLojaHoje.setVisibility(View.VISIBLE);
         textoInformativoTotalDeVendasIfoodHoje.setVisibility(View.VISIBLE);
@@ -469,12 +521,9 @@ public class FinanceiroFragment extends Fragment {
         valorTotalDeVendasNoCreditoHoje.setVisibility(View.VISIBLE);
         textoInformativoQuantidadeTotalDeVendasHoje.setVisibility(View.VISIBLE);
         quantidadeDeVendasHoje.setVisibility(View.VISIBLE);
+        barChartHoje.setVisibility(View.VISIBLE);
+        textoInformaQueNaoTemDadosDiarioParaSeremExibidos.setVisibility(View.GONE);
 
-    }
-
-
-    private void carregaCargaInformacoesDiariaDoBancoParaATela(AlertDialog progressDialogCarregandoAsInformacoesDoCaixaDiario, ModeloMontanteDiario modeloMontanteDiario){
-        carregaCargaParaAparecerComponentesDaTela();
         String totalDeVendasNoCaixaHoje = modeloMontanteDiario.getValorTotalDeVendasNaLojaDesseDia();
         String totalDeVendasEmDinheiro = modeloMontanteDiario.getValorTotalDeVendasNoDinheiroDesseDia();
         String totalDeSaidaCaixaHoje = modeloMontanteDiario.getValorTotalDeTrocoDesseDia();
@@ -482,6 +531,7 @@ public class FinanceiroFragment extends Fragment {
         String totalDeVendasNoDebitoNoCaixHoje = modeloMontanteDiario.getValorTotalDeVendasNoDebitoDesseDia();
         String valorTotalDeVendasNoIfoodDesseDia = modeloMontanteDiario.getValorTotalDeVendasNoIfoodDesseDia();
         int quantidadeTotalDeVendasHoje = modeloMontanteDiario.getQuantidadeDeVendasFeitasDesseDia();
+        String quantidadeConvert = String.valueOf(quantidadeTotalDeVendasHoje);
         //Diario
 
        // textoInformativoTotalDeVendasLojaHoje.setText(valorQueOCaixaIniciouODia);
@@ -495,72 +545,57 @@ public class FinanceiroFragment extends Fragment {
        // textoInformativoTotalDeVendasNoCreditoHoje.setText(View.VISIBLE);
         valorTotalDeVendasNoCreditoHoje.setText(totalDeVendasNoCreditoHoje);
        // textoInformativoQuantidadeTotalDeVendasHoje.setText(View.VISIBLE);
-        quantidadeDeVendasHoje.setText(quantidadeTotalDeVendasHoje);
-
+        quantidadeDeVendasHoje.setText(quantidadeConvert);
+        carregaGraficoDeHoje(modeloMontanteDiario);
+        progressDialogCarregandoAsInformacoesDoCaixaDiario.dismiss();
     }
 
-    private void verificaSeTemDadosParaSeremExibidosNaTela(AlertDialog progressDialogCarregandoAsInformacoesDoCaixaDiario) {
 
-        try {
-            firebaseFirestore.collection(nomeCompletoColletionMontanteMensal).whereEqualTo("mesReferenciaDesseMontante", mesReferenciaDesseMontante).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                @Override
-                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-
-                    List<DocumentSnapshot> listaDeMontanteParaVerificar = queryDocumentSnapshots.getDocuments();
-
-                    if (listaDeMontanteParaVerificar.size() > 0) {
-
-                        firebaseFirestore.collection(nomeCompletoColletionMontanteDiario).whereEqualTo("dataReferenciaMontanteDiarioDesseDia", dataReferenciaCaixaDiario).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                            @Override
-                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-
-                                List<DocumentSnapshot> listaMontantesDiariosDesseMes = queryDocumentSnapshots.getDocuments();
-
-                                if (listaMontantesDiariosDesseMes.size() > 0) {
-                                    progressDialogCarregandoAsInformacoesDoCaixaDiario.dismiss();
-                                    //alertaOpaVendi();
-                                } else {
-                                  //  alertaNecessarioCriarOMontanteAoEfetuarUmaVenda("DIARIO");
-                                    progressDialogCarregandoAsInformacoesDoCaixaDiario.dismiss();
-                                }
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(getContext(), "Verifique a conexão e tente novamente mais tarde!", Toast.LENGTH_SHORT).show();
-                                Log.i("Erro no verifica se tem montante criado", e.getMessage());
-                            }
-                        });
-
-                    } else {
+    private void carregaCargaDeNaoTemInformacoesDiario(AlertDialog progressDialogCarregandoAsInformacoesDoCaixaDiario) {
 
 
-                      //  alertaNecessarioCriarOMontanteAoEfetuarUmaVenda("MENSAL");
-                    }
-
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-
-                    Toast.makeText(getContext(), "Verifique a conexão e tente novamente mais tarde!", Toast.LENGTH_SHORT).show();
-                    Log.i("Erro no verifica se tem montante criado", e.getMessage());
-
-                }
-            });
-
-
-        } catch (ExceptionInInitializerError e) {
-            System.out.println("ExceptionInInitializerError: " + e.getMessage());
-
-        } catch (Exception e) {
-            System.out.println("Exception: " + e.getMessage());
-
-        } catch (ExecutionError ex) {
-            System.out.println("ExecutionError: " + ex.getMessage());
-
-        }
-
-
+        textoGraficoDeHoje.setVisibility(View.GONE);
+        barChartHoje.setVisibility(View.GONE);
+        textoInformativoTotalDeVendasLojaHoje.setVisibility(View.GONE);
+        valorTotalDeVendasLojaHoje.setVisibility(View.GONE);
+        textoInformativoTotalDeVendasIfoodHoje.setVisibility(View.GONE);
+        valorTotalDeVendasIfoodHoje.setVisibility(View.GONE);
+        textoInformativoTotalDeVendasNoDinheiroHoje.setVisibility(View.GONE);
+        valorTotalDeVendasNoDinheiroHoje.setVisibility(View.GONE);
+        textoInformativoTotalDeVendasNoDebitoHoje.setVisibility(View.GONE);
+        valorTotalDeVendasNoDebitoHoje.setVisibility(View.GONE);
+        textoInformativoTotalDeVendasNoCreditoHoje.setVisibility(View.GONE);
+        valorTotalDeVendasNoCreditoHoje.setVisibility(View.GONE);
+        textoInformativoQuantidadeTotalDeVendasHoje.setVisibility(View.GONE);
+        quantidadeDeVendasHoje.setVisibility(View.INVISIBLE);
+        textoInformaQueNaoTemDadosDiarioParaSeremExibidos.setVisibility(View.VISIBLE);
+        progressDialogCarregandoAsInformacoesDoCaixaDiario.dismiss();
     }
+
+    private void corregaDadosParaSeremExibidosNaTelaMontateDiario(String idRecuperadoDiario) {
+        System.out.println("idRecuperadoDiario " + idRecuperadoDiario);
+        firebaseFirestore.collection(nomeCompletoColletionMontanteDiario).document(idRecuperadoDiario).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                ModeloMontanteDiario modeloMontanteDiarioRecuperado = documentSnapshot.toObject(ModeloMontanteDiario.class);
+
+                System.out.println("modeloMontanteDiarioRecuperado " + modeloMontanteDiarioRecuperado.toString());
+                ModeloMontanteDiario modeloMontanteDiarioExibeDadosNaTela = modeloMontanteDiarioRecuperado;
+
+                System.out.println("modeloMontanteDiarioExibeDadosNaTela " + modeloMontanteDiarioExibeDadosNaTela.toString());
+                progressDialogCarregandoAsInformacoesDoCaixaDiario.show();
+                carregaCargaInformacoesDiariaDoBancoParaATela(progressDialogCarregandoAsInformacoesDoCaixaDiario, modeloMontanteDiarioExibeDadosNaTela);
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getContext(), "Verifique a conexão e tente novamente mais tarde!", Toast.LENGTH_SHORT).show();
+                Log.i("Erro no verifica se tem montante criado", e.getMessage());
+            }
+        });
+    }
+
+
 }
