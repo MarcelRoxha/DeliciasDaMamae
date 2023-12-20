@@ -7,7 +7,7 @@ public class ModeloBolosAdicionadosVitrineQuandoVender implements Serializable {
     private String idModeloBoloAdicionadosVitrineQuandoVender;
     private String idReferenciaBoloCadastradoParaVenda ;
 
-    private String nomeDoBoloVendido;
+    private String nomeBoloCadastrado;
     private String precoQueFoiVendido;
     private String precoCadastradoVendaNaLoja;
     private String precoCadastradoVendaIfood;
@@ -15,6 +15,8 @@ public class ModeloBolosAdicionadosVitrineQuandoVender implements Serializable {
     private String valorSugeridoParaVendaNaBoleria;
 
     private String valorSugeridoParaVendaIfood;
+
+    private String custoTotalDaReceita;
 
     private String enderecoFoto;
     private boolean vendeuNoIfood = false;
@@ -26,9 +28,9 @@ public class ModeloBolosAdicionadosVitrineQuandoVender implements Serializable {
     public ModeloBolosAdicionadosVitrineQuandoVender() {
     }
 
-    public ModeloBolosAdicionadosVitrineQuandoVender(String idReferenciaBoloCadastradoParaVenda, String nomeDoBoloVendido, String precoQueFoiVendido, String precoCadastradoVendaNaLoja, String precoCadastradoVendaIfood, String valorSugeridoParaVendaNaBoleria, String valorSugeridoParaVendaIfood, boolean vendeuNoIfood, boolean vendeuNaLoja, String enderecoFoto, String idModeloBoloAdicionadosVitrineQuandoVender) {
+    public ModeloBolosAdicionadosVitrineQuandoVender(String idReferenciaBoloCadastradoParaVenda, String nomeDoBoloVendido, String precoQueFoiVendido, String precoCadastradoVendaNaLoja, String precoCadastradoVendaIfood, String valorSugeridoParaVendaNaBoleria, String valorSugeridoParaVendaIfood, String custoTotalDaReceita,  boolean vendeuNoIfood, boolean vendeuNaLoja, String enderecoFoto, String idModeloBoloAdicionadosVitrineQuandoVender) {
         this.idReferenciaBoloCadastradoParaVenda = idReferenciaBoloCadastradoParaVenda;
-        this.nomeDoBoloVendido = nomeDoBoloVendido;
+        this.nomeBoloCadastrado = nomeDoBoloVendido;
         this.precoQueFoiVendido = precoQueFoiVendido;
         this.precoCadastradoVendaNaLoja = precoCadastradoVendaNaLoja;
         this.precoCadastradoVendaIfood = precoCadastradoVendaIfood;
@@ -38,6 +40,7 @@ public class ModeloBolosAdicionadosVitrineQuandoVender implements Serializable {
         this.vendeuNaLoja = vendeuNaLoja;
         this.enderecoFoto = enderecoFoto;
         this.idModeloBoloAdicionadosVitrineQuandoVender = idModeloBoloAdicionadosVitrineQuandoVender;
+        this.custoTotalDaReceita = custoTotalDaReceita;
     }
 
     public String getIdModeloBoloAdicionadosVitrineQuandoVender() {
@@ -56,12 +59,12 @@ public class ModeloBolosAdicionadosVitrineQuandoVender implements Serializable {
         this.idReferenciaBoloCadastradoParaVenda = idReferenciaBoloCadastradoParaVenda;
     }
 
-    public String getNomeDoBoloVendido() {
-        return nomeDoBoloVendido;
+    public String getNomeBoloCadastrado() {
+        return nomeBoloCadastrado;
     }
 
-    public void setNomeDoBoloVendido(String nomeDoBoloVendido) {
-        this.nomeDoBoloVendido = nomeDoBoloVendido;
+    public void setNomeBoloCadastrado(String nomeDoBoloVendido) {
+        this.nomeBoloCadastrado = nomeDoBoloVendido;
     }
 
     public String getPrecoQueFoiVendido() {
@@ -128,20 +131,32 @@ public class ModeloBolosAdicionadosVitrineQuandoVender implements Serializable {
         this.valorSugeridoParaVendaIfood = valorSugeridoParaVendaIfood;
     }
 
+    public String getCustoTotalDaReceita() {
+        return custoTotalDaReceita;
+    }
+
+    public void setCustoTotalDaReceita(String custoTotalDaReceita) {
+        this.custoTotalDaReceita = custoTotalDaReceita;
+    }
+
     @Override
     public String toString() {
         return "ModeloBolosAdicionadosVitrineQuandoVender{" +
                 "idModeloBoloAdicionadosVitrineQuandoVender='" + idModeloBoloAdicionadosVitrineQuandoVender + '\'' +
                 ", idReferenciaBoloCadastradoParaVenda='" + idReferenciaBoloCadastradoParaVenda + '\'' +
-                ", nomeDoBoloVendido='" + nomeDoBoloVendido + '\'' +
+                ", nomeDoBoloVendido='" + nomeBoloCadastrado + '\'' +
                 ", precoQueFoiVendido='" + precoQueFoiVendido + '\'' +
                 ", precoCadastradoVendaNaLoja='" + precoCadastradoVendaNaLoja + '\'' +
                 ", precoCadastradoVendaIfood='" + precoCadastradoVendaIfood + '\'' +
                 ", valorSugeridoParaVendaNaBoleria='" + valorSugeridoParaVendaNaBoleria + '\'' +
                 ", valorSugeridoParaVendaIfood='" + valorSugeridoParaVendaIfood + '\'' +
+                ", custoTotalDaReceita='" + custoTotalDaReceita + '\'' +
                 ", enderecoFoto='" + enderecoFoto + '\'' +
                 ", vendeuNoIfood=" + vendeuNoIfood +
                 ", vendeuNaLoja=" + vendeuNaLoja +
                 '}';
+    }
+
+    public class ModeloBolosAdicionadosVitrineQuandoVenderViewHolder {
     }
 }

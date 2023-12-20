@@ -389,12 +389,12 @@ public class ConfeccionarBoloFragment extends Fragment {
 
                 if(ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
 
-
-                }else {
-
                     ActivityCompat.requestPermissions(getActivity(), new String[] {
                             Manifest.permission.CAMERA,
                             Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_CODE_PERMISSIONS);
+                }else {
+
+
                     verificaGaleriaCamera = 1;
                     dispatchCaptureImageIntent();
                }

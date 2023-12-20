@@ -96,6 +96,7 @@ public class ModeloMontanteDiarioDAO implements InterfaceModeloMontanteDiarioDAO
             montanteMensalJaIniciadoAtualizandoIdParaArmazenar.put("idReferenciaMontanteMensal", modeloMontanteDiario.getIdReferenciaMontanteMensal());
             montanteMensalJaIniciadoAtualizandoIdParaArmazenar.put("dataReferenciaMontanteDiarioDesseDia", modeloMontanteDiario.getDataReferenciaMontanteDiarioDesseDia());
             montanteMensalJaIniciadoAtualizandoIdParaArmazenar.put("valorQueOCaixaIniciouODia", modeloMontanteDiario.getValorQueOCaixaIniciouODia());
+            montanteMensalJaIniciadoAtualizandoIdParaArmazenar.put("valorQueOCaixaFinalizou", modeloMontanteDiario.getValorQueOCaixaFinalizou());
             montanteMensalJaIniciadoAtualizandoIdParaArmazenar.put("valorTotalDeVendasNaLojaDesseDia", modeloMontanteDiario.getValorTotalDeVendasNaLojaDesseDia());
             montanteMensalJaIniciadoAtualizandoIdParaArmazenar.put("valorTotalDeVendasNoIfoodDesseDia", modeloMontanteDiario.getValorTotalDeVendasNoIfoodDesseDia());
             montanteMensalJaIniciadoAtualizandoIdParaArmazenar.put("valorTotalDeVendasEmGeralDesseDia", modeloMontanteDiario.getValorTotalDeVendasEmGeralDesseDia());

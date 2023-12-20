@@ -35,11 +35,13 @@ import com.marcel.a.n.roxha.deliciasdamamae.R;
 import com.marcel.a.n.roxha.deliciasdamamae.activity.AdicionarBoloVitrineActivity2;
 import com.marcel.a.n.roxha.deliciasdamamae.activity.AdicionarProdutoComoVendidoNoSistema;
 import com.marcel.a.n.roxha.deliciasdamamae.activity.BolosVendidosActivity2;
+import com.marcel.a.n.roxha.deliciasdamamae.adapter.AdapterModeloBolosAdicionadosVitrineQuandoVender;
 import com.marcel.a.n.roxha.deliciasdamamae.adapter.BolosAdicionadosVitrineParaExibirQuandoVenderAdapter;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
 import com.marcel.a.n.roxha.deliciasdamamae.controller.helper.ModeloMontanteDiarioDAO;
 import com.marcel.a.n.roxha.deliciasdamamae.controller.helper.ModeloMontanteMensalDAO;
 import com.marcel.a.n.roxha.deliciasdamamae.model.BolosModel;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloBolosAdicionadosVitrineQuandoVender;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloControleRelatorioMensal;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloMontanteDiario;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloMontanteMensalLoja;
@@ -167,6 +169,8 @@ public class CaixaLojaFragment extends Fragment {
     private CollectionReference referenceCaixaDiario = firebaseFirestore.collection(COLLECTION_CAIXA_DIARIO);
     private CollectionReference referenceMontanteDesseMes = firebaseFirestore.collection(COLLECTION_MONTANTE_DESSE_MES);
     private BolosAdicionadosVitrineParaExibirQuandoVenderAdapter expostoAdapter;
+
+    private AdapterModeloBolosAdicionadosVitrineQuandoVender adapter;
 
     private CollectionReference refBolosExpostosVitrine = firebaseFirestore.collection(COLLECTION_BOLOS_EXPOSTOS_VITRINE);
 
@@ -349,7 +353,7 @@ public class CaixaLojaFragment extends Fragment {
 
     }
 
-    private void verificaSeJaTemCaixaDiarioCriadoParaVisualizarRelatorioDiario(AlertDialog progressDialogCarregandoAsInformacoesDoCaixaDiario, String nomeCollectionCaixaDiario){
+    private void verificaSeJaTemCaixaDiarioCriadoParaVisualizarRelatorioDiario(AlertDialog progressDialogCarregandoAsInformacoesDoCaixaDiario, String nomeCollectionCaixaDiario) {
 
         firebaseFirestore.collection(nomeCollectionCaixaDiario).whereEqualTo("dataReferenciaMontanteDiarioDesseDia", diaAtual).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
@@ -368,7 +372,7 @@ public class CaixaLojaFragment extends Fragment {
                                 ModeloMontanteDiario modeloMontanteDiarioRecuperadoJaCriado = documentSnapshot.toObject(ModeloMontanteDiario.class);
                                 idRecuperadoCaixaDiario = modeloMontanteDiarioRecuperadoJaCriado.getIdReferenciaMontanteDiarioDesseDia();
                                 progressDialogCarregandoAsInformacoesDoCaixaDiario.dismiss();
-                                Intent intent = new Intent( getContext(), BolosVendidosActivity2.class);
+                                Intent intent = new Intent(getContext(), BolosVendidosActivity2.class);
                                 intent.putExtra("idMontanteDiario", idRecuperadoCaixaDiario);
                                 startActivity(intent);
                             }
@@ -409,6 +413,7 @@ public class CaixaLojaFragment extends Fragment {
         carregarComponentesDeTelaParaVizualizar();
 
     }
+
     private void alertaOpaVendi() {
         AlertDialog.Builder alertaMostrarProdutosDaVetrinePoisFoiVendidoAlgo = new AlertDialog.Builder(getContext());
         alertaMostrarProdutosDaVetrinePoisFoiVendidoAlgo.setTitle("OPA VENDI");
@@ -421,17 +426,17 @@ public class CaixaLojaFragment extends Fragment {
         recyclerView_itens_vitrine = dialogView.findViewById(R.id.recyclerView_opa_vendi_alguma_coisa_id);
         Query query = refBolosExpostosVitrine.orderBy("nomeBoloCadastrado", Query.Direction.ASCENDING);
 
-        FirestoreRecyclerOptions<BolosModel> options = new FirestoreRecyclerOptions.Builder<BolosModel>().setQuery(query, BolosModel.class).build();
+        FirestoreRecyclerOptions<ModeloBolosAdicionadosVitrineQuandoVender> options = new FirestoreRecyclerOptions.Builder<ModeloBolosAdicionadosVitrineQuandoVender>().setQuery(query, ModeloBolosAdicionadosVitrineQuandoVender.class).build();
 
-        expostoAdapter = new BolosAdicionadosVitrineParaExibirQuandoVenderAdapter(options, getContext());
-
+//        expostoAdapter = new BolosAdicionadosVitrineParaExibirQuandoVenderAdapter(options, getContext());
+        adapter = new AdapterModeloBolosAdicionadosVitrineQuandoVender(options, getContext());
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
 
         recyclerView_itens_vitrine.setHasFixedSize(true);
         recyclerView_itens_vitrine.setLayoutManager(layoutManager);
-        recyclerView_itens_vitrine.setAdapter(expostoAdapter);
-        expostoAdapter.startListening();
-        expostoAdapter.setOnItemClickListerner(new BolosAdicionadosVitrineParaExibirQuandoVenderAdapter.OnItemClickLisener() {
+        recyclerView_itens_vitrine.setAdapter(adapter);
+
+        adapter.setOnItemClickListerner(new AdapterModeloBolosAdicionadosVitrineQuandoVender.OnItemClickLisener() {
             @Override
             public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
 
@@ -449,10 +454,31 @@ public class CaixaLojaFragment extends Fragment {
                 intentAdicionarProdutoComoVendidoNoSistema.putExtra("custoDoProdutoRecuperadoExpostoVitrine", custoDoProdutoRecuperadoExpostoVitrine);
 
                 startActivity(intentAdicionarProdutoComoVendidoNoSistema);
-
             }
         });
-
+//        expostoAdapter.startListening();
+//        expostoAdapter.setOnItemClickListerner(new BolosAdicionadosVitrineParaExibirQuandoVenderAdapter.OnItemClickLisener() {
+//            @Override
+//            public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
+//
+//                BolosModel boloRecuperadoParaProcessamentoDaVenda = documentSnapshot.toObject(BolosModel.class);
+//                String idDoProdutoCadastrado = boloRecuperadoParaProcessamentoDaVenda.getIdReferenciaReceitaCadastrada();
+//                String idRecuperadoDoBoloExpostoVitrine = boloRecuperadoParaProcessamentoDaVenda.getIdBoloCadastrado();
+//                String nomeRecuperadoExpostoVitrine = boloRecuperadoParaProcessamentoDaVenda.getNomeBoloCadastrado();
+//                String custoDoProdutoRecuperadoExpostoVitrine = boloRecuperadoParaProcessamentoDaVenda.getCustoTotalDaReceitaDoBolo();
+//                Intent intentAdicionarProdutoComoVendidoNoSistema = new Intent(getContext(), AdicionarProdutoComoVendidoNoSistema.class);
+//                intentAdicionarProdutoComoVendidoNoSistema.putExtra("itemKey", idRecuperadoDoBoloExpostoVitrine);
+//                intentAdicionarProdutoComoVendidoNoSistema.putExtra("itemKeyMontanteMensal", idRecuperadoMontanteMensal);
+//                intentAdicionarProdutoComoVendidoNoSistema.putExtra("nomeRecuperadoExpostoVitrine", nomeRecuperadoExpostoVitrine);
+//                intentAdicionarProdutoComoVendidoNoSistema.putExtra("itemKeyMontanteDiario", idRecuperadoCaixaDiario);
+//                intentAdicionarProdutoComoVendidoNoSistema.putExtra("itemKeyIdProdutoCadastrado", idDoProdutoCadastrado);
+//                intentAdicionarProdutoComoVendidoNoSistema.putExtra("custoDoProdutoRecuperadoExpostoVitrine", custoDoProdutoRecuperadoExpostoVitrine);
+//
+//                startActivity(intentAdicionarProdutoComoVendidoNoSistema);
+//
+//            }
+//        });
+        adapter.startListening();
         alertaMostrarProdutosDaVetrinePoisFoiVendidoAlgo.create();
         alertaMostrarProdutosDaVetrinePoisFoiVendidoAlgo.show();
 
@@ -1055,7 +1081,7 @@ public class CaixaLojaFragment extends Fragment {
 
     }
 
-    private void finalizarDia(String idRecuperado){
+    private void finalizarDia(String idRecuperado) {
 
         System.out.println("finalizarDia   idRecuperado " + idRecuperado);
         firebaseFirestore.collection(nomeCompletoColletionMontanteDiario).document(idRecuperado).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -1064,8 +1090,8 @@ public class CaixaLojaFragment extends Fragment {
 
                 ModeloMontanteDiario modeloMontanteDiarioRecuperadoParaFinalizar = documentSnapshot.toObject(ModeloMontanteDiario.class);
                 System.out.println("modeloMontanteDiarioRecuperadoParaFinalizar " + modeloMontanteDiarioRecuperadoParaFinalizar.toString());
-                String retiradoDoCaixaHoje = modeloMontanteDiarioRecuperadoParaFinalizar.getValorTotalDeTrocoDesseDia().replace(",",".");
-                String totalDeVendasDoCaixaHoje = modeloMontanteDiarioRecuperadoParaFinalizar.getValorTotalDeVendasEmGeralDesseDia().replace(",",".");
+                String retiradoDoCaixaHoje = modeloMontanteDiarioRecuperadoParaFinalizar.getValorTotalDeTrocoDesseDia().replace(",", ".");
+                String totalDeVendasDoCaixaHoje = modeloMontanteDiarioRecuperadoParaFinalizar.getValorTotalDeVendasEmGeralDesseDia().replace(",", ".");
                 System.out.println("retiradoDoCaixaHoje " + retiradoDoCaixaHoje);
                 System.out.println("totalDeVendasDoCaixaHoje " + totalDeVendasDoCaixaHoje);
                 double retiradoDoCaixaHojeConvert = Double.parseDouble(retiradoDoCaixaHoje);
@@ -1088,12 +1114,10 @@ public class CaixaLojaFragment extends Fragment {
 
     }
 
-    private void registraFinalizaçãoDoDia(String resultadoDaConta, String idRecuperado){
+    private void registraFinalizaçãoDoDia(String resultadoDaConta, String idRecuperado) {
 
         Map<String, Object> finalizaDiaCaixaDiario = new HashMap<>();
-        finalizaDiaCaixaDiario.put("valorQueOCaixaFinalizou",resultadoDaConta);
-
-
+        finalizaDiaCaixaDiario.put("valorQueOCaixaFinalizou", resultadoDaConta);
 
 
         firebaseFirestore.collection(nomeCompletoColletionMontanteDiario).document(idRecuperado).update(finalizaDiaCaixaDiario).addOnSuccessListener(new OnSuccessListener<Void>() {

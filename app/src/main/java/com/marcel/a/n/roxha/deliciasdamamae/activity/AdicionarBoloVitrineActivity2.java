@@ -80,7 +80,7 @@ public class AdicionarBoloVitrineActivity2 extends AppCompatActivity {
     //Classes
 
     private BolosCadastradosVendaAddVitrineAdapter addVitrineAdapter;
-    private BolosAdicionadosExpostosVitrineActiviyAdicionarBolosVitrineAdapter expostosAdapter;
+    private BolosCadastradosVendaAddVitrineAdapter expostosAdapter;
 
     //Data
 
@@ -189,8 +189,9 @@ public class AdicionarBoloVitrineActivity2 extends AppCompatActivity {
                 ModeloBolosAdicionadosVitrineQuandoVender modeloBolosAdicionadosVitrineQuandoVender = new ModeloBolosAdicionadosVitrineQuandoVender();
 
                 modeloBolosAdicionadosVitrineQuandoVender.setIdReferenciaBoloCadastradoParaVenda(documentSnapshot.getId());
-                modeloBolosAdicionadosVitrineQuandoVender.setNomeDoBoloVendido(bolosModelRecuperadoParaAdicionarNaVitrine.getNomeBoloCadastrado());
+                modeloBolosAdicionadosVitrineQuandoVender.setNomeBoloCadastrado(bolosModelRecuperadoParaAdicionarNaVitrine.getNomeBoloCadastrado());
                 modeloBolosAdicionadosVitrineQuandoVender.setPrecoQueFoiVendido("");
+                modeloBolosAdicionadosVitrineQuandoVender.setCustoTotalDaReceita(bolosModelRecuperadoParaAdicionarNaVitrine.getCustoTotalDaReceitaDoBolo());
                 modeloBolosAdicionadosVitrineQuandoVender.setPrecoCadastradoVendaNaLoja(bolosModelRecuperadoParaAdicionarNaVitrine.getValorCadastradoParaVendasNaBoleria());
                 modeloBolosAdicionadosVitrineQuandoVender.setPrecoCadastradoVendaIfood(bolosModelRecuperadoParaAdicionarNaVitrine.getValorCadastradoParaVendasNoIfood());
                 modeloBolosAdicionadosVitrineQuandoVender.setValorSugeridoParaVendaNaBoleria(bolosModelRecuperadoParaAdicionarNaVitrine.getValorSugeridoParaVendasNaBoleriaComAcrescimoDoLucro());
@@ -341,48 +342,21 @@ public class AdicionarBoloVitrineActivity2 extends AppCompatActivity {
 
         Query query = refBolosAdicionadosVitrine.orderBy("nomeBoloCadastrado", Query.Direction.ASCENDING);
 
-        FirestoreRecyclerOptions<BolosAdicionadosVitrine> options = new FirestoreRecyclerOptions.Builder<BolosAdicionadosVitrine>()
-                .setQuery(query, BolosAdicionadosVitrine.class)
+
+        FirestoreRecyclerOptions<BolosModel> options = new FirestoreRecyclerOptions.Builder<BolosModel>()
+                .setQuery(query, BolosModel.class)
                 .build();
 
 
-        expostosAdapter = new BolosAdicionadosExpostosVitrineActiviyAdicionarBolosVitrineAdapter(options);
+//        addVitrineAdapter = new BolosCadastradosVendaAddVitrineAdapter(options, getApplicationContext());
+
+
+       expostosAdapter = new BolosCadastradosVendaAddVitrineAdapter(options, getApplicationContext());
 
         recyclerViewListaBolosAdicionadosExpostosVitrine.setHasFixedSize(true);
         recyclerViewListaBolosAdicionadosExpostosVitrine.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         recyclerViewListaBolosAdicionadosExpostosVitrine.setAdapter(expostosAdapter);
         recyclerViewListaBolosAdicionadosExpostosVitrine.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.VERTICAL));
-
-        expostosAdapter.setOnItemClickListerner(new BolosAdicionadosExpostosVitrineActiviyAdicionarBolosVitrineAdapter.OnItemClickLisener() {
-            @Override
-            public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
-                Toast.makeText(AdicionarBoloVitrineActivity2.this, "Teste clique", Toast.LENGTH_SHORT).show();
-
-
-                AlertDialog.Builder alertBoloExposto = new AlertDialog.Builder(AdicionarBoloVitrineActivity2.this);
-                alertBoloExposto.setTitle("REMOVER ITEM DA LISTA");
-                alertBoloExposto.setMessage("Deseja remover o item da lista? ");
-                alertBoloExposto.setPositiveButton("SIM", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        expostosAdapter.deletarBolosAdicionadoIndividual(position);
-                        Toast.makeText(AdicionarBoloVitrineActivity2.this, "Item removido da lista com sucesso", Toast.LENGTH_SHORT).show();
-
-
-                    }
-                }).setNegativeButton("NÃO", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Toast.makeText(AdicionarBoloVitrineActivity2.this, "Cancelado", Toast.LENGTH_SHORT).show();
-
-                    }
-                });
-
-                alertBoloExposto.show();
-                alertBoloExposto.create();
-
-            }
-        });
 
 
     }

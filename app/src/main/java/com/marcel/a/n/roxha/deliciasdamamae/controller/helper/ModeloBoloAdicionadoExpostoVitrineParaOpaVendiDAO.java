@@ -37,10 +37,9 @@ public class ModeloBoloAdicionadoExpostoVitrineParaOpaVendiDAO implements Interf
         try{
 
             if(bolosModel != null){
-
                 Map<String, Object> boloCadastrando = new HashMap<>();
                 boloCadastrando.put("idBoloCadastrado","N/D");
-                boloCadastrando.put("nomeBoloCadastrado", bolosModel.getNomeDoBoloVendido());
+                boloCadastrando.put("nomeBoloCadastrado", bolosModel.getNomeBoloCadastrado());
                 boloCadastrando.put("idReferenciaBoloCadastradoParaVenda", bolosModel.getIdReferenciaBoloCadastradoParaVenda());
                 boloCadastrando.put("precoQueFoiVendido", "N/V");
                 boloCadastrando.put("precoCadastradoVendaNaLoja", bolosModel.getPrecoCadastradoVendaNaLoja());
@@ -59,7 +58,7 @@ public class ModeloBoloAdicionadoExpostoVitrineParaOpaVendiDAO implements Interf
                         ModeloBolosAdicionadosVitrineQuandoVender bolosAdicionadosVitrineQuandoVender = new ModeloBolosAdicionadosVitrineQuandoVender();
                         bolosAdicionadosVitrineQuandoVender.setIdModeloBoloAdicionadosVitrineQuandoVender(documentReference.getId());
                         bolosAdicionadosVitrineQuandoVender.setIdReferenciaBoloCadastradoParaVenda(bolosModel.getIdReferenciaBoloCadastradoParaVenda());
-                        bolosAdicionadosVitrineQuandoVender.setNomeDoBoloVendido(bolosModel.getNomeDoBoloVendido());
+                        bolosAdicionadosVitrineQuandoVender.setNomeBoloCadastrado(bolosModel.getNomeBoloCadastrado());
                         bolosAdicionadosVitrineQuandoVender.setPrecoQueFoiVendido(bolosModel.getPrecoQueFoiVendido());
                         bolosAdicionadosVitrineQuandoVender.setPrecoCadastradoVendaNaLoja(bolosModel.getPrecoCadastradoVendaNaLoja());
                         bolosAdicionadosVitrineQuandoVender.setPrecoCadastradoVendaIfood(bolosModel.getPrecoCadastradoVendaIfood());
@@ -115,7 +114,7 @@ public class ModeloBoloAdicionadoExpostoVitrineParaOpaVendiDAO implements Interf
 
             Map<String, Object> boloComIdAtualizado = new HashMap<>();
             boloComIdAtualizado.put("idBoloCadastrado","N/D");
-            boloComIdAtualizado.put("nomeBoloCadastrado", boloParaAtualizarOId.getNomeDoBoloVendido());
+            boloComIdAtualizado.put("nomeBoloCadastrado", boloParaAtualizarOId.getNomeBoloCadastrado());
             boloComIdAtualizado.put("idReferenciaBoloCadastradoParaVenda", boloParaAtualizarOId.getIdReferenciaBoloCadastradoParaVenda());
             boloComIdAtualizado.put("precoQueFoiVendido", boloParaAtualizarOId.getPrecoQueFoiVendido());
             boloComIdAtualizado.put("precoCadastradoVendaNaLoja", boloParaAtualizarOId.getPrecoCadastradoVendaNaLoja());
@@ -131,7 +130,7 @@ public class ModeloBoloAdicionadoExpostoVitrineParaOpaVendiDAO implements Interf
             collectionReferenceBoloAdicionadoNaVitrineParaOpaVendi.document(id).update(boloComIdAtualizado).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void unused) {
-                    Toast.makeText(context, boloParaAtualizarOId.getNomeDoBoloVendido()+ " adicionado com sucesso a vitrine", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, boloParaAtualizarOId.getNomeBoloCadastrado()+ " adicionado com sucesso a vitrine", Toast.LENGTH_SHORT).show();
 
 
                 }
