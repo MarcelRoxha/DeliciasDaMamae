@@ -32,7 +32,7 @@ import com.marcel.a.n.roxha.deliciasdamamae.adapter.IngredienteAdicionadoAdapter
 import com.marcel.a.n.roxha.deliciasdamamae.adapter.ItemEstoqueAdapter;
 import com.marcel.a.n.roxha.deliciasdamamae.adapter.ModeloItemEstoqueAdapter;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
-import com.marcel.a.n.roxha.deliciasdamamae.model.ItemEstoqueModel;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloItemEstoque;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloIngredienteAdicionadoReceita;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloItemEstoque;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ReceitaModel;
@@ -649,11 +649,11 @@ public class EditarReceitasCompletasCadastradas extends AppCompatActivity {
                         @Override
                         public void onSuccess(DocumentSnapshot documentSnapshot) {
 
-                            ItemEstoqueModel itemEstoqueModel = documentSnapshot.toObject(ItemEstoqueModel.class);
+                            ModeloItemEstoque ModeloItemEstoque = documentSnapshot.toObject(ModeloItemEstoque.class);
 
-                            assert itemEstoqueModel != null;
+                            assert ModeloItemEstoque != null;
 
-                            valorItemReceitaCadastradaCompleta = itemEstoqueModel.getValorItemPorReceita();
+                            valorItemReceitaCadastradaCompleta = ModeloItemEstoque.getCustoPorReceitaItemEstoque();
 
                             valor = Double.parseDouble(valorItemReceitaCadastradaCompleta);
                             listaIngredientesAdicionadosReceitaCompletaCadastrada.add(valor);
@@ -702,13 +702,13 @@ public class EditarReceitasCompletasCadastradas extends AppCompatActivity {
 
 
 
-                ModeloItemEstoque itemEstoqueModel = documentSnapshot.toObject(ModeloItemEstoque.class);
-                assert itemEstoqueModel != null;
+                ModeloItemEstoque ModeloItemEstoque = documentSnapshot.toObject(ModeloItemEstoque.class);
+                assert ModeloItemEstoque != null;
 
-                String nomeItemAdd = itemEstoqueModel.getNomeItemEstoque();
-                String valorItemAdd = itemEstoqueModel.getCustoPorReceitaItemEstoque();
-                String quantItemAdd = itemEstoqueModel.getQuantidadeUtilizadaNasReceitas();
-                String unidadeMedidaUtilizadaReceita = itemEstoqueModel.getUnidadeMedidaUtilizadoNasReceitas();
+                String nomeItemAdd = ModeloItemEstoque.getNomeItemEstoque();
+                String valorItemAdd = ModeloItemEstoque.getCustoPorReceitaItemEstoque();
+                String quantItemAdd = ModeloItemEstoque.getQuantidadeUtilizadaNasReceitas();
+                String unidadeMedidaUtilizadaReceita = ModeloItemEstoque.getUnidadeMedidaUtilizadoNasReceitas();
 
 
                 ModeloIngredienteAdicionadoReceita modeloIngredienteAdicionadoReceita = new ModeloIngredienteAdicionadoReceita();

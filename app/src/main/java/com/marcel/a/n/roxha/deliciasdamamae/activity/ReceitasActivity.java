@@ -22,7 +22,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.WriteBatch;
 import com.marcel.a.n.roxha.deliciasdamamae.R;
-import com.marcel.a.n.roxha.deliciasdamamae.model.ItemEstoqueModel;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloItemEstoque;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ReceitaModel;
 
 import java.util.ArrayList;

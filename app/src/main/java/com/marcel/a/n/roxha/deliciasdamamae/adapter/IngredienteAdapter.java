@@ -12,25 +12,25 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.marcel.a.n.roxha.deliciasdamamae.R;
-import com.marcel.a.n.roxha.deliciasdamamae.model.ItemEstoqueModel;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloItemEstoque;
 
-public class IngredienteAdapter extends FirestoreRecyclerAdapter<ItemEstoqueModel, IngredienteAdapter.IngredienteViewHolder> {
+public class IngredienteAdapter extends FirestoreRecyclerAdapter<ModeloItemEstoque, IngredienteAdapter.IngredienteViewHolder> {
 
     private OnItemClickLisener listener;
 
 
-    public IngredienteAdapter(@NonNull FirestoreRecyclerOptions<ItemEstoqueModel> options) {
+    public IngredienteAdapter(@NonNull FirestoreRecyclerOptions<ModeloItemEstoque> options) {
         super(options);
     }
 
 
 
     @Override
-    protected void onBindViewHolder(@NonNull IngredienteViewHolder holder, int position, @NonNull ItemEstoqueModel model) {
+    protected void onBindViewHolder(@NonNull IngredienteViewHolder holder, int position, @NonNull ModeloItemEstoque model) {
 
-        holder.nomeIngrediente.setText(model.getNameItem());
-        holder.quantUsadaReceitaIngrediente.setText(model.getQuantUsadaReceita());
-        holder.custoIngredienteReceita.setText(model.valorItemPorReceita());
+        holder.nomeIngrediente.setText(model.getNomeItemEstoque());
+        holder.quantUsadaReceitaIngrediente.setText(model.getQuantidadeUtilizadaNasReceitas());
+        holder.custoIngredienteReceita.setText(model.getValorIndividualItemEstoque());
     }
 
     @NonNull

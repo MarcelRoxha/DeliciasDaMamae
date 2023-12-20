@@ -36,12 +36,17 @@ public class ModeloItemEstoqueDAO implements InterfaceModeloItemEstoqueDAO{
     @Override
     public boolean salvarItemEstoque(ModeloItemEstoque modeloItemEstoque) {
 
+        System.out.println("Item recebido   ============ " + modeloItemEstoque.toString());
+
         try {
 
             Map<String, Object> item = new HashMap<>();
 
             item.put("nomeItemEstoque",modeloItemEstoque.getNomeItemEstoque().trim());
+            item.put("versionEstoque", "Estoque_DeliciasDaMamae");
+            item.put("valorIndividualItemEstoque", modeloItemEstoque.getValorIndividualItemEstoque());
             item.put("quantidadeTotalItemEstoque", modeloItemEstoque.getQuantidadeTotalItemEstoque());
+
             item.put("quantidadePorVolumeItemEstoque", modeloItemEstoque.getQuantidadePorVolumeItemEstoque());
             item.put("quantidadeUtilizadaNasReceitas", modeloItemEstoque.getQuantidadeUtilizadaNasReceitas());
 
@@ -49,13 +54,13 @@ public class ModeloItemEstoqueDAO implements InterfaceModeloItemEstoqueDAO{
             item.put("unidadeMedidaPacoteItemEstoque", modeloItemEstoque.getUnidadeMedidaPacoteItemEstoque());
             item.put("unidadeMedidaUtilizadoNasReceitas", modeloItemEstoque.getUnidadeMedidaUtilizadoNasReceitas());
 
-            item.put("valorIndividualItemEstoque", modeloItemEstoque.getValorIndividualItemEstoque());
+
             item.put("valorFracionadoItemEstoque", modeloItemEstoque.getValorFracionadoItemEstoque());
             item.put("custoPorReceitaItemEstoque", modeloItemEstoque.getCustoPorReceitaItemEstoque());
             item.put("quantidadeTotalItemEmEstoquePorVolume", modeloItemEstoque.getQuantidadeTotalItemEmEstoquePorVolume());
             item.put("quantidadeTotalItemEmEstoqueEmGramas", modeloItemEstoque.getQuantidadeTotalItemEmEstoqueEmGramas());
             item.put("custoTotalDoItemEmEstoque", modeloItemEstoque.getCustoTotalDoItemEmEstoque());
-            item.put("versionEstoque", "Estoque_DeliciasDaMamae");
+
             referenceItemEstoque.add(item).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                 @Override
                 public void onSuccess(DocumentReference documentReference) {

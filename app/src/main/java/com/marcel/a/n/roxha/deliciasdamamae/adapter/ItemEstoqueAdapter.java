@@ -13,14 +13,14 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.marcel.a.n.roxha.deliciasdamamae.R;
-import com.marcel.a.n.roxha.deliciasdamamae.model.ItemEstoqueModel;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloItemEstoque;
 
-public class ItemEstoqueAdapter extends FirestoreRecyclerAdapter<ItemEstoqueModel, ItemEstoqueAdapter.ItemEstoqueViewHolder> {
+public class ItemEstoqueAdapter extends FirestoreRecyclerAdapter<ModeloItemEstoque, ItemEstoqueAdapter.ItemEstoqueViewHolder> {
 
     private OnItemClickLisener listener;
     private OnLongClickListener listenerLong;
 
-    public ItemEstoqueAdapter(@NonNull FirestoreRecyclerOptions<ItemEstoqueModel> options) {
+    public ItemEstoqueAdapter(@NonNull FirestoreRecyclerOptions<ModeloItemEstoque> options) {
         super(options);
     }
 
@@ -33,15 +33,15 @@ public class ItemEstoqueAdapter extends FirestoreRecyclerAdapter<ItemEstoqueMode
 
 
     @Override
-    protected void onBindViewHolder(@NonNull ItemEstoqueViewHolder holder, int position, @NonNull ItemEstoqueModel model) {
+    protected void onBindViewHolder(@NonNull ItemEstoqueViewHolder holder, int position, @NonNull ModeloItemEstoque model) {
 
 
-        holder.nomeItem.setText(model.getNameItem());
-        holder.ultimoValotItem.setText(model.getValorItem());
-        holder.quantEstoqueItem.setText(model.getQuantItem());
-        holder.valorFracionado.setText(model.calcularValorFracionado());
-        holder.custoItemPorReceita.setText(model.valorItemPorReceita());
-        holder.quantUsadaReceita.setText(model.getQuantUsadaReceita());
+        holder.nomeItem.setText(model.getNomeItemEstoque());
+        holder.ultimoValotItem.setText(model.getValorIndividualItemEstoque());
+        holder.quantEstoqueItem.setText(model.getQuantidadeTotalItemEstoque());
+        holder.valorFracionado.setText(model.calcularValorFracionadoModeloItemEstoque());
+        holder.custoItemPorReceita.setText(model.calcularValorItemPorReceita());
+        holder.quantUsadaReceita.setText(model.getQuantidadeUtilizadaNasReceitas());
 
     }
 

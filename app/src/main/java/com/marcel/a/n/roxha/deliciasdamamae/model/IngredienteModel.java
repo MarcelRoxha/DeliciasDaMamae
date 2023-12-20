@@ -64,7 +64,7 @@ public class IngredienteModel implements Serializable {
         return quantUsadaReceitaIngrediente;
     }
 
-    public void setQuantUsadaReceitaIngrediente(String quantUsadaReceitaIngrediente) {
+    public void setQuantidadeUtilizadaNasReceitasIngrediente(String quantUsadaReceitaIngrediente) {
         this.quantUsadaReceitaIngrediente = quantUsadaReceitaIngrediente;
     }
 

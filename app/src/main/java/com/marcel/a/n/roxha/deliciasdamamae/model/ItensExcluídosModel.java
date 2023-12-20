@@ -115,7 +115,7 @@ public class ItensExcluídosModel implements Serializable {
         return quantItem;
     }
 
-    public void setQuantItem(String quantItem) {
+    public void setQuantidadeTotalItemEstoque(String quantItem) {
         this.quantItem = quantItem;
     }
 
@@ -123,7 +123,7 @@ public class ItensExcluídosModel implements Serializable {
         return quantPacote;
     }
 
-    public void setQuantPacote(String quantPacote) {
+    public void setQuantidadePorVolumeItemEstoque(String quantPacote) {
         this.quantPacote = quantPacote;
     }
 
@@ -139,7 +139,7 @@ public class ItensExcluídosModel implements Serializable {
         return unidMedida;
     }
 
-    public void setUnidMedida(String unidMedida) {
+    public void setUnidadeMedidaPacoteItemEstoque(String unidMedida) {
         this.unidMedida = unidMedida;
     }
 
@@ -147,7 +147,7 @@ public class ItensExcluídosModel implements Serializable {
         return unidReceita;
     }
 
-    public void setUnidReceita(String unidReceita) {
+    public void setUnidadeMedidaUtilizadoNasReceitas(String unidReceita) {
         this.unidReceita = unidReceita;
     }
 
@@ -163,7 +163,7 @@ public class ItensExcluídosModel implements Serializable {
         return valorItem;
     }
 
-    public void setValorItem(String valorItem) {
+    public void setValorIndividualItemEstoque(String valorItem) {
         this.valorItem = valorItem;
     }
 
@@ -171,7 +171,7 @@ public class ItensExcluídosModel implements Serializable {
         return valorItemPorReceita;
     }
 
-    public void setValorItemPorReceita(String valorItemPorReceita) {
+    public void setValorIndividualItemEstoquePorReceita(String valorItemPorReceita) {
         this.valorItemPorReceita = valorItemPorReceita;
     }
 

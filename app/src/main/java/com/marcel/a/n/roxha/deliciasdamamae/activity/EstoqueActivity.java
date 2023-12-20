@@ -33,7 +33,7 @@ import com.marcel.a.n.roxha.deliciasdamamae.adapter.ItemEstoqueAdapter;
 import com.marcel.a.n.roxha.deliciasdamamae.adapter.ModeloItemEstoqueAdapter;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
 import com.marcel.a.n.roxha.deliciasdamamae.controller.helper.ItemEstoqueDAO;
-import com.marcel.a.n.roxha.deliciasdamamae.model.ItemEstoqueModel;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloItemEstoque;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloItemEstoque;
 
 import java.util.List;
@@ -53,7 +53,7 @@ public class EstoqueActivity extends AppCompatActivity {
     private CollectionReference itemEstoqueRef = firestore.collection("ITEM_ESTOQUE");
     private String chaveSeg = "DeliciasDaMamae";
 
-    private ItemEstoqueModel itemSelecionado;
+    private ModeloItemEstoque itemSelecionado;
     private int contador = 0;
 
     @Override

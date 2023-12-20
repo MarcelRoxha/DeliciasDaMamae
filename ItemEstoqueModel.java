@@ -21,7 +21,7 @@ import java.util.Map;
 
 /*import com.marcel.a.n.roxha.deliciasdamamae.helper.Base64Custom;*/
 
-public class ItemEstoqueModel implements Serializable {
+public class ModeloItemEstoque implements Serializable {
 
 //Atributos classe Item Estoque Model
     String id;
@@ -41,12 +41,12 @@ public class ItemEstoqueModel implements Serializable {
 
 
 //Construtor vazio
-    public ItemEstoqueModel() {
+    public ModeloItemEstoque() {
 
     }
 
 //Construtor completo
-    public ItemEstoqueModel(String nameItem, String valorItem, String quantItem, String unidMedida, String unidReceita){
+    public ModeloItemEstoque(String nameItem, String valorItem, String quantItem, String unidMedida, String unidReceita){
 
             this.nameItem = nameItem;
             this.valorItem = valorItem;
@@ -76,7 +76,7 @@ public class ItemEstoqueModel implements Serializable {
         return nameItem;
     }
 
-    public void setNameItem(String nameItem) {
+    public void setNomeItemEstoque(String nameItem) {
         this.nameItem = nameItem;
     }
 
@@ -84,7 +84,7 @@ public class ItemEstoqueModel implements Serializable {
         return valorItem;
     }
 
-    public void setValorItem(String valorItem) {
+    public void setValorIndividualItemEstoque(String valorItem) {
         this.valorItem = valorItem;
     }
 
@@ -92,7 +92,7 @@ public class ItemEstoqueModel implements Serializable {
         return quantItem;
     }
 
-    public void setQuantItem(String quantItem) {
+    public void setQuantidadeTotalItemEstoque(String quantItem) {
         this.quantItem = quantItem;
     }
 
@@ -100,7 +100,7 @@ public class ItemEstoqueModel implements Serializable {
         return unidMedida;
     }
 
-    public void setUnidMedida(String unidMedida) {
+    public void setUnidadeMedidaPacoteItemEstoque(String unidMedida) {
         this.unidMedida = unidMedida;
     }
 
@@ -108,7 +108,7 @@ public class ItemEstoqueModel implements Serializable {
         return unidReceita;
     }
 
-    public void setUnidReceita(String unidReceita) {
+    public void setUnidadeMedidaUtilizadoNasReceitas(String unidReceita) {
         this.unidReceita = unidReceita;
     }
 
@@ -120,11 +120,11 @@ public class ItemEstoqueModel implements Serializable {
         return quantUsadaReceita;
     }
 
-    public void setQuantUsadaReceita(String quantUsadaReceita) {
+    public void setQuantidadeUtilizadaNasReceitas(String quantUsadaReceita) {
         this.quantUsadaReceita = quantUsadaReceita;
     }
 
-    public void setQuantPacote(String quantPacote) {
+    public void setQuantidadePorVolumeItemEstoque(String quantPacote) {
         this.quantPacote = quantPacote;
     }
 

@@ -33,7 +33,7 @@ import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
 import com.marcel.a.n.roxha.deliciasdamamae.model.BoloVendidoModel;
 import com.marcel.a.n.roxha.deliciasdamamae.model.BolosAdicionadosVitrine;
 import com.marcel.a.n.roxha.deliciasdamamae.model.CaixaMensalModel;
-import com.marcel.a.n.roxha.deliciasdamamae.model.ItemEstoqueModel;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloItemEstoque;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ReceitaModel;
 import com.squareup.picasso.Picasso;
 
@@ -263,8 +263,8 @@ public class FinalizarVendaBoloExpostoVitrineActivity extends AppCompatActivity 
 
         Query query = referenciaListaIngredienteReceita.orderBy("nameItem", Query.Direction.ASCENDING);
 
-        FirestoreRecyclerOptions<ItemEstoqueModel> options = new FirestoreRecyclerOptions.Builder<ItemEstoqueModel>()
-                .setQuery(query, ItemEstoqueModel.class)
+        FirestoreRecyclerOptions<ModeloItemEstoque> options = new FirestoreRecyclerOptions.Builder<ModeloItemEstoque>()
+                .setQuery(query, ModeloItemEstoque.class)
                 .build();
 
         adapter = new ListaIngredientesReceitaFinalizarCompraAdapter(options);

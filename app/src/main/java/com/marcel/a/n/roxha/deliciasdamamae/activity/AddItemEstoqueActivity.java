@@ -24,7 +24,7 @@ import com.marcel.a.n.roxha.deliciasdamamae.R;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
 import com.marcel.a.n.roxha.deliciasdamamae.controller.helper.ItemEstoqueDAO;
 import com.marcel.a.n.roxha.deliciasdamamae.controller.helper.ModeloItemEstoqueDAO;
-import com.marcel.a.n.roxha.deliciasdamamae.model.ItemEstoqueModel;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloItemEstoque;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloItemEstoque;
 
 import java.util.ArrayList;
@@ -63,7 +63,7 @@ public class AddItemEstoqueActivity extends AppCompatActivity {
 
 
     //Classes:
-    private ItemEstoqueModel itemEstoqueModel, itemEstoqueModelAtualizar;
+    private ModeloItemEstoque ModeloItemEstoque, ModeloItemEstoqueAtualizar;
     private ItemEstoqueDAO itemEstoqueDAO;
     private ModeloItemEstoque modeloItemEstoqueAtualizar;
 

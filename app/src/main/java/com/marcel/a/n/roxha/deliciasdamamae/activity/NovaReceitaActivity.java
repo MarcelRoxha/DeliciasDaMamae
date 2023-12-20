@@ -38,7 +38,7 @@ import com.marcel.a.n.roxha.deliciasdamamae.adapter.IngredienteAdicionadoAdapter
 import com.marcel.a.n.roxha.deliciasdamamae.adapter.ItemEstoqueAdapter;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
 import com.marcel.a.n.roxha.deliciasdamamae.model.IngredienteModel;
-import com.marcel.a.n.roxha.deliciasdamamae.model.ItemEstoqueModel;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloItemEstoque;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloIngredienteAdicionadoReceita;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloItemEstoque;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ReceitaModel;
@@ -151,8 +151,8 @@ public class NovaReceitaActivity extends AppCompatActivity {
 
 
 
-        FirestoreRecyclerOptions<ItemEstoqueModel> options = new FirestoreRecyclerOptions.Builder<ItemEstoqueModel>()
-                .setQuery(query, ItemEstoqueModel.class)
+        FirestoreRecyclerOptions<ModeloItemEstoque> options = new FirestoreRecyclerOptions.Builder<ModeloItemEstoque>()
+                .setQuery(query, ModeloItemEstoque.class)
                 .build();
 
         adapterItem = new IngredienteAdapter(options);
@@ -168,16 +168,16 @@ public class NovaReceitaActivity extends AppCompatActivity {
 
                 /* IngredienteModel ingredienteAdicionado = new IngredienteModel(); */
 
-                ItemEstoqueModel itemEstoqueModel = documentSnapshot.toObject(ItemEstoqueModel.class);
+                ModeloItemEstoque ModeloItemEstoque = documentSnapshot.toObject(ModeloItemEstoque.class);
 
-                assert itemEstoqueModel != null;
-
-
+                assert ModeloItemEstoque != null;
 
 
-                String nomeAdicionado = itemEstoqueModel.getNameItem();
-                valorAdicionado = itemEstoqueModel.valorItemPorReceita();
-                String quantAdicionado = itemEstoqueModel.getQuantUsadaReceita();
+
+
+                String nomeAdicionado = ModeloItemEstoque.getNomeItemEstoque();
+                valorAdicionado = ModeloItemEstoque.getCustoPorReceitaItemEstoque();
+                String quantAdicionado = ModeloItemEstoque.getQuantidadeUtilizadaNasReceitas();
 
 
 

@@ -434,11 +434,11 @@ public class FinalizarReceitaActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(DocumentSnapshot documentSnapshot) {
 
-                    ItemEstoqueModel itemEstoqueModel = documentSnapshot.toObject(ItemEstoqueModel.class);
+                    ModeloItemEstoque ModeloItemEstoque = documentSnapshot.toObject(ModeloItemEstoque.class);
 
-                    assert itemEstoqueModel != null;
+                    assert ModeloItemEstoque != null;
 
-                    valorItemReceita = itemEstoqueModel.getValorItemPorReceita();
+                    valorItemReceita = ModeloItemEstoque.getValorItemPorReceita();
 
                     valor = Double.parseDouble(valorItemReceita);
 
@@ -460,11 +460,11 @@ public class FinalizarReceitaActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(DocumentSnapshot documentSnapshot) {
 
-                    ItemEstoqueModel itemEstoqueModel = documentSnapshot.toObject(ItemEstoqueModel.class);
+                    ModeloItemEstoque ModeloItemEstoque = documentSnapshot.toObject(ModeloItemEstoque.class);
 
-                    assert itemEstoqueModel != null;
+                    assert ModeloItemEstoque != null;
 
-                    valorItemReceita = itemEstoqueModel.getValorItemPorReceita();
+                    valorItemReceita = ModeloItemEstoque.getValorItemPorReceita();
 
                     valor = Double.parseDouble(valorItemReceita);
 
@@ -488,11 +488,11 @@ public class FinalizarReceitaActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(DocumentSnapshot documentSnapshot) {
 
-                    ItemEstoqueModel itemEstoqueModel = documentSnapshot.toObject(ItemEstoqueModel.class);
+                    ModeloItemEstoque ModeloItemEstoque = documentSnapshot.toObject(ModeloItemEstoque.class);
 
-                    assert itemEstoqueModel != null;
+                    assert ModeloItemEstoque != null;
 
-                    valorItemReceita = itemEstoqueModel.getValorItemPorReceita();
+                    valorItemReceita = ModeloItemEstoque.getValorItemPorReceita();
 
                     valor = Double.parseDouble(valorItemReceita);
 

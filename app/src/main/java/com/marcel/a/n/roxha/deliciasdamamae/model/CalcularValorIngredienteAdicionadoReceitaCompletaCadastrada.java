@@ -55,11 +55,11 @@ public class CalcularValorIngredienteAdicionadoReceitaCompletaCadastrada impleme
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
 
-                        ItemEstoqueModel itemEstoqueModel = documentSnapshot.toObject(ItemEstoqueModel.class);
+                        ModeloItemEstoque ModeloItemEstoque = documentSnapshot.toObject(ModeloItemEstoque.class);
 
-                        assert itemEstoqueModel != null;
+                        assert ModeloItemEstoque != null;
 
-                        valorItemReceitaCadastradaCompleta = itemEstoqueModel.getValorItemPorReceita();
+                        valorItemReceitaCadastradaCompleta = ModeloItemEstoque.getCustoPorReceitaItemEstoque();
 
                         valor = Double.parseDouble(valorItemReceitaCadastradaCompleta);
                         listaIngredientesAdicionadosReceitaCompletaCadastrada.add(valor);

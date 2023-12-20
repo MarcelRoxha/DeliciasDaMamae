@@ -1,11 +1,11 @@
 package com.marcel.a.n.roxha.deliciasdamamae.controller.helper;
 
-import com.marcel.a.n.roxha.deliciasdamamae.model.ItemEstoqueModel;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloItemEstoque;
 
 public interface InterfaceItemEstoqueDAO {
 
-    public boolean salvarItemEstoque(ItemEstoqueModel itemEstoqueModel);
-    public boolean salvarItemEstoqueRealtimeDataBase(ItemEstoqueModel itemEstoqueModel);
-    public boolean atualizarItemEstoque(String KeyItemEstoque, ItemEstoqueModel itemEstoqueModel);
-    public boolean deletarItemEstoque(String KeyItemEstoque, ItemEstoqueModel itemEstoqueModel);
+    public boolean salvarItemEstoque(ModeloItemEstoque ModeloItemEstoque);
+    public boolean salvarItemEstoqueRealtimeDataBase(ModeloItemEstoque ModeloItemEstoque);
+    public boolean atualizarItemEstoque(String KeyItemEstoque, ModeloItemEstoque ModeloItemEstoque);
+    public boolean deletarItemEstoque(String KeyItemEstoque, ModeloItemEstoque ModeloItemEstoque);
 }

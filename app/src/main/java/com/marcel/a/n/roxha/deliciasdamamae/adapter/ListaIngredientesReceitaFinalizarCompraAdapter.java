@@ -11,20 +11,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.marcel.a.n.roxha.deliciasdamamae.R;
-import com.marcel.a.n.roxha.deliciasdamamae.model.ItemEstoqueModel;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloItemEstoque;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ReceitaModel;
 
-public class ListaIngredientesReceitaFinalizarCompraAdapter extends FirestoreRecyclerAdapter<ItemEstoqueModel, ListaIngredientesReceitaFinalizarCompraAdapter.ListaIngredientesReceitafinalizarViewHolder> {
+public class ListaIngredientesReceitaFinalizarCompraAdapter extends FirestoreRecyclerAdapter<ModeloItemEstoque, ListaIngredientesReceitaFinalizarCompraAdapter.ListaIngredientesReceitafinalizarViewHolder> {
 
 
-    public ListaIngredientesReceitaFinalizarCompraAdapter(@NonNull FirestoreRecyclerOptions<ItemEstoqueModel> options) {
+    public ListaIngredientesReceitaFinalizarCompraAdapter(@NonNull FirestoreRecyclerOptions<ModeloItemEstoque> options) {
         super(options);
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull ListaIngredientesReceitafinalizarViewHolder holder, int position, @NonNull ItemEstoqueModel model) {
+    protected void onBindViewHolder(@NonNull ListaIngredientesReceitafinalizarViewHolder holder, int position, @NonNull ModeloItemEstoque model) {
 
-        holder.nomeIngrediente.setText(model.getNameItem());
+        holder.nomeIngrediente.setText(model.getNomeItemEstoque());
 
     }
 

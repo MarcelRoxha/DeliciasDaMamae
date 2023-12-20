@@ -1,6 +1,6 @@
 package com.marcel.a.n.roxha.deliciasdamamae.controller.helper;
 
-import com.marcel.a.n.roxha.deliciasdamamae.model.ItemEstoqueModel;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloItemEstoque;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloItemEstoque;
 
 public interface InterfaceModeloItemEstoqueDAO {
