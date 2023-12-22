@@ -186,26 +186,12 @@ public class AdicionarBoloVitrineActivity2 extends AppCompatActivity {
                 progressbarCarregarInformacoes.show();
 
                 BolosModel bolosModelRecuperadoParaAdicionarNaVitrine = documentSnapshot.toObject(BolosModel.class);
-                ModeloBolosAdicionadosVitrineQuandoVender modeloBolosAdicionadosVitrineQuandoVender = new ModeloBolosAdicionadosVitrineQuandoVender();
-
-                modeloBolosAdicionadosVitrineQuandoVender.setIdReferenciaBoloCadastradoParaVenda(documentSnapshot.getId());
-                modeloBolosAdicionadosVitrineQuandoVender.setNomeBoloCadastrado(bolosModelRecuperadoParaAdicionarNaVitrine.getNomeBoloCadastrado());
-                modeloBolosAdicionadosVitrineQuandoVender.setPrecoQueFoiVendido("");
-                modeloBolosAdicionadosVitrineQuandoVender.setCustoTotalDaReceita(bolosModelRecuperadoParaAdicionarNaVitrine.getCustoTotalDaReceitaDoBolo());
-                modeloBolosAdicionadosVitrineQuandoVender.setPrecoCadastradoVendaNaLoja(bolosModelRecuperadoParaAdicionarNaVitrine.getValorCadastradoParaVendasNaBoleria());
-                modeloBolosAdicionadosVitrineQuandoVender.setPrecoCadastradoVendaIfood(bolosModelRecuperadoParaAdicionarNaVitrine.getValorCadastradoParaVendasNoIfood());
-                modeloBolosAdicionadosVitrineQuandoVender.setValorSugeridoParaVendaNaBoleria(bolosModelRecuperadoParaAdicionarNaVitrine.getValorSugeridoParaVendasNaBoleriaComAcrescimoDoLucro());
-                modeloBolosAdicionadosVitrineQuandoVender.setValorSugeridoParaVendaIfood(bolosModelRecuperadoParaAdicionarNaVitrine.getValorSugeridoParaVendasNoIfoodComAcrescimoDaPorcentagem());
-                modeloBolosAdicionadosVitrineQuandoVender.setEnderecoFoto(bolosModelRecuperadoParaAdicionarNaVitrine.getEnderecoFoto());
-                modeloBolosAdicionadosVitrineQuandoVender.setVendeuNaLoja(false);
-                modeloBolosAdicionadosVitrineQuandoVender.setVendeuNoIfood(false);
-
                 /*Quando clicar e adicionar a receita cadastrada para venda, clonada essa receita para ser exposto na vitrine */
 
                 String idRecuperadoDaReceitaDeReferencia = bolosModelRecuperadoParaAdicionarNaVitrine.getIdReferenciaReceitaCadastrada();
                 BolosModel bolosModelParaAdicionarNaVitrineParaOOpaVendi = bolosModelRecuperadoParaAdicionarNaVitrine;
                 ModeloBoloAdicionadoExpostoVitrineParaOpaVendiDAO modeloBoloAdicionadoExpostoVitrineParaOpaVendiDAO = new ModeloBoloAdicionadoExpostoVitrineParaOpaVendiDAO(getApplicationContext());
-                modeloBoloAdicionadoExpostoVitrineParaOpaVendiDAO.salvarBoloAdicionadoNaVitrineParaOpaVendi(modeloBolosAdicionadosVitrineQuandoVender);
+                modeloBoloAdicionadoExpostoVitrineParaOpaVendiDAO.salvarBoloAdicionadoNaVitrineParaOpaVendi(bolosModelParaAdicionarNaVitrineParaOOpaVendi);
 
 
 

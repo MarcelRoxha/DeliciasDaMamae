@@ -426,38 +426,17 @@ public class CaixaLojaFragment extends Fragment {
         recyclerView_itens_vitrine = dialogView.findViewById(R.id.recyclerView_opa_vendi_alguma_coisa_id);
         Query query = refBolosExpostosVitrine.orderBy("nomeBoloCadastrado", Query.Direction.ASCENDING);
 
-        FirestoreRecyclerOptions<ModeloBolosAdicionadosVitrineQuandoVender> options = new FirestoreRecyclerOptions.Builder<ModeloBolosAdicionadosVitrineQuandoVender>().setQuery(query, ModeloBolosAdicionadosVitrineQuandoVender.class).build();
+        FirestoreRecyclerOptions<BolosModel> options = new FirestoreRecyclerOptions.Builder<BolosModel>().setQuery(query, BolosModel.class).build();
 
-//        expostoAdapter = new BolosAdicionadosVitrineParaExibirQuandoVenderAdapter(options, getContext());
-        adapter = new AdapterModeloBolosAdicionadosVitrineQuandoVender(options, getContext());
+        expostoAdapter = new BolosAdicionadosVitrineParaExibirQuandoVenderAdapter(options, getContext());
+//        adapter = new AdapterModeloBolosAdicionadosVitrineQuandoVender(options, getContext());
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
 
         recyclerView_itens_vitrine.setHasFixedSize(true);
         recyclerView_itens_vitrine.setLayoutManager(layoutManager);
-        recyclerView_itens_vitrine.setAdapter(adapter);
+        recyclerView_itens_vitrine.setAdapter(expostoAdapter);
 
-        adapter.setOnItemClickListerner(new AdapterModeloBolosAdicionadosVitrineQuandoVender.OnItemClickLisener() {
-            @Override
-            public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
-
-                BolosModel boloRecuperadoParaProcessamentoDaVenda = documentSnapshot.toObject(BolosModel.class);
-                String idDoProdutoCadastrado = boloRecuperadoParaProcessamentoDaVenda.getIdReferenciaReceitaCadastrada();
-                String idRecuperadoDoBoloExpostoVitrine = boloRecuperadoParaProcessamentoDaVenda.getIdBoloCadastrado();
-                String nomeRecuperadoExpostoVitrine = boloRecuperadoParaProcessamentoDaVenda.getNomeBoloCadastrado();
-                String custoDoProdutoRecuperadoExpostoVitrine = boloRecuperadoParaProcessamentoDaVenda.getCustoTotalDaReceitaDoBolo();
-                Intent intentAdicionarProdutoComoVendidoNoSistema = new Intent(getContext(), AdicionarProdutoComoVendidoNoSistema.class);
-                intentAdicionarProdutoComoVendidoNoSistema.putExtra("itemKey", idRecuperadoDoBoloExpostoVitrine);
-                intentAdicionarProdutoComoVendidoNoSistema.putExtra("itemKeyMontanteMensal", idRecuperadoMontanteMensal);
-                intentAdicionarProdutoComoVendidoNoSistema.putExtra("nomeRecuperadoExpostoVitrine", nomeRecuperadoExpostoVitrine);
-                intentAdicionarProdutoComoVendidoNoSistema.putExtra("itemKeyMontanteDiario", idRecuperadoCaixaDiario);
-                intentAdicionarProdutoComoVendidoNoSistema.putExtra("itemKeyIdProdutoCadastrado", idDoProdutoCadastrado);
-                intentAdicionarProdutoComoVendidoNoSistema.putExtra("custoDoProdutoRecuperadoExpostoVitrine", custoDoProdutoRecuperadoExpostoVitrine);
-
-                startActivity(intentAdicionarProdutoComoVendidoNoSistema);
-            }
-        });
-//        expostoAdapter.startListening();
-//        expostoAdapter.setOnItemClickListerner(new BolosAdicionadosVitrineParaExibirQuandoVenderAdapter.OnItemClickLisener() {
+//        adapter.setOnItemClickListerner(new AdapterModeloBolosAdicionadosVitrineQuandoVender.OnItemClickLisener() {
 //            @Override
 //            public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
 //
@@ -475,10 +454,34 @@ public class CaixaLojaFragment extends Fragment {
 //                intentAdicionarProdutoComoVendidoNoSistema.putExtra("custoDoProdutoRecuperadoExpostoVitrine", custoDoProdutoRecuperadoExpostoVitrine);
 //
 //                startActivity(intentAdicionarProdutoComoVendidoNoSistema);
-//
 //            }
 //        });
-        adapter.startListening();
+        expostoAdapter.startListening();
+        expostoAdapter.setOnItemClickListerner(new BolosAdicionadosVitrineParaExibirQuandoVenderAdapter.OnItemClickLisener() {
+            @Override
+            public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
+
+                BolosModel boloRecuperadoParaProcessamentoDaVenda = documentSnapshot.toObject(BolosModel.class);
+                String idDoProdutoCadastrado = boloRecuperadoParaProcessamentoDaVenda.getIdReferenciaReceitaCadastrada();
+                String idRecuperadoDoBoloExpostoVitrine = documentSnapshot.getId();
+                String nomeRecuperadoExpostoVitrine = boloRecuperadoParaProcessamentoDaVenda.getNomeBoloCadastrado();
+                String custoDoProdutoRecuperadoExpostoVitrine = boloRecuperadoParaProcessamentoDaVenda.getCustoTotalDaReceitaDoBolo();
+                String enderecoFoto = boloRecuperadoParaProcessamentoDaVenda.getEnderecoFoto();
+                System.out.println("enderecoFoto " + enderecoFoto);
+                Intent intentAdicionarProdutoComoVendidoNoSistema = new Intent(getContext(), AdicionarProdutoComoVendidoNoSistema.class);
+                intentAdicionarProdutoComoVendidoNoSistema.putExtra("itemKey", idRecuperadoDoBoloExpostoVitrine);
+                intentAdicionarProdutoComoVendidoNoSistema.putExtra("itemKeyMontanteMensal", idRecuperadoMontanteMensal);
+                intentAdicionarProdutoComoVendidoNoSistema.putExtra("nomeRecuperadoExpostoVitrine", nomeRecuperadoExpostoVitrine);
+                intentAdicionarProdutoComoVendidoNoSistema.putExtra("itemKeyMontanteDiario", idRecuperadoCaixaDiario);
+                intentAdicionarProdutoComoVendidoNoSistema.putExtra("itemKeyIdProdutoCadastrado", idDoProdutoCadastrado);
+                intentAdicionarProdutoComoVendidoNoSistema.putExtra("custoDoProdutoRecuperadoExpostoVitrine", custoDoProdutoRecuperadoExpostoVitrine);
+                intentAdicionarProdutoComoVendidoNoSistema.putExtra("fotoDoProduto", enderecoFoto);
+
+                startActivity(intentAdicionarProdutoComoVendidoNoSistema);
+
+            }
+        });
+//        adapter.startListening();
         alertaMostrarProdutosDaVetrinePoisFoiVendidoAlgo.create();
         alertaMostrarProdutosDaVetrinePoisFoiVendidoAlgo.show();
 

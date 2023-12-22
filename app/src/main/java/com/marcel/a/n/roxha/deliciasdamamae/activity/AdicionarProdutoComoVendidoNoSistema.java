@@ -156,7 +156,7 @@ public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
                 android.R.color.transparent
         );
         this.progressDialogCarregando.show();
-
+        produtoRecuperadoPraExibirNaTela = new BolosModel();
 
         itemKey = getIntent().getStringExtra("itemKey");
         itemKeyMontanteMensal = getIntent().getStringExtra("itemKeyMontanteMensal");
@@ -164,6 +164,7 @@ public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
         itemKeyIdProdutoCadastrado = getIntent().getStringExtra("itemKeyIdProdutoCadastrado");
         nomeRecuperadoExpostoVitrine = getIntent().getStringExtra("nomeRecuperadoExpostoVitrine");
         custoDoProdutoRecuperadoExpostoVitrine = getIntent().getStringExtra("custoDoProdutoRecuperadoExpostoVitrine");
+        enderecoFotoProduto = getIntent().getStringExtra("fotoDoProduto");
 
         if (itemKey != null){
             produtoVendidoProcessado = new ModeloProdutoVendido();
@@ -178,7 +179,7 @@ public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
 
                             produtoRecuperadoPraExibirNaTela = documentSnapshot.toObject(BolosModel.class);
 
-                            enderecoFotoProduto = produtoRecuperadoPraExibirNaTela.getEnderecoFoto();
+//                            enderecoFotoProduto = produtoRecuperadoPraExibirNaTela.getEnderecoFoto();
                             nomeDoProdutoRecuperado = produtoRecuperadoPraExibirNaTela.getNomeBoloCadastrado();
                             valorDoIfoodDoProdutoRecuperado = produtoRecuperadoPraExibirNaTela.getValorCadastradoParaVendasNoIfood();
                             valorNaLojaDoProdutoRecuperado = produtoRecuperadoPraExibirNaTela.getValorCadastradoParaVendasNaBoleria();

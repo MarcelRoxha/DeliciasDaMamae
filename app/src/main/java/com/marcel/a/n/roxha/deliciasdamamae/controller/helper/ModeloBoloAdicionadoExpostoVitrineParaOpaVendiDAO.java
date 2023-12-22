@@ -32,45 +32,49 @@ public class ModeloBoloAdicionadoExpostoVitrineParaOpaVendiDAO implements Interf
 
 
     @Override
-    public boolean salvarBoloAdicionadoNaVitrineParaOpaVendi(ModeloBolosAdicionadosVitrineQuandoVender bolosModel) {
+    public boolean salvarBoloAdicionadoNaVitrineParaOpaVendi(BolosModel bolosModel) {
 
         try{
 
             if(bolosModel != null){
                 Map<String, Object> boloCadastrando = new HashMap<>();
-                boloCadastrando.put("idBoloCadastrado","N/D");
+                boloCadastrando.put("idBoloCadastrado",bolosModel.getIdBoloCadastrado());
                 boloCadastrando.put("nomeBoloCadastrado", bolosModel.getNomeBoloCadastrado());
-                boloCadastrando.put("idReferenciaBoloCadastradoParaVenda", bolosModel.getIdReferenciaBoloCadastradoParaVenda());
-                boloCadastrando.put("precoQueFoiVendido", "N/V");
-                boloCadastrando.put("precoCadastradoVendaNaLoja", bolosModel.getPrecoCadastradoVendaNaLoja());
-                boloCadastrando.put("precoCadastradoVendaIfood", bolosModel.getPrecoCadastradoVendaIfood());
-                boloCadastrando.put("valorSugeridoParaVendaNaBoleria", bolosModel.getValorSugeridoParaVendaIfood());
-                boloCadastrando.put("valorSugeridoParaVendaIfood", bolosModel.getValorSugeridoParaVendaNaBoleria());
+                boloCadastrando.put("idReferenciaReceitaCadastrada", bolosModel.getIdReferenciaReceitaCadastrada());
+                boloCadastrando.put("custoTotalDaReceitaDoBolo", bolosModel.getCustoTotalDaReceitaDoBolo());
+                boloCadastrando.put("valorCadastradoParaVendasNaBoleria", bolosModel.getValorCadastradoParaVendasNaBoleria());
+                boloCadastrando.put("valorCadastradoParaVendasNoIfood", bolosModel.getValorCadastradoParaVendasNoIfood());
+                boloCadastrando.put("porcentagemAdicionadoPorContaDoIfood", bolosModel.getPorcentagemAdicionadoPorContaDoIfood());
+                boloCadastrando.put("porcentagemAdicionadoPorContaDoLucro", bolosModel.getPorcentagemAdicionadoPorContaDoLucro());
+                boloCadastrando.put("valorSugeridoParaVendasNoIfoodComAcrescimoDaPorcentagem", bolosModel.getValorSugeridoParaVendasNoIfoodComAcrescimoDaPorcentagem());
+                boloCadastrando.put("valorSugeridoParaVendasNaBoleriaComAcrescimoDoLucro", bolosModel.getValorSugeridoParaVendasNaBoleriaComAcrescimoDoLucro());
                 boloCadastrando.put("enderecoFoto", bolosModel.getEnderecoFoto());
-                boloCadastrando.put("vendeuNoIfood", bolosModel.isVendeuNoIfood());
-                boloCadastrando.put("vendeuNaLoja", bolosModel.isVendeuNaLoja());
+                boloCadastrando.put("valorQueOBoloRealmenteFoiVendido", bolosModel.getValorQueOBoloRealmenteFoiVendido());
+                boloCadastrando.put("verificaCameraGaleria", bolosModel.getVerificaCameraGaleria());
 
                 collectionReferenceBoloAdicionadoNaVitrineParaOpaVendi.add(boloCadastrando).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
 
+                        Toast.makeText(context, "Bolo adicionado a vitrine com sucesso", Toast.LENGTH_SHORT).show();
 
-                        ModeloBolosAdicionadosVitrineQuandoVender bolosAdicionadosVitrineQuandoVender = new ModeloBolosAdicionadosVitrineQuandoVender();
-                        bolosAdicionadosVitrineQuandoVender.setIdModeloBoloAdicionadosVitrineQuandoVender(documentReference.getId());
-                        bolosAdicionadosVitrineQuandoVender.setIdReferenciaBoloCadastradoParaVenda(bolosModel.getIdReferenciaBoloCadastradoParaVenda());
-                        bolosAdicionadosVitrineQuandoVender.setNomeBoloCadastrado(bolosModel.getNomeBoloCadastrado());
-                        bolosAdicionadosVitrineQuandoVender.setPrecoQueFoiVendido(bolosModel.getPrecoQueFoiVendido());
-                        bolosAdicionadosVitrineQuandoVender.setPrecoCadastradoVendaNaLoja(bolosModel.getPrecoCadastradoVendaNaLoja());
-                        bolosAdicionadosVitrineQuandoVender.setPrecoCadastradoVendaIfood(bolosModel.getPrecoCadastradoVendaIfood());
-                        bolosAdicionadosVitrineQuandoVender.setValorSugeridoParaVendaNaBoleria(bolosModel.getValorSugeridoParaVendaNaBoleria());
-                        bolosAdicionadosVitrineQuandoVender.setValorSugeridoParaVendaIfood(bolosModel.getValorSugeridoParaVendaIfood());
-                        bolosAdicionadosVitrineQuandoVender.setEnderecoFoto(bolosModel.getEnderecoFoto());
-                        bolosAdicionadosVitrineQuandoVender.setVendeuNaLoja(bolosModel.isVendeuNaLoja());
-                        bolosAdicionadosVitrineQuandoVender.setVendeuNoIfood(bolosModel.isVendeuNoIfood());
-
-
-                        atualizarIdDoProprioBoloAdicionado(bolosAdicionadosVitrineQuandoVender.getIdModeloBoloAdicionadosVitrineQuandoVender(), bolosAdicionadosVitrineQuandoVender);
-
+//
+//                        ModeloBolosAdicionadosVitrineQuandoVender bolosAdicionadosVitrineQuandoVender = new ModeloBolosAdicionadosVitrineQuandoVender();
+//                        bolosAdicionadosVitrineQuandoVender.setIdModeloBoloAdicionadosVitrineQuandoVender(documentReference.getId());
+//                        bolosAdicionadosVitrineQuandoVender.setIdReferenciaBoloCadastradoParaVenda(bolosModel.getIdReferenciaBoloCadastradoParaVenda());
+//                        bolosAdicionadosVitrineQuandoVender.setNomeBoloCadastrado(bolosModel.getNomeBoloCadastrado());
+//                        bolosAdicionadosVitrineQuandoVender.setPrecoQueFoiVendido(bolosModel.getPrecoQueFoiVendido());
+//                        bolosAdicionadosVitrineQuandoVender.setPrecoCadastradoVendaNaLoja(bolosModel.getPrecoCadastradoVendaNaLoja());
+//                        bolosAdicionadosVitrineQuandoVender.setPrecoCadastradoVendaIfood(bolosModel.getPrecoCadastradoVendaIfood());
+//                        bolosAdicionadosVitrineQuandoVender.setValorSugeridoParaVendaNaBoleria(bolosModel.getValorSugeridoParaVendaNaBoleria());
+//                        bolosAdicionadosVitrineQuandoVender.setValorSugeridoParaVendaIfood(bolosModel.getValorSugeridoParaVendaIfood());
+//                        bolosAdicionadosVitrineQuandoVender.setEnderecoFoto(bolosModel.getEnderecoFoto());
+//                        bolosAdicionadosVitrineQuandoVender.setVendeuNaLoja(bolosModel.isVendeuNaLoja());
+//                        bolosAdicionadosVitrineQuandoVender.setVendeuNoIfood(bolosModel.isVendeuNoIfood());
+//
+//
+//                        atualizarIdDoProprioBoloAdicionado(bolosAdicionadosVitrineQuandoVender.getIdModeloBoloAdicionadosVitrineQuandoVender(), bolosAdicionadosVitrineQuandoVender);
+//
 
                     }
                 }).addOnFailureListener(new OnFailureListener() {
