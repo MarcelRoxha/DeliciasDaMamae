@@ -7,9 +7,7 @@ import android.os.Bundle;
 import com.marcel.a.n.roxha.deliciasdamamae.R;
 import com.marcel.a.n.roxha.deliciasdamamae.fragments.CaixaLojaFragment;
 import com.marcel.a.n.roxha.deliciasdamamae.fragments.FinanceiroFragment;
-import com.marcel.a.n.roxha.deliciasdamamae.fragments.ReceitaNovaFragment;
-import com.marcel.a.n.roxha.deliciasdamamae.fragments.ReceitasProntasFragment;
-import com.marcel.a.n.roxha.deliciasdamamae.fragments.VitrineFragment;
+import com.marcel.a.n.roxha.deliciasdamamae.fragments.GraficosFragment;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
@@ -41,6 +39,7 @@ public class LojaActivityV2 extends AppCompatActivity {
                 FragmentPagerItems.with(this)
                         .add("CAIXA", CaixaLojaFragment.class)
                         .add("FINANCEIRO", FinanceiroFragment.class)
+                        .add("GRÁFICOS", GraficosFragment.class)
                         .create()
         );
         viewPager.setAdapter(adapter);

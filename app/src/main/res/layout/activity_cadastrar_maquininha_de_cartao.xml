@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.CadastrarMaquininhaDeCartaoActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="12dp">
+
+        <ImageView
+            android:id="@+id/imageView15"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:scaleType="fitStart"
+            android:src="@drawable/ic_logo"
+            android:layout_margin="25dp"/>
+
+        <TextView
+            android:id="@+id/textView91"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/bungee_shade"
+            android:gravity="center"
+            android:text="Cadastre a maquininha com a porcentagem cobrada por tipo de cobrança"
+            android:textColor="@color/rosa"
+            android:textSize="14sp"
+            android:layout_margin="5dp"/>
+
+        <EditText
+            android:id="@+id/inputNomeMaquininhaDeCartoesId"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:ems="10"
+            android:inputType="text"
+            android:layout_margin="5dp"
+            android:hint="Digite um nome para identificar essa maquininha" />
+
+        <EditText
+            android:id="@+id/inputPorcentagemDeCreditoId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="numberDecimal"
+            android:layout_margin="5dp"
+            android:hint="Porcentagem de taxa no Crédito" />
+
+        <EditText
+            android:id="@+id/inputPorcentagemDeDebitoId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="numberDecimal"
+            android:layout_margin="5dp"
+            android:hint="Porcentagem de taxa no Débito" />
+
+
+
+        <com.santalu.maskara.widget.MaskEditText
+            android:id="@+id/dataDePagamentoDaMaquininhaId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            app:mask="__"
+            app:maskCharacter="_"
+            app:maskStyle="completable" />
+
+        <Button
+            android:id="@+id/botaoCadastrarMaquininhaId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn"
+            android:text="CADASTRAR"
+            android:layout_margin="5dp"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/botaoCancelarCadastroDaMaquininhaId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn"
+            android:text="CANCELAR"
+            android:layout_margin="5dp"
+            android:textColor="@color/white" />
+    </LinearLayout>
+</ScrollView>

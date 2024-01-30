@@ -79,13 +79,14 @@ dependencies {
 
     implementation 'com.ogaclejapan.smarttablayout:library:2.0.0@aar'
     implementation 'com.ogaclejapan.smarttablayout:utils-v4:2.0.0@aar'
-
+    implementation 'com.github.santalu:maskara:1.0.0'
 
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     implementation 'com.github.bumptech.glide:compiler:4.11.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'
     compileOnly 'com.google.android.wearable:wearable:2.6.0'
+
 
 
 

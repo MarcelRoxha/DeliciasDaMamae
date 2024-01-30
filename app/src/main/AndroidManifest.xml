@@ -21,6 +21,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DeliciasDaMamae.PopupOverlay">
         <activity
+            android:name=".activity.CadastrarMaquininhaDeCartaoActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.AdicionarProdutoComoVendidoNoSistema"
             android:parentActivityName=".activity.BolosActivity"
             android:screenOrientation="portrait" />
@@ -34,9 +37,10 @@
             android:screenOrientation="portrait" />
         <activity android:name=".activity.DeletarBoloVendidoBancoActivity" />
         <activity android:name=".activity.EditarBoloVendidoBancoActivity" />
-        <activity android:name=".activity.BolosVendidosActivity2"
+        <activity
+            android:name=".activity.BolosVendidosActivity2"
             android:parentActivityName=".activity.BolosActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.FinalizarVendaBoloExpostoVitrineActivity"
             android:screenOrientation="portrait" />
@@ -105,6 +109,10 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_path" />
         </provider>
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>

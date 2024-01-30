@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.FinanceiroFragment"
+    android:padding="12dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView99"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto"
+            android:text="% De desconto maquininha"
+            android:textSize="20sp"
+            android:gravity="center"
+            android:layout_marginTop="13dp"/>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="13dp"
+            android:padding="20dp"
+            app:cardBackgroundColor="@color/fui_linkColor"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="20dp"
+            app:contentPadding="12dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+
+                    <TextView
+                        android:id="@+id/textView100"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:fontFamily="@font/roboto"
+                        android:text="Cartão de Crédito:"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/porcentagemCadastradaParaComprasNaMaquininhaNoCreditoId"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:layout_weight="2"
+                        android:gravity="right"
+                        android:text="Cartão de Crédito:"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textView1001"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="13dp"
+                        android:layout_weight="2"
+                        android:fontFamily="@font/roboto"
+                        android:text="Cartão de Débito:"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/porcentagemCadastradaParaComprasNaMaquininhaNoDebitoId"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:layout_marginTop="13dp"
+                        android:layout_weight="2"
+                        android:text="Cartão de Débito:"
+                        android:textAlignment="textEnd"
+                        android:textSize="14sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/textoVoceAindaNaoCadastrouAsPorcentagensId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto"
+            android:text="Você ainda não cadastrou as % da maquina que deve ser subtraida"
+            android:gravity="center"
+            android:textStyle="italic"
+            android:textSize="20sp"
+            android:layout_marginTop="13dp"/>
+
+        <Button
+            android:id="@+id/botaoCadastrarPorcentagemCreditoEDebitoMaquininhaId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn"
+            android:text="ADD % CRED. E/OU DEBITO"
+            android:padding="5dp"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginTop="13dp"/>
+
+        <TextView
+            android:id="@+id/textView992"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto"
+            android:text="Gastos fixos"
+            android:textSize="20sp"
+            android:layout_marginTop="13dp"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/recyclerViewGastosFixos"
+            android:layout_marginTop="13dp"/>
+
+        <TextView
+            android:id="@+id/textoVoceAindaNaoPossuiGastosFixosId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto"
+            android:text="Você ainda não cadastrou nenhum gasto fixo"
+            android:gravity="center"
+            android:textStyle="italic"
+            android:textSize="20sp"
+            android:layout_marginTop="13dp"/>
+        <Button
+            android:id="@+id/botaoCadastrarGastoFixoId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn"
+            android:text="CADASTRAR GASTO FIXO"
+            android:padding="5dp"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginTop="13dp"/>
+
+
+        <TextView
+            android:id="@+id/textView9922"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto"
+            android:text="Gastos avulsos"
+            android:textSize="20sp"
+            android:layout_marginTop="13dp"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/recyclerViewGastosAvulsos"
+            android:layout_marginTop="13dp"/>
+
+        <TextView
+            android:id="@+id/textoVoceAindaNaoAdicionouNenhumGastoAvulsoId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto"
+            android:text="Você ainda não cadastrou as % da maquina que deve ser subtraida"
+            android:gravity="center"
+            android:textStyle="italic"
+            android:textSize="20sp"
+            android:layout_marginTop="13dp"/>
+        <Button
+            android:id="@+id/botaoAdicionarGastoAvulsoId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn"
+            android:text="ADICIONAR GASTO AVULSO"
+            android:padding="5dp"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginTop="13dp"/>
+    </LinearLayout>
+</ScrollView>

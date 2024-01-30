@@ -115,7 +115,9 @@ public class AddItemEstoqueActivity extends AppCompatActivity {
 
 
         //Recuperando a chave do item estoque caso seja atualização
-         itemKey = getIntent().getStringExtra("itemKey");
+         itemKey = getIntent().getStringExtra("idMaquininha");
+
+
 
          /*Verificando se o item recuperado é diferente de nulo, pois se for direfente de nulo significa
              que é uma atualização e os inputs e RadionButtons serão preenchidos com os dados*/
