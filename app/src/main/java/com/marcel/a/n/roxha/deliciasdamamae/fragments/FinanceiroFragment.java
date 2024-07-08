@@ -6,25 +6,39 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.marcel.a.n.roxha.deliciasdamamae.R;
+import com.marcel.a.n.roxha.deliciasdamamae.activity.AdicionarOuEditarGastoAvulsoActivity;
 import com.marcel.a.n.roxha.deliciasdamamae.activity.CadastrarMaquininhaDeCartaoActivity;
+import com.marcel.a.n.roxha.deliciasdamamae.activity.CadastrarOuAtualizarGastoFixoActivity;
+import com.marcel.a.n.roxha.deliciasdamamae.adapter.AdapterModeloGastoAvulsos;
+import com.marcel.a.n.roxha.deliciasdamamae.adapter.AdapterModeloGastosFixos;
+import com.marcel.a.n.roxha.deliciasdamamae.adapter.ModeloItemEstoqueAdapter;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloGastosAvulsos;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloGastosFixos;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloItemEstoque;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloMaquininhaDePassarCartao;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -44,18 +58,33 @@ public class FinanceiroFragment extends Fragment {
     private String mParam2;
 
     private Button botaoCadastrarPorcentagensMaquininha, botaoCadastrarGastoFixos, botaoAdicionarGastoAvulso;
-    private RecyclerView recyclerViewGastosFixos, recyclerViewGastosAvulsos;
+    private RecyclerView recyclerViewGastosFixos;
+    private RecyclerView recyclerViewGastosAvulsos;
     private TextView textViewInformaQueAindaNaoCadastrouPorcentagemDaMaquininha ,textViewInformandoQueNaoTemGastosFixosCadastrados,
             textViewInformandoQueNaoTemGastosAvulsos, textViewPorcentagemCartaoCredito, textViewPorcentagemCartaoDebito, textViewNomeMaquininhaQuandoHouver;
 
     private FirebaseFirestore firestore = ConfiguracaoFirebase.getFirestor();
     private CollectionReference collectionReference;
+    private CollectionReference collectionReferenceGastosAvulsos = firestore.collection("GASTOS_AVULSOS");
+    private String mesAtual = "";
+    private String diaAtual = "";
+    private String dataReferenciaGastosAvulsos = "";
+    private String anoAtual = "";
+
+    private Date dataHoje = new Date();
+    private Date dataCollectionReferenciaMontanteMensal = new Date();
 
     private SimpleDateFormat simpleDateFormatDataCompleta = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
     private SimpleDateFormat simpleDateFormatCollectionReferenciaAtual = new SimpleDateFormat("MM");
     private SimpleDateFormat simpleDateFormatCollectionReferenciaAnoAtual = new SimpleDateFormat("yyyy");
-    private SimpleDateFormat simpleDateFormatCollectionReferenciaAtualModeloCaixaDiario = new SimpleDateFormat("dd/MM/yyyy");
+    private SimpleDateFormat formatoDataVerificaGastosAvulsos = new SimpleDateFormat("dd/MM/yyyy");
 
+    private AdapterModeloGastosFixos adapterModeloGastosFixos;
+    private AdapterModeloGastoAvulsos adapterModeloGastoAvulsos;
+
+    private String mesReferenciaDesseMontante;
+    private String nomeCompletoColletionMontanteMensal;
+    private final String COLLECTION_MONTANTE_DESSE_MES = "MONTANTE_MENSAL";
     public FinanceiroFragment() {
         // Required empty public constructor
     }
@@ -101,6 +130,26 @@ public class FinanceiroFragment extends Fragment {
         textViewPorcentagemCartaoDebito = viewFinanceiroFragment.findViewById(R.id.porcentagemCadastradaParaComprasNaMaquininhaNoDebitoId);
         textViewInformaQueAindaNaoCadastrouPorcentagemDaMaquininha = viewFinanceiroFragment.findViewById(R.id.textoVoceAindaNaoCadastrouAsPorcentagensId);
         textViewNomeMaquininhaQuandoHouver = viewFinanceiroFragment.findViewById(R.id.textView99);
+        textViewInformandoQueNaoTemGastosAvulsos = viewFinanceiroFragment.findViewById(R.id.textoVoceAindaNaoAdicionouNenhumGastoAvulsoId);
+        //Montar as datas referencia atual
+        diaAtual = formatoDataVerificaGastosAvulsos.format(dataHoje);
+        anoAtual = simpleDateFormatCollectionReferenciaAnoAtual.format(dataHoje);
+        mesAtual = simpleDateFormatCollectionReferenciaAtual.format(dataHoje);
+        dataReferenciaGastosAvulsos = formatoDataVerificaGastosAvulsos.format(dataHoje);
+        mesReferenciaDesseMontante = mesAtual + "_" + anoAtual;
+        nomeCompletoColletionMontanteMensal = COLLECTION_MONTANTE_DESSE_MES + "_" + mesReferenciaDesseMontante;
+
+        textViewInformandoQueNaoTemGastosFixosCadastrados = viewFinanceiroFragment.findViewById(R.id.textoVoceAindaNaoPossuiGastosFixosId);
+        recyclerViewGastosFixos = viewFinanceiroFragment.findViewById(R.id.recyclerViewGastosFixosId);
+        recyclerViewGastosAvulsos = viewFinanceiroFragment.findViewById(R.id.listaGastoAvulsosId);
+
+        botaoCadastrarGastoFixos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), CadastrarOuAtualizarGastoFixoActivity.class);
+                startActivity(intent);
+            }
+        });
 
         carregarDadosDaMaquininha();
         botaoCadastrarPorcentagensMaquininha.setOnClickListener(new View.OnClickListener() {
@@ -110,7 +159,21 @@ public class FinanceiroFragment extends Fragment {
             }
         });
 
-        // Inflate the layout for this fragment
+
+        botaoAdicionarGastoAvulso.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(getContext(), AdicionarOuEditarGastoAvulsoActivity.class);
+                startActivity(intent);
+            }
+        });
+//
+        carregarDadosGastosFixos();
+        verificaSeTemGastosFixosCadastrados();
+
+        adapterModeloGastosFixos.startListening();
+        verificaSeTemGastoAvulsoNesseMes();
         return viewFinanceiroFragment;
     }
 
@@ -217,15 +280,105 @@ public class FinanceiroFragment extends Fragment {
     }
 
 
+    private void carregarDadosGastosFixos(){
 
-//    private String retornaData(){
-//        return
-//    }
+        collectionReference = firestore.collection("GASTOS_FIXOS");
 
+        Query query = collectionReference.orderBy("nomeDoGastoFixo", Query.Direction.ASCENDING);
+        System.out.println("Passou pelo carrega dados Fixos");
+        FirestoreRecyclerOptions<ModeloGastosFixos> options = new FirestoreRecyclerOptions.Builder<ModeloGastosFixos>()
+                .setQuery(query, ModeloGastosFixos.class)
+                .build();
+
+
+
+
+        adapterModeloGastosFixos = new AdapterModeloGastosFixos(options);
+        recyclerViewGastosFixos.setHasFixedSize(true);
+        recyclerViewGastosFixos.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerViewGastosFixos.setAdapter(adapterModeloGastosFixos);
+        adapterModeloGastosFixos.startListening();
+
+    }
+
+
+    public void verificaSeTemGastosFixosCadastrados(){
+
+        firestore.collection("GASTOS_FIXOS").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                List<DocumentSnapshot> listaDeGastosFixo = queryDocumentSnapshots.getDocuments();
+
+                if(listaDeGastosFixo.size() > 0){
+                    textViewInformandoQueNaoTemGastosFixosCadastrados.setVisibility(View.GONE);
+                }else {
+                    textViewInformandoQueNaoTemGastosFixosCadastrados.setVisibility(View.VISIBLE);
+                }
+
+
+            }
+        });
+
+    }
+
+
+    public void verificaSeTemGastoAvulsoNesseMes(){
+
+        System.out.println("mes referencia " + mesReferenciaDesseMontante);
+        firestore.collection("GASTOS_AVULSOS").whereEqualTo("dataPagamentoAvulsos", mesReferenciaDesseMontante).get()
+                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                            @Override
+                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                           List<DocumentSnapshot> listaGastoAvulsosDesseMes = queryDocumentSnapshots.getDocuments();
+                           if(listaGastoAvulsosDesseMes.size() > 0){
+                               System.out.println("Achou a queryy");
+                               carregarDadosDosGastosAvulsosDesseMes();
+                           }else{
+                               System.out.println("Não achou a queryy");
+                           }
+                            }
+                        });
+
+
+
+    }
+
+    private void carregarDadosDosGastosAvulsosDesseMes() {
+//        CollectionReference collectionReference = firestore.collection("GASTOS_AVULSOS");
+
+        Query query = collectionReferenceGastosAvulsos.whereEqualTo("dataPagamentoAvulsos", mesReferenciaDesseMontante).orderBy("nomeDoGastoAvulsos", Query.Direction.ASCENDING);
+        System.out.println("Query++++++++++++++++++++++ " + query.get());
+
+
+
+//        Query query = collectionReferenceGastosAvulsos.orderBy("nomeDoGastoFixo", Query.Direction.ASCENDING);
+        System.out.println("Passou pelo carregarDadosDosGastosAvulsosDesseMes");
+
+
+        FirestoreRecyclerOptions<ModeloGastosAvulsos> options = new FirestoreRecyclerOptions.Builder<ModeloGastosAvulsos>()
+                .setQuery(query, ModeloGastosAvulsos.class)
+                .build();
+
+
+
+        adapterModeloGastoAvulsos = new AdapterModeloGastoAvulsos(options);
+        recyclerViewGastosAvulsos.setHasFixedSize(true);
+        recyclerViewGastosAvulsos.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerViewGastosAvulsos.setAdapter(adapterModeloGastoAvulsos);
+        adapterModeloGastoAvulsos.startListening();
+
+    }
 
     @Override
     public void onStart() {
         super.onStart();
-        carregarDadosDaMaquininha();
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+//        adapterModeloGastoAvulsos.stopListening();
     }
 }

@@ -429,33 +429,13 @@ public class CaixaLojaFragment extends Fragment {
         FirestoreRecyclerOptions<BolosModel> options = new FirestoreRecyclerOptions.Builder<BolosModel>().setQuery(query, BolosModel.class).build();
 
         expostoAdapter = new BolosAdicionadosVitrineParaExibirQuandoVenderAdapter(options, getContext());
-//        adapter = new AdapterModeloBolosAdicionadosVitrineQuandoVender(options, getContext());
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
 
         recyclerView_itens_vitrine.setHasFixedSize(true);
         recyclerView_itens_vitrine.setLayoutManager(layoutManager);
         recyclerView_itens_vitrine.setAdapter(expostoAdapter);
 
-//        adapter.setOnItemClickListerner(new AdapterModeloBolosAdicionadosVitrineQuandoVender.OnItemClickLisener() {
-//            @Override
-//            public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
-//
-//                BolosModel boloRecuperadoParaProcessamentoDaVenda = documentSnapshot.toObject(BolosModel.class);
-//                String idDoProdutoCadastrado = boloRecuperadoParaProcessamentoDaVenda.getIdReferenciaReceitaCadastrada();
-//                String idRecuperadoDoBoloExpostoVitrine = boloRecuperadoParaProcessamentoDaVenda.getIdBoloCadastrado();
-//                String nomeRecuperadoExpostoVitrine = boloRecuperadoParaProcessamentoDaVenda.getNomeBoloCadastrado();
-//                String custoDoProdutoRecuperadoExpostoVitrine = boloRecuperadoParaProcessamentoDaVenda.getCustoTotalDaReceitaDoBolo();
-//                Intent intentAdicionarProdutoComoVendidoNoSistema = new Intent(getContext(), AdicionarProdutoComoVendidoNoSistema.class);
-//                intentAdicionarProdutoComoVendidoNoSistema.putExtra("itemKey", idRecuperadoDoBoloExpostoVitrine);
-//                intentAdicionarProdutoComoVendidoNoSistema.putExtra("itemKeyMontanteMensal", idRecuperadoMontanteMensal);
-//                intentAdicionarProdutoComoVendidoNoSistema.putExtra("nomeRecuperadoExpostoVitrine", nomeRecuperadoExpostoVitrine);
-//                intentAdicionarProdutoComoVendidoNoSistema.putExtra("itemKeyMontanteDiario", idRecuperadoCaixaDiario);
-//                intentAdicionarProdutoComoVendidoNoSistema.putExtra("itemKeyIdProdutoCadastrado", idDoProdutoCadastrado);
-//                intentAdicionarProdutoComoVendidoNoSistema.putExtra("custoDoProdutoRecuperadoExpostoVitrine", custoDoProdutoRecuperadoExpostoVitrine);
-//
-//                startActivity(intentAdicionarProdutoComoVendidoNoSistema);
-//            }
-//        });
+
         expostoAdapter.startListening();
         expostoAdapter.setOnItemClickListerner(new BolosAdicionadosVitrineParaExibirQuandoVenderAdapter.OnItemClickLisener() {
             @Override
@@ -624,9 +604,15 @@ public class CaixaLojaFragment extends Fragment {
 
                                                     if (task.isSuccessful()) {
                                                         if (!task.getResult().isEmpty()) {
+                                                            String valorQueOCaixaFinalizou ="";
                                                             progressDialogCarregandoAsInformacoesDoCaixaDiario.dismiss();
                                                             DocumentSnapshot document = task.getResult().getDocuments().get(0);
-                                                            String valorQueOCaixaFinalizou = document.get("valorQueOCaixaFinalizou").toString();
+                                                            if(document.get("valorQueOCaixaFinalizou").toString() != null){
+                                                                valorQueOCaixaFinalizou = document.get("valorQueOCaixaFinalizou").toString();
+                                                            }else{
+                                                                valorQueOCaixaFinalizou = "0";
+                                                            }
+
 
                                                             criandoAlertaDoMontanteQuandoPrecisaCriarApenasDeMontanteDiario("DIARIO-COM-DIA-ANTERIOR", valorQueOCaixaFinalizou, idRecuperado);
 

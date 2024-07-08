@@ -16,6 +16,9 @@ public class ModeloMontanteMensalLoja implements Serializable {
     private String valorTotalDeVendasNoDinheiroDesseMes;
     private String valorTotalDeVendasNoCreditoDesseMes;
     private String valorTotalDeVendasNoDebitoDesseMes;
+    private String valorTotalGastoAvulsoDesseMes;
+    private String valorTotalGastoFixoEsseMes;
+
 
     private int quantidadeDeVendasDesseMes;
 
@@ -141,6 +144,22 @@ public class ModeloMontanteMensalLoja implements Serializable {
         this.quantidadeDeVendasDesseMes = quantidadeDeVendasDesseMes;
     }
 
+    public String getValorTotalGastoAvulsoDesseMes() {
+        return valorTotalGastoAvulsoDesseMes;
+    }
+
+    public void setValorTotalGastoAvulsoDesseMes(String valorTotalGastoAvulsoDesseMes) {
+        this.valorTotalGastoAvulsoDesseMes = valorTotalGastoAvulsoDesseMes;
+    }
+
+    public String getValorTotalGastoFixoEsseMes() {
+        return valorTotalGastoFixoEsseMes;
+    }
+
+    public void setValorTotalGastoFixoEsseMes(String valorTotalGastoFixoEsseMes) {
+        this.valorTotalGastoFixoEsseMes = valorTotalGastoFixoEsseMes;
+    }
+
     @Override
     public String toString() {
         return "ModeloMontanteMensalLoja{" +
@@ -156,6 +175,8 @@ public class ModeloMontanteMensalLoja implements Serializable {
                 ", valorTotalDeVendasNoDinheiroDesseMes='" + valorTotalDeVendasNoDinheiroDesseMes + '\'' +
                 ", valorTotalDeVendasNoCreditoDesseMes='" + valorTotalDeVendasNoCreditoDesseMes + '\'' +
                 ", valorTotalDeVendasNoDebitoDesseMes='" + valorTotalDeVendasNoDebitoDesseMes + '\'' +
+                ", valorTotalGastoAvulsoDesseMes='" + valorTotalGastoAvulsoDesseMes + '\'' +
+                ", valorTotalGastoFixoEsseMes='" + valorTotalGastoFixoEsseMes + '\'' +
                 ", quantidadeDeVendasDesseMes=" + quantidadeDeVendasDesseMes +
                 '}';
     }

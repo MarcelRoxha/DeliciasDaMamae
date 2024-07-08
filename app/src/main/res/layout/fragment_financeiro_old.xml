@@ -129,7 +129,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/recyclerViewGastosFixos"
+            android:id="@+id/recyclerViewGastosFixosId"
             android:layout_marginTop="13dp"/>
 
         <TextView
@@ -165,10 +165,9 @@
             android:layout_marginTop="13dp"/>
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/listaGastoAvulsosId"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/recyclerViewGastosAvulsos"
-            android:layout_marginTop="13dp"/>
+            android:layout_height="match_parent" />
 
         <TextView
             android:id="@+id/textoVoceAindaNaoAdicionouNenhumGastoAvulsoId"

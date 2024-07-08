@@ -283,6 +283,7 @@ public class GraficosFragment extends Fragment {
                 String totalDeVendasNoDinheiroRecuperado = modeloMontanteMensalLojaRecuperaDados.getValorTotalDeVendasNoDinheiroDesseMes().replace(",", ",");
                 String totalDeVendasNoDebitoRecuperado = modeloMontanteMensalLojaRecuperaDados.getValorTotalDeVendasNoDebitoDesseMes().replace(",", ",");
                 String totalDeVendasNoCreditoRecuperado = modeloMontanteMensalLojaRecuperaDados.getValorTotalDeVendasNoCreditoDesseMes().replace(",", ",");
+
                 int quantidadeTotalDeVendas = modeloMontanteMensalLojaRecuperaDados.getQuantidadeDeVendasDesseMes();
                 ModeloMontanteMensalLoja modeloMontanteMensalLojaExibeDadosTela = new ModeloMontanteMensalLoja();
                 modeloMontanteMensalLojaExibeDadosTela.setValorTotalVendasBoleriaMensal(totalDeVendasBoleriaRecuperada);

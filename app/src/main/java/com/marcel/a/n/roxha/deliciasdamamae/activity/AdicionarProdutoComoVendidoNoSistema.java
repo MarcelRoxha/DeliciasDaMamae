@@ -1,5 +1,7 @@
 package com.marcel.a.n.roxha.deliciasdamamae.activity;
 
+import static android.app.PendingIntent.getActivity;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -222,44 +224,137 @@ public class AdicionarProdutoComoVendidoNoSistema extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 try {
-                     String valorQueVaiSerVendidoMesmo = textoValorQueVaiSerVendidoMesmo.getText().toString();
 
-                    if(!radioButtonSelecionarPrecoDeVendaNaLoja.isChecked() && !radioButtonSelecionarPrecoDeVendaNoIfood.isChecked() && valoQueFoiVendidoOProdutoRecuperado == "0"){
-                        //Se cair nessa condição é por que não foi digitado um valor valido para ser processada a venda.
+                    if(radioButtonSelecionarPrecoDeVendaNoIfood.isChecked()){
 
-                        Toast.makeText(AdicionarProdutoComoVendidoNoSistema.this, "É NECESSÁRIO QUE SEJA SELECIONADO UM DOS VALORES PARA VENDA, ESCOLHA ENTRE VALORES CADASTRADOS NA LOJA E/OU IFOOD OU EDITE O VALOR DE VENDA", Toast.LENGTH_LONG).show();
+                        AlertDialog.Builder builder = new AlertDialog.Builder(AdicionarProdutoComoVendidoNoSistema.this);
+                        LayoutInflater inflaterLayout = AdicionarProdutoComoVendidoNoSistema.this.getLayoutInflater();
+                        builder.setView(inflaterLayout.inflate(R.layout.alerta_desconto_indevido_venda_ifood, null));
+                        builder.setCancelable(true);
+                        View v = getLayoutInflater().inflate(R.layout.alerta_desconto_indevido_venda_ifood, null);
+                        EditText valorDescontoIfood = v.findViewById(R.id.descontoIndevidoIfoodId);
+                        Button botaoConfirmar, botaoCancelar;
 
-                    }else{
+                        botaoCancelar = v.findViewById(R.id.botaoCancelarDescontoIndevidoIfoodId);
+                        botaoConfirmar = v.findViewById(R.id.botaoConfirmarVendaComDescontoIndevidoIfoodId);
+                        builder.setView(v);
+                        builder.create();
+                        builder.show();
 
-                        if(radioButtonSelecionarPrecoDeVendaNoIfood.isChecked()){
-                            PLATAFORMA_VENDIDA = "IFOOD";
-                            valoQueFoiVendidoOProdutoRecuperado = valorDoIfoodDoProdutoRecuperado;
-                        }else if(radioButtonSelecionarPrecoDeVendaNaLoja.isChecked()){
-                            valoQueFoiVendidoOProdutoRecuperado = valorNaLojaDoProdutoRecuperado;
-                            PLATAFORMA_VENDIDA = "LOJA";
-                        }
-                        if(radioButtonPagouNoCredito.isChecked()){
-                            METODO_DE_PAGAMENTO = "CREDITO";
-                        }else if(radioButtonPagouNoDinheiroOuPix.isChecked()){
-                            METODO_DE_PAGAMENTO = "DINHEIROOUPIX";
-                        }else if(radioButtonPagouNoDebito.isChecked()){
-                            METODO_DE_PAGAMENTO = "DEBITO";
-                        }
+                        botaoConfirmar.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
 
-                        dataRegistroDoProcessoDeVenda = formatoDataDiaMesAno.format(dataAtual);
-                        String custoPreper=custoDoProdutoRecuperadoExpostoVitrine.replace(",", ".");
-                        double custoConvertidoDoProdutoVendido = Double.parseDouble(custoPreper);
 
-                        produtoVendidoProcessado.setPlataformaVendida(PLATAFORMA_VENDIDA);
-                        produtoVendidoProcessado.setMetodoDePagamento(METODO_DE_PAGAMENTO);
-                        produtoVendidoProcessado.setNomeDoProdutoVendido(nomeRecuperadoExpostoVitrine);
-                        produtoVendidoProcessado.setValorQueOBoloFoiVendido(valoQueFoiVendidoOProdutoRecuperado);
-                        produtoVendidoProcessado.setRegistroDaVenda(dataRegistroDoProcessoDeVenda);
-                        produtoVendidoProcessado.setCustoProduto(custoConvertidoDoProdutoVendido);
-                        ModeloProcessaVendaFeitaDAO modeloProcessaVendaFeitaDAO = new ModeloProcessaVendaFeitaDAO(AdicionarProdutoComoVendidoNoSistema.this);
-                        modeloProcessaVendaFeitaDAO.processaNoMontanteMensalVendaFeita(produtoVendidoProcessado, itemKeyMontanteMensal, itemKeyMontanteDiario);
+
+                                String valorDescontoInesperado = valorDescontoIfood.getText().toString();
+                                if(valorDescontoInesperado.isEmpty() || valorDescontoInesperado.equals("0")){
+                                    String valorQueVaiSerVendidoMesmo = textoValorQueVaiSerVendidoMesmo.getText().toString();
+
+                                    if(!radioButtonSelecionarPrecoDeVendaNaLoja.isChecked() && !radioButtonSelecionarPrecoDeVendaNoIfood.isChecked() && valoQueFoiVendidoOProdutoRecuperado == "0"){
+                                        //Se cair nessa condição é por que não foi digitado um valor valido para ser processada a venda.
+
+                                        Toast.makeText(AdicionarProdutoComoVendidoNoSistema.this, "É NECESSÁRIO QUE SEJA SELECIONADO UM DOS VALORES PARA VENDA, ESCOLHA ENTRE VALORES CADASTRADOS NA LOJA E/OU IFOOD OU EDITE O VALOR DE VENDA", Toast.LENGTH_LONG).show();
+
+                                    }else{
+
+                                        if(radioButtonSelecionarPrecoDeVendaNoIfood.isChecked()){
+                                            PLATAFORMA_VENDIDA = "IFOOD";
+                                            valoQueFoiVendidoOProdutoRecuperado = valorDoIfoodDoProdutoRecuperado;
+                                        }else if(radioButtonSelecionarPrecoDeVendaNaLoja.isChecked()){
+                                            valoQueFoiVendidoOProdutoRecuperado = valorNaLojaDoProdutoRecuperado;
+                                            PLATAFORMA_VENDIDA = "LOJA";
+                                        }
+                                        if(radioButtonPagouNoCredito.isChecked()){
+                                            METODO_DE_PAGAMENTO = "CREDITO";
+                                        }else if(radioButtonPagouNoDinheiroOuPix.isChecked()){
+                                            METODO_DE_PAGAMENTO = "DINHEIROOUPIX";
+                                        }else if(radioButtonPagouNoDebito.isChecked()){
+                                            METODO_DE_PAGAMENTO = "DEBITO";
+                                        }
+
+                                        dataRegistroDoProcessoDeVenda = formatoDataDiaMesAno.format(dataAtual);
+                                        String custoPreper=custoDoProdutoRecuperadoExpostoVitrine.replace(",", ".");
+                                        double custoConvertidoDoProdutoVendido = Double.parseDouble(custoPreper);
+
+                                        produtoVendidoProcessado.setPlataformaVendida(PLATAFORMA_VENDIDA);
+                                        produtoVendidoProcessado.setMetodoDePagamento(METODO_DE_PAGAMENTO);
+                                        produtoVendidoProcessado.setNomeDoProdutoVendido(nomeRecuperadoExpostoVitrine);
+                                        produtoVendidoProcessado.setValorQueOBoloFoiVendido(valoQueFoiVendidoOProdutoRecuperado);
+                                        produtoVendidoProcessado.setRegistroDaVenda(dataRegistroDoProcessoDeVenda);
+                                        produtoVendidoProcessado.setCustoProduto(custoConvertidoDoProdutoVendido);
+                                        ModeloProcessaVendaFeitaDAO modeloProcessaVendaFeitaDAO = new ModeloProcessaVendaFeitaDAO(AdicionarProdutoComoVendidoNoSistema.this);
+                                        modeloProcessaVendaFeitaDAO.processaNoMontanteMensalVendaFeita(produtoVendidoProcessado, itemKeyMontanteMensal, itemKeyMontanteDiario);
+
+                                    }
+
+                                }else{
+                                    String valorQueVaiSerVendidoMesmo = textoValorQueVaiSerVendidoMesmo.getText().toString();
+
+                                    if(!radioButtonSelecionarPrecoDeVendaNaLoja.isChecked() && !radioButtonSelecionarPrecoDeVendaNoIfood.isChecked() && valoQueFoiVendidoOProdutoRecuperado == "0"){
+                                        //Se cair nessa condição é por que não foi digitado um valor valido para ser processada a venda.
+
+                                        Toast.makeText(AdicionarProdutoComoVendidoNoSistema.this, "É NECESSÁRIO QUE SEJA SELECIONADO UM DOS VALORES PARA VENDA, ESCOLHA ENTRE VALORES CADASTRADOS NA LOJA E/OU IFOOD OU EDITE O VALOR DE VENDA", Toast.LENGTH_LONG).show();
+
+                                    }else{
+
+                                        if(radioButtonSelecionarPrecoDeVendaNoIfood.isChecked()){
+                                            PLATAFORMA_VENDIDA = "IFOOD";
+                                            valoQueFoiVendidoOProdutoRecuperado = valorDoIfoodDoProdutoRecuperado;
+                                        }else if(radioButtonSelecionarPrecoDeVendaNaLoja.isChecked()){
+                                            valoQueFoiVendidoOProdutoRecuperado = valorNaLojaDoProdutoRecuperado;
+                                            PLATAFORMA_VENDIDA = "LOJA";
+                                        }
+                                        if(radioButtonPagouNoCredito.isChecked()){
+                                            METODO_DE_PAGAMENTO = "CREDITO";
+                                        }else if(radioButtonPagouNoDinheiroOuPix.isChecked()){
+                                            METODO_DE_PAGAMENTO = "DINHEIROOUPIX";
+                                        }else if(radioButtonPagouNoDebito.isChecked()){
+                                            METODO_DE_PAGAMENTO = "DEBITO";
+                                        }
+
+                                        dataRegistroDoProcessoDeVenda = formatoDataDiaMesAno.format(dataAtual);
+                                        String custoPreper=custoDoProdutoRecuperadoExpostoVitrine.replace(",", ".");
+                                        double custoConvertidoDoProdutoVendido = Double.parseDouble(custoPreper);
+                                        double valorDescontoIndevidoConvertido = Double.parseDouble(valorDescontoInesperado);
+                                        double valorConverter = Double.parseDouble(valoQueFoiVendidoOProdutoRecuperado);
+                                        double valorQueVaiSerVendidoOProdutoComDesconto = valorConverter - valorDescontoIndevidoConvertido;
+
+                                        String valorQueVaiSerVendidoComDesconto = String.valueOf(valorQueVaiSerVendidoOProdutoComDesconto);
+                                        produtoVendidoProcessado.setPlataformaVendida(PLATAFORMA_VENDIDA);
+                                        produtoVendidoProcessado.setMetodoDePagamento(METODO_DE_PAGAMENTO);
+                                        produtoVendidoProcessado.setNomeDoProdutoVendido(nomeRecuperadoExpostoVitrine);
+                                        produtoVendidoProcessado.setValorQueOBoloFoiVendido(valorQueVaiSerVendidoComDesconto);
+                                        produtoVendidoProcessado.setRegistroDaVenda(dataRegistroDoProcessoDeVenda);
+                                        produtoVendidoProcessado.setCustoProduto(custoConvertidoDoProdutoVendido);
+                                        ModeloProcessaVendaFeitaDAO modeloProcessaVendaFeitaDAO = new ModeloProcessaVendaFeitaDAO(AdicionarProdutoComoVendidoNoSistema.this);
+                                        modeloProcessaVendaFeitaDAO.processaNoMontanteMensalVendaFeita(produtoVendidoProcessado, itemKeyMontanteMensal, itemKeyMontanteDiario);
+
+                                    }
+                                }
+
+
+
+                            }
+                        });
+
+                        botaoCancelar.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+
+                                Intent intent = new Intent(AdicionarProdutoComoVendidoNoSistema.this, LojaActivityV2.class);
+                                startActivity(intent);
+                                finish();
+
+                            }
+                        });
+
 
                     }
+
+                    /*TODO necessario adicionar tratativa para o valor do ifood quando tiver desconto inesperado */
+
+
 
 
                 }catch (Exception e){

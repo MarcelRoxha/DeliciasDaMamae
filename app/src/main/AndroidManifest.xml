@@ -21,6 +21,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DeliciasDaMamae.PopupOverlay">
         <activity
+            android:name=".activity.AdicionarOuEditarGastoAvulsoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.CadastrarOuAtualizarGastoFixoActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.CadastrarMaquininhaDeCartaoActivity"
             android:exported="false" />
         <activity

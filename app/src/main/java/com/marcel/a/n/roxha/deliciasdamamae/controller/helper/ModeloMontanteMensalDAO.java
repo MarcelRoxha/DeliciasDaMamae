@@ -12,6 +12,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloControleRelatorioMensal;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloGastosAvulsos;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloMontanteDiario;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloMontanteMensalLoja;
 
@@ -23,6 +24,7 @@ import java.util.Map;
 public class ModeloMontanteMensalDAO implements InterfaceModeloMontanteMensalDAO{
 
     private static final String COLLECTIO_MONTANTE_MENSAL = "MONTANTE_MENSAL";
+    private static final String COLLECTIO_GASTO_AVULSO = "GASTO_AVULSO";
     private Context context;
     private FirebaseFirestore firestore = ConfiguracaoFirebase.getFirestor();
     private CollectionReference referenciaMontanteMensal ;
@@ -156,6 +158,64 @@ public class ModeloMontanteMensalDAO implements InterfaceModeloMontanteMensalDAO
             Toast.makeText(context, "Algo deu errado, verifique as informações e a internet e tente novamente", Toast.LENGTH_SHORT).show();
 
         }
+
+    }
+
+    public void adicionarGastoAvulsoMontanteMensal(double valorQueSaiuAtualiza, double valorGastoAvulsoAtualiza, String idMontanteAtualiza, ModeloGastosAvulsos modeloGastosAvulsos){
+        if(idMontanteAtualiza != null) {
+
+            String valorQueSaiuAtulizaConvert = String.valueOf(valorQueSaiuAtualiza);
+            String valorGastoAvulsoAtualizaConvert = String.valueOf(valorGastoAvulsoAtualiza);
+
+            System.out.println("idMontanteAtualiza " + idMontanteAtualiza);
+            try {
+                Map<String, Object> montanteMensalSendoIniciadoParaArmazenar = new HashMap<>();
+                montanteMensalSendoIniciadoParaArmazenar.put("quantoDinheiroSaiuEsseMes", valorQueSaiuAtulizaConvert);
+                montanteMensalSendoIniciadoParaArmazenar.put("valorTotalGastoAvulsoDesseMes", valorGastoAvulsoAtualizaConvert);
+
+
+                CollectionReference collectionReference = firestore.collection("GASTOS_AVULSOS");
+                this.referenciaMontanteMensal.document(idMontanteAtualiza).update(montanteMensalSendoIniciadoParaArmazenar).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+
+                        System.out.println("atualizou");
+                        HashMap<String, Object> gastoAvulsoAdiciona = new HashMap<>();
+                        gastoAvulsoAdiciona.put("nomeDoGastoAvulsos", modeloGastosAvulsos.getNomeDoGastoAvulsos());
+                        gastoAvulsoAdiciona.put("dataDeRegistroGasto", modeloGastosAvulsos.getDataDeRegistroGasto());
+                        gastoAvulsoAdiciona.put("dataPagamentoAvulsos", modeloGastosAvulsos.getDataPagamentoAvulsos());
+                        gastoAvulsoAdiciona.put("valorGastoAvulsos", modeloGastosAvulsos.getValorGastoAvulsos());
+
+
+                        firestore.collection("GASTOS_AVULSOS").add(gastoAvulsoAdiciona)
+                                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                            @Override
+                                            public void onSuccess(DocumentReference documentReference) {
+                                                Toast.makeText(context, "Gasto Avulso adicionado com sucesso", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(context, "Atenção, gasto avulso não foi adicionado, favor verifique sua internet e tente novamente", Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+
+
+            } catch (Exception e) {
+                System.out.println("Error: " + e.getMessage());
+            }
+
+
+        }else {
+            Toast.makeText(context, "Algo deu errado, verifique as informações e a internet e tente novamente", Toast.LENGTH_SHORT).show();
+
+        }
+
 
     }
 
