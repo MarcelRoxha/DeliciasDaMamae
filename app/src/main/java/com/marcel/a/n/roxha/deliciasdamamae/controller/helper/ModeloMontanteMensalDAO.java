@@ -9,6 +9,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloControleRelatorioMensal;
@@ -219,4 +220,39 @@ public class ModeloMontanteMensalDAO implements InterfaceModeloMontanteMensalDAO
 
     }
 
+    public void somaValorSaidaDevidoAoTrocoMontanteMensal(String idMontanteMensal, String valorTroco){
+
+        this.referenciaMontanteMensal.document(idMontanteMensal).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    ModeloMontanteMensalLoja modeloMontanteMensalLojaRecuperado = documentSnapshot.toObject(ModeloMontanteMensalLoja.class);
+                    String valorSaidaRecuperado = modeloMontanteMensalLojaRecuperado.getQuantoDinheiroSaiuEsseMes();
+                    double valorSaidaConvertido = Double.parseDouble(valorSaidaRecuperado);
+                    double valorTrocoConvertido = Double.parseDouble(valorTroco);
+                    double somaValores = valorTrocoConvertido + valorSaidaConvertido;
+
+                    String valorParaAtualizarNoBanco = String.valueOf(somaValores);
+
+                    atualizaValorQueSaiuMes(idMontanteMensal, valorParaAtualizarNoBanco);
+
+
+
+                    }
+                });
+
+    }
+
+    private void atualizaValorQueSaiuMes(String idMontanteMensal, String valorParaAtualizarNoBanco) {
+        HashMap<String, Object> atualizaMontanteMensal = new HashMap<>();
+        atualizaMontanteMensal.put("quantoDinheiroSaiuEsseMes", valorParaAtualizarNoBanco);
+        
+        this.referenciaMontanteMensal.document(idMontanteMensal).update(atualizaMontanteMensal)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Toast.makeText(context, "Troco atualizado.", Toast.LENGTH_SHORT).show();     
+                    }
+                });
+    }
 }

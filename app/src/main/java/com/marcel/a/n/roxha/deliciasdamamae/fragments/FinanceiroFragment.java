@@ -32,6 +32,8 @@ import com.marcel.a.n.roxha.deliciasdamamae.adapter.AdapterModeloGastoAvulsos;
 import com.marcel.a.n.roxha.deliciasdamamae.adapter.AdapterModeloGastosFixos;
 import com.marcel.a.n.roxha.deliciasdamamae.adapter.ModeloItemEstoqueAdapter;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
+import com.marcel.a.n.roxha.deliciasdamamae.controller.helper.ModeloGastosAvulsosDAO;
+import com.marcel.a.n.roxha.deliciasdamamae.controller.helper.ModeloGastosFixosDAO;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloGastosAvulsos;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloGastosFixos;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloItemEstoque;
@@ -61,7 +63,8 @@ public class FinanceiroFragment extends Fragment {
     private RecyclerView recyclerViewGastosFixos;
     private RecyclerView recyclerViewGastosAvulsos;
     private TextView textViewInformaQueAindaNaoCadastrouPorcentagemDaMaquininha ,textViewInformandoQueNaoTemGastosFixosCadastrados,
-            textViewInformandoQueNaoTemGastosAvulsos, textViewPorcentagemCartaoCredito, textViewPorcentagemCartaoDebito, textViewNomeMaquininhaQuandoHouver;
+            textViewInformandoQueNaoTemGastosAvulsos, textViewPorcentagemCartaoCredito, textViewPorcentagemCartaoDebito, textViewNomeMaquininhaQuandoHouver,
+    textViewValorTotalGastoFixo, textViewViewTotalGastoAvulsos;
 
     private FirebaseFirestore firestore = ConfiguracaoFirebase.getFirestor();
     private CollectionReference collectionReference;
@@ -131,6 +134,8 @@ public class FinanceiroFragment extends Fragment {
         textViewInformaQueAindaNaoCadastrouPorcentagemDaMaquininha = viewFinanceiroFragment.findViewById(R.id.textoVoceAindaNaoCadastrouAsPorcentagensId);
         textViewNomeMaquininhaQuandoHouver = viewFinanceiroFragment.findViewById(R.id.textView99);
         textViewInformandoQueNaoTemGastosAvulsos = viewFinanceiroFragment.findViewById(R.id.textoVoceAindaNaoAdicionouNenhumGastoAvulsoId);
+        textViewValorTotalGastoFixo = viewFinanceiroFragment.findViewById(R.id.valorTotalGastosFixosId);
+        textViewViewTotalGastoAvulsos = viewFinanceiroFragment.findViewById(R.id.valorTotalDeGastoAvulsoId);
         //Montar as datas referencia atual
         diaAtual = formatoDataVerificaGastosAvulsos.format(dataHoje);
         anoAtual = simpleDateFormatCollectionReferenciaAnoAtual.format(dataHoje);
@@ -169,12 +174,21 @@ public class FinanceiroFragment extends Fragment {
             }
         });
 //
-        carregarDadosGastosFixos();
-        verificaSeTemGastosFixosCadastrados();
 
-        adapterModeloGastosFixos.startListening();
-        verificaSeTemGastoAvulsoNesseMes();
+
+        carregatodosOsDados();
         return viewFinanceiroFragment;
+    }
+
+    private void carregarTotalGastoAvulsoMensal() {
+        ModeloGastosAvulsosDAO modeloGastosAvulsosDAO = new ModeloGastosAvulsosDAO(getContext());
+        modeloGastosAvulsosDAO.recuperarValorTotalGastoAvulso(textViewViewTotalGastoAvulsos);
+
+    }
+
+    private void carregarTotalGastoFixoMensal() {
+        ModeloGastosFixosDAO modeloGastosFixosDAOExibeValorTotalGastoFixo = new ModeloGastosFixosDAO(getContext());
+        modeloGastosFixosDAOExibeValorTotalGastoFixo.recuperaTotalGastosFixos(textViewValorTotalGastoFixo);
     }
 
     private void carregarDadosDaMaquininha() {
@@ -325,16 +339,18 @@ public class FinanceiroFragment extends Fragment {
 
     public void verificaSeTemGastoAvulsoNesseMes(){
 
-        System.out.println("mes referencia " + mesReferenciaDesseMontante);
-        firestore.collection("GASTOS_AVULSOS").whereEqualTo("dataPagamentoAvulsos", mesReferenciaDesseMontante).get()
+        collectionReference = firestore.collection("GASTOS_AVULSOS");
+        collectionReference.whereEqualTo("dataPagamentoAvulsos", mesReferenciaDesseMontante).get()
                         .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                             @Override
                             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                            List<DocumentSnapshot> listaGastoAvulsosDesseMes = queryDocumentSnapshots.getDocuments();
                            if(listaGastoAvulsosDesseMes.size() > 0){
                                System.out.println("Achou a queryy");
+                               textViewInformandoQueNaoTemGastosAvulsos.setVisibility(View.GONE);
                                carregarDadosDosGastosAvulsosDesseMes();
                            }else{
+                               textViewInformandoQueNaoTemGastosAvulsos.setVisibility(View.VISIBLE);
                                System.out.println("Não achou a queryy");
                            }
                             }
@@ -346,11 +362,9 @@ public class FinanceiroFragment extends Fragment {
 
     private void carregarDadosDosGastosAvulsosDesseMes() {
 //        CollectionReference collectionReference = firestore.collection("GASTOS_AVULSOS");
-
-        Query query = collectionReferenceGastosAvulsos.whereEqualTo("dataPagamentoAvulsos", mesReferenciaDesseMontante).orderBy("nomeDoGastoAvulsos", Query.Direction.ASCENDING);
+        collectionReference = firestore.collection("GASTOS_AVULSOS");
+        Query query = collectionReference.whereEqualTo("dataPagamentoAvulsos", mesReferenciaDesseMontante).orderBy("nomeDoGastoAvulsos", Query.Direction.ASCENDING);
         System.out.println("Query++++++++++++++++++++++ " + query.get());
-
-
 
 //        Query query = collectionReferenceGastosAvulsos.orderBy("nomeDoGastoFixo", Query.Direction.ASCENDING);
         System.out.println("Passou pelo carregarDadosDosGastosAvulsosDesseMes");
@@ -359,6 +373,7 @@ public class FinanceiroFragment extends Fragment {
         FirestoreRecyclerOptions<ModeloGastosAvulsos> options = new FirestoreRecyclerOptions.Builder<ModeloGastosAvulsos>()
                 .setQuery(query, ModeloGastosAvulsos.class)
                 .build();
+
 
 
 
@@ -373,7 +388,16 @@ public class FinanceiroFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        carregatodosOsDados();
 
+    }
+
+    private  void carregatodosOsDados(){
+        verificaSeTemGastoAvulsoNesseMes();
+        carregarTotalGastoFixoMensal();
+        carregarTotalGastoAvulsoMensal();
+        carregarDadosGastosFixos();
+        verificaSeTemGastosFixosCadastrados();
     }
 
     @Override

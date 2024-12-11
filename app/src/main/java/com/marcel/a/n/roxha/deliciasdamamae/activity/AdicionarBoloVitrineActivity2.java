@@ -191,7 +191,9 @@ public class AdicionarBoloVitrineActivity2 extends AppCompatActivity {
                 String idRecuperadoDaReceitaDeReferencia = bolosModelRecuperadoParaAdicionarNaVitrine.getIdReferenciaReceitaCadastrada();
                 BolosModel bolosModelParaAdicionarNaVitrineParaOOpaVendi = bolosModelRecuperadoParaAdicionarNaVitrine;
                 ModeloBoloAdicionadoExpostoVitrineParaOpaVendiDAO modeloBoloAdicionadoExpostoVitrineParaOpaVendiDAO = new ModeloBoloAdicionadoExpostoVitrineParaOpaVendiDAO(getApplicationContext());
-                modeloBoloAdicionadoExpostoVitrineParaOpaVendiDAO.salvarBoloAdicionadoNaVitrineParaOpaVendi(bolosModelParaAdicionarNaVitrineParaOOpaVendi);
+
+
+
 
 
 
@@ -204,6 +206,12 @@ public class AdicionarBoloVitrineActivity2 extends AppCompatActivity {
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
 
                         ReceitaModel receitaModelRecuperada = documentSnapshot.toObject(ReceitaModel.class);
+                        int quantidadeConvertida = Integer.parseInt(receitaModelRecuperada.getQuantRendimentoReceita());
+
+                        for(int i =0; i< quantidadeConvertida; i ++){
+                            modeloBoloAdicionadoExpostoVitrineParaOpaVendiDAO.salvarBoloAdicionadoNaVitrineParaOpaVendi(bolosModelParaAdicionarNaVitrineParaOOpaVendi);
+                        }
+
 
                         FirebaseFirestore fb = ConfiguracaoFirebase.getFirestor();
                         CollectionReference coll = fb.collection("RECEITA_CADASTRADA").document(receitaModelRecuperada.getIdReceita()).collection("INGREDIENTES_ADICIONADOS");

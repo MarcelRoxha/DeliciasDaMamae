@@ -10,6 +10,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.marcel.a.n.roxha.deliciasdamamae.activity.LojaActivityV2;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
@@ -74,7 +75,8 @@ public class ModeloMontanteDiarioDAO implements InterfaceModeloMontanteDiarioDAO
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-
+                    Toast.makeText(context, "Algo deu errado, tente novamente mais tarde", Toast.LENGTH_SHORT).show();
+                    System.out.println("Error linha 79 " + e.getMessage());
                 }
             });
 
@@ -153,5 +155,52 @@ public class ModeloMontanteDiarioDAO implements InterfaceModeloMontanteDiarioDAO
     }
 
 
+    public void somaValorDeTrocoDesseDia(String idMontante, String valorTroco){
+
+        System.out.println("nomeCompletoColletion --XH--" + nomeCompletoColletion);
+        FirebaseFirestore.getInstance().collection(nomeCompletoColletion).document(idMontante).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                        ModeloMontanteDiario modeloMontanteDiarioRecuperado = documentSnapshot.toObject(ModeloMontanteDiario.class);
+                        String valorDeTrocoDesseDia = modeloMontanteDiarioRecuperado.getValorTotalDeTrocoDesseDia();
+                        double valorTrocoDoDiaConvertido = Double.parseDouble(valorDeTrocoDesseDia);
+                        double valorDoTrocoAtual = Double.parseDouble(valorTroco);
+                        double valorSomaTroco = valorDoTrocoAtual + valorTrocoDoDiaConvertido;
+                        String valorConvertidoParaRegistro = String.valueOf(valorSomaTroco);
+                        atualizarValorDoTrocoDesseDia(idMontante, valorConvertidoParaRegistro);
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(context, "Algo deu errado, tente novamente mais tarde", Toast.LENGTH_SHORT).show();
+                        System.out.println("Error linha 169 " + e.getMessage());
+                    }
+                });
+
+    }
+
+    private void atualizarValorDoTrocoDesseDia(String idMontante, String valorConvertidoParaRegistro) {
+
+        HashMap<String, Object> atualizarValorTrocoHoje = new HashMap<>();
+        atualizarValorTrocoHoje.put("valorTotalDeTrocoDesseDia", valorConvertidoParaRegistro);
+
+        this.referenceMontanteDiarioHoje.document(idMontante).update(atualizarValorTrocoHoje)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Toast.makeText(context, "Troco adicionado no montante diario com sucesso", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(context, "Algo deu errado, tente novamente mais tarde", Toast.LENGTH_SHORT).show();
+                        System.out.println("Error linha 198 " + e.getMessage());
+                    }
+                });
+
+    }
 
 }

@@ -117,14 +117,40 @@
             android:textStyle="bold"
             android:layout_marginTop="13dp"/>
 
-        <TextView
-            android:id="@+id/textView992"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/roboto"
-            android:text="Gastos fixos"
-            android:textSize="20sp"
-            android:layout_marginTop="13dp"/>
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/textView992"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/roboto"
+                android:text="Gastos fixos"
+                android:textSize="14sp"
+                android:layout_weight="1"
+                android:layout_marginTop="13dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:textSize="20sp"
+                android:fontFamily="@font/roboto"
+                android:text="R$:"
+                android:textAlignment="textEnd"
+                android:layout_marginTop="13dp"/>
+            <TextView
+                android:id="@+id/valorTotalGastosFixosId"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:textSize="20sp"
+                android:textAlignment="textEnd"
+                android:fontFamily="@font/roboto"
+                android:text="3000,00"
+                android:layout_marginTop="13dp"/>
+        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
@@ -155,14 +181,40 @@
             android:layout_marginTop="13dp"/>
 
 
-        <TextView
-            android:id="@+id/textView9922"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/roboto"
-            android:text="Gastos avulsos"
-            android:textSize="20sp"
-            android:layout_marginTop="13dp"/>
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/roboto"
+                android:text="Gastos avulsos"
+                android:layout_weight="1"
+                android:textSize="14sp"
+                android:layout_marginTop="13dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto"
+                android:text="R$:"
+                android:layout_weight="1"
+                android:textSize="20sp"
+                android:textAlignment="textEnd"
+                android:layout_marginTop="13dp"/>
+
+            <TextView
+                android:id="@+id/valorTotalDeGastoAvulsoId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto"
+                android:text="300,00"
+                android:textAlignment="textEnd"
+                android:layout_weight="1"
+                android:textSize="20sp"
+                android:layout_marginTop="13dp"/>
+        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/listaGastoAvulsosId"

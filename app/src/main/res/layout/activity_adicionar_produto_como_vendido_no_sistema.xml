@@ -231,7 +231,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-smallcaps"
-                android:text="PAGOU NO DINHEIRO OU PIX"
+                android:text="PAGOU NO PIX"
                 android:textColor="@color/azul_claro" />
 
             <RadioButton
@@ -248,6 +248,13 @@
                 android:layout_height="wrap_content"
                 android:text="PAGOU NO CRÉDITO"
                 android:textColor="@color/azul_claro" />
+            <RadioButton
+                android:id="@+id/radioButtonPagouNoDinheiroId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-smallcaps"
+                android:text="PAGOU NO DINHEIRO"
+                android:textColor="@color/azul_claro"/>
         </RadioGroup>
 
         <TextView

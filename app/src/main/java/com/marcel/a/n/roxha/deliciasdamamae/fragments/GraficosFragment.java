@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,16 +23,24 @@ import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.marcel.a.n.roxha.deliciasdamamae.R;
 import com.marcel.a.n.roxha.deliciasdamamae.adapter.BolosAdicionadosVitrineParaExibirQuandoVenderAdapter;
 import com.marcel.a.n.roxha.deliciasdamamae.config.ConfiguracaoFirebase;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloFormataData;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloGastosAvulsos;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloGastosFixos;
+import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloItemEstoque;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloMontanteDiario;
 import com.marcel.a.n.roxha.deliciasdamamae.model.ModeloMontanteMensalLoja;
 
@@ -67,6 +76,7 @@ public class GraficosFragment extends Fragment {
 
     private BarChart barChart;
     private BarChart barChartHoje;
+    private BarChart barChartGastos;
     private BarData barData;
     private BarData barDataHoje;
     private BarDataSet barDataSet;
@@ -136,6 +146,10 @@ public class GraficosFragment extends Fragment {
 
     private CollectionReference refBolosExpostosVitrine = firebaseFirestore.collection(COLLECTION_BOLOS_EXPOSTOS_VITRINE);
 
+    private List<ModeloGastosFixos> listaGastosFixos = new ArrayList<>();
+    private List<ModeloGastosAvulsos> listaGastosAvulsos = new ArrayList<>();
+    private List<ModeloItemEstoque> listaItensEmEstoque = new ArrayList<>();
+
     public GraficosFragment() {
         // Required empty public constructor
     }
@@ -198,6 +212,7 @@ public class GraficosFragment extends Fragment {
         //Graficos
         barChart = viewFinanceiroFragment.findViewById(R.id.grafico_mensal_id);
         barChartHoje = viewFinanceiroFragment.findViewById(R.id.grafico_hoje_id);
+        barChartGastos = viewFinanceiroFragment.findViewById(R.id.grafico_gastos_id);
 
 
         //Componentes de tela
@@ -238,7 +253,7 @@ public class GraficosFragment extends Fragment {
         hojeString = simpleDateFormat.format(hoje.getTime());
         textoInformativoUltimaAtualizacaoDoPainel.setText(hojeString);
         // Inflate the layout for this fragment
-
+        recuperaDadosDeGastosAvulsosEFixos();
         this.progressDialogCarregandoAsInformacoesDoCaixaDiario.dismiss();
         return viewFinanceiroFragment;
     }
@@ -334,6 +349,180 @@ public class GraficosFragment extends Fragment {
         verificaSeTemMontanteDiarioParaDadosSeremExibidos(progressDialogCarregandoAsInformacoesDoCaixaDiario);
 
 
+    }
+
+    private void recuperaDadosDeGastosAvulsosEFixos(){
+        this.progressDialogCarregandoAsInformacoesDoCaixaDiario.show();
+        listaGastosFixos = new ArrayList<>();
+        // Inicializa o Firebase Firestore
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+// Referencia a coleção de documentos
+        CollectionReference collectionRef = db.collection("GASTOS_FIXOS");
+
+// Cria um listener para receber as atualizações em tempo real
+        collectionRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@NonNull QuerySnapshot snapshot, @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.d("TAG", "Erro ao ouvir atualizações: ", e);
+                    return;
+                }
+
+                List<DocumentSnapshot> documents = snapshot.getDocuments();
+                for (DocumentSnapshot document : documents) {
+                    ModeloGastosFixos modeloGastosFixosRecuperado = new ModeloGastosFixos();
+                    Log.d("TAG", document.getId() + " => " + document.toObject(ModeloGastosFixos.class));
+                    modeloGastosFixosRecuperado = document.toObject(ModeloGastosFixos.class);
+                    listaGastosFixos.add(modeloGastosFixosRecuperado);
+                    // Atualiza a interface do usuário com os dados do documento
+//                    atualizarUI(document);
+                }
+                double somaGastosFixos = 0;
+                for (ModeloGastosFixos list: listaGastosFixos){
+                    somaGastosFixos += list.getValorGastoFixo();
+                }
+
+                carregaGastosAvulsosDesseMes(somaGastosFixos);
+
+            }
+        });
+
+
+    }
+
+    private void carregaGastosAvulsosDesseMes(double somaGastosFixos) {
+        listaGastosAvulsos = new ArrayList<>();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        ModeloFormataData dataRef = new ModeloFormataData();
+        String referenciaAtual = dataRef.getRetornaDataRefAtual();
+
+// Referencia a coleção de documentos
+        CollectionReference collectionRef = db.collection("GASTOS_AVULSOS");
+
+// Cria um listener para receber as atualizações em tempo real
+        collectionRef.whereEqualTo("dataPagamentoAvulsos", referenciaAtual).addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@NonNull QuerySnapshot snapshot, @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.d("TAG", "Erro ao ouvir atualizações: ", e);
+                    return;
+                }
+
+                List<DocumentSnapshot> documents = snapshot.getDocuments();
+                for (DocumentSnapshot document : documents) {
+                    ModeloGastosAvulsos modeloGastosFixosRecuperado = new ModeloGastosAvulsos();
+                    Log.d("TAG", document.getId() + " => " + document.toObject(ModeloGastosAvulsos.class));
+                    modeloGastosFixosRecuperado = document.toObject(ModeloGastosAvulsos.class);
+                    listaGastosAvulsos.add(modeloGastosFixosRecuperado);
+                    // Atualiza a interface do usuário com os dados do documento
+//                    atualizarUI(document);
+                }
+                double somaValores = 0;
+                for (ModeloGastosAvulsos list: listaGastosAvulsos){
+                    somaValores += list.getValorGastoAvulsos();
+                }
+
+                double somaTotalDeGastos = somaValores + somaGastosFixos;
+//                carregaGastosAvulsosDesseMes(somaGastosFixos);
+
+                carregaValorDoEstoqueAtualmente(somaValores, somaGastosFixos,somaTotalDeGastos);
+
+            }
+        });
+
+    }
+
+    private void carregaValorDoEstoqueAtualmente(double somaValores, double somaGastosFixos, double somaTotalDeGastos) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference collectionRef = db.collection("ITEM_ESTOQUE");
+        listaItensEmEstoque = new ArrayList<>();
+        collectionRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (error != null) {
+                    Log.d("TAG", "Erro ao ouvir atualizações: ", error);
+                    return;
+                }
+                List<DocumentSnapshot> documents = value.getDocuments();
+                for (DocumentSnapshot document : documents) {
+                    ModeloItemEstoque modeloGastosFixosRecuperado = new ModeloItemEstoque();
+                    Log.d("TAG", document.getId() + " => " + document.toObject(ModeloItemEstoque.class));
+                    modeloGastosFixosRecuperado = document.toObject(ModeloItemEstoque.class);
+                    listaItensEmEstoque.add(modeloGastosFixosRecuperado);
+                    // Atualiza a interface do usuário com os dados do documento
+//                    atualizarUI(document);
+                }
+
+                double soma = 0;
+                for (ModeloItemEstoque list: listaItensEmEstoque){
+                    String quantidade = list.getQuantidadeTotalItemEstoque();
+                    int quantidadeConvertida = Integer.parseInt(quantidade);
+                    String valorIndividual = list.getValorIndividualItemEstoque();
+                    double valorIndividualConvertido = Double.parseDouble(valorIndividual);
+                    double valorTotalDoItem = valorIndividualConvertido * quantidadeConvertida;
+                    soma += valorTotalDoItem;
+                }
+
+                double somaTotal = soma + somaValores + somaGastosFixos;
+
+                System.out.println("finalizou total avulso" + somaValores);
+                System.out.println("finalizou total fixo" + somaGastosFixos);
+                System.out.println("finalizou total itens estoque" + soma);
+                System.out.println("finalizou total total" + somaTotal);
+
+                carragarValoresParaOsGraficos(somaValores, somaGastosFixos, soma, somaTotal);
+            }
+        });
+    }
+
+    private void carragarValoresParaOsGraficos(double somaValores, double somaGastosFixos, double soma, double somaTotal) {
+
+        String valorGastosAvulsos = String.valueOf(somaValores);
+        String valorGastosFixos = String.valueOf(somaGastosFixos);
+        String valorGastosComItensEmEstoque = String.valueOf(soma);
+        String valorTotalDosGastos = String.valueOf(somaTotal);
+
+        Float floatTotalGastosAvulsos = Float.parseFloat(valorGastosAvulsos.replace(",", "."));
+        Float floatTotalGastosFixos = Float.parseFloat(valorGastosFixos.replace(",", "."));
+        Float floatTotalGastosItensEstoque = Float.parseFloat(valorGastosComItensEmEstoque.replace(",", "."));
+        Float floatTotalDeGastosEmGeral = Float.parseFloat(valorTotalDosGastos.replace(",", "."));
+
+        Float determinaTetoGrafico = floatTotalDeGastosEmGeral + 10;
+
+
+        List<String> xValuesDiario = Arrays.asList("G.Avulso", "G. Fixo", "Total Estoque", "Total Geral");
+        barChartGastos.getAxisRight().setDrawLabels(false);
+
+        ArrayList<BarEntry> entries = new ArrayList<>();
+        entries.add(new BarEntry(0, floatTotalGastosAvulsos));
+        entries.add(new BarEntry(1, floatTotalGastosFixos));
+        entries.add(new BarEntry(2, floatTotalGastosItensEstoque));
+        entries.add(new BarEntry(3, floatTotalDeGastosEmGeral));
+
+        YAxis yAxis = barChartGastos.getAxisLeft();
+        yAxis.setAxisMaximum(0f);
+        yAxis.setAxisMaximum(determinaTetoGrafico);
+        yAxis.setAxisLineWidth(2f);
+        yAxis.setAxisLineColor(Color.BLACK);
+        yAxis.setLabelCount(10);
+
+
+        barDataSetHoje = new BarDataSet(entries, "Valores ao londo do dia");
+        barDataSetHoje.setColors(ColorTemplate.COLORFUL_COLORS);
+
+        barDataHoje = new BarData(barDataSetHoje);
+        barChartGastos.setData(barDataHoje);
+
+        barChartGastos.getDescription().setEnabled(false);
+
+        barChartGastos.invalidate();
+
+        barChartGastos.getXAxis().setValueFormatter(new IndexAxisValueFormatter(xValuesDiario));
+        barChartGastos.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        barChartGastos.getXAxis().setGranularity(1f);
+        barChartGastos.getXAxis().setGranularityEnabled(true);
+        this.progressDialogCarregandoAsInformacoesDoCaixaDiario.dismiss();
     }
 
     private void verificaSeTemMontanteDiarioParaDadosSeremExibidos(AlertDialog progressDialogCarregandoAsInformacoesDoCaixaDiario) {

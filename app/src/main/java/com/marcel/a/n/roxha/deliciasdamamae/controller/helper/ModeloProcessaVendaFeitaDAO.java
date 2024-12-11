@@ -37,6 +37,8 @@ public class ModeloProcessaVendaFeitaDAO implements InterfaceModeloProcessaVenda
     private static final String COLLECTION_MONTANTE_MENSAL = "MONTANTE_MENSAL_";
     private static final String COLLECTION_CAIXA_DIARIO = "CAIXAS_DIARIO_";
 
+    private static final String COLLECTION_BOLOS_EXPOSTOS_VITRINE = "BOLOS_EXPOSTOS_VITRINE";
+
     private String nomeCollectionNomeCaixaDiario = "";
     private String nomeCollectionNomeMontanteMensal = "";
     private Date dataHojeReferencia = new Date();
@@ -53,13 +55,6 @@ public class ModeloProcessaVendaFeitaDAO implements InterfaceModeloProcessaVenda
     private SimpleDateFormat simpleDateFormatCollectionDataCaixaDiario = new SimpleDateFormat("dd/MM/yyyy");
     private SimpleDateFormat simpleDateFormatHoraProcessamentoDaVenda = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
-    private boolean verificaVendaIfood = false;
-    private boolean verificaVendaLoja = false;
-
-
-    private boolean verificaMetodoDinheirOuPix = false;
-    private boolean verificaMetodoDebito = false;
-    private boolean verificaMetodoCredito = false;
 
     private String valorQuePrecisaraSerSomadoEmGeralMontanteMensal = "";
     private String valorQuePrecisaraSerSomadoEmGeralMontanteDiario = "";
@@ -69,13 +64,12 @@ public class ModeloProcessaVendaFeitaDAO implements InterfaceModeloProcessaVenda
     private String valorQuePrecisaSerSomadoDependendoDoTipoDeMetodoDePagamentoDiario = "";
 
 
-//    private String valorQuePrecisaraSerSomadoEmGeralDiario;
-//    private String valorQuePrecisaraSerSomadoDependendoDeOndeSaiuAVendaDiario;
-//    private String valorQuePrecisaSerSomadoDependendoDoTipoDeMetodoDePagamentoDiario;
 
     private String valorQueOProdutoFoiVendido;
     private FirebaseFirestore firestore = ConfiguracaoFirebase.getFirestor();
     private CollectionReference collectionReferenceMontanteMensal;
+
+    private CollectionReference bolosExpostosVitrine = firestore.collection(COLLECTION_BOLOS_EXPOSTOS_VITRINE);
 
     private ModeloMontanteMensalLoja modeloMontanteMensalLoja;
     private  ModeloMontanteDiario modeloMontanteDiario;
@@ -92,6 +86,7 @@ public class ModeloProcessaVendaFeitaDAO implements InterfaceModeloProcessaVenda
         dataCompleta = simpleDateFormatCollectionDataCaixaDiario.format(dataHojeReferencia.getTime());
         nomeCollectionNomeMontanteMensal = COLLECTION_MONTANTE_MENSAL + mesReferenciaDesseMontante;
         nomeCollectionNomeCaixaDiario = COLLECTION_CAIXA_DIARIO + mesReferenciaDesseMontante;
+
     }
 
     @Override
@@ -209,6 +204,29 @@ public class ModeloProcessaVendaFeitaDAO implements InterfaceModeloProcessaVenda
 
         return false;
     }
+
+    @Override
+    public boolean removeBoloVitrineVendido(String idProduto) {
+        this.bolosExpostosVitrine.document(idProduto).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Toast.makeText(context, "Produto removido da vitrine", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(context, LojaActivityV2.class);
+                context.startActivity(intent);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(context, "Algo deu errado ao remover produto da vitrine", Toast.LENGTH_SHORT).show();
+                System.out.println("Error 219" + e.getMessage());
+                Intent intent = new Intent(context, LojaActivityV2.class);
+                context.startActivity(intent);
+            }
+        });
+
+        return false;
+    }
+
     public boolean processaNoMontanteDiarioVendaFeita(@NonNull ModeloProdutoVendido modeloProdutoVendido, String idMontanteDiario) {
         valorQueOProdutoFoiVendido = modeloProdutoVendido.getValorQueOBoloFoiVendido();
         Map<String, Object> montanteDiarioAtualizandoDevidoAVendaDiario = new HashMap<>();
@@ -451,3 +469,5 @@ public class ModeloProcessaVendaFeitaDAO implements InterfaceModeloProcessaVenda
         return false;
     }
 }
+
+

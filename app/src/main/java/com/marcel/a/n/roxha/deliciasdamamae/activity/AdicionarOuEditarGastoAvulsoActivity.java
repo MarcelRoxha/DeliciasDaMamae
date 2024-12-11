@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
@@ -148,11 +149,16 @@ public class AdicionarOuEditarGastoAvulsoActivity extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                                         ModeloMontanteMensalLoja modeloMontanteMensalLoja = documentSnapshot.toObject(ModeloMontanteMensalLoja.class);
-
+                                        String valorTotalGastoAvulso = "";
                                         String quantidadeDinheiro = modeloMontanteMensalLoja.getQuantoDinheiroSaiuEsseMes().replace(",", ".");
 
+                                        if(modeloMontanteMensalLoja.getValorTotalGastoAvulsoDesseMes() != null){
 
-                                        String valorTotalGastoAvulso = modeloMontanteMensalLoja.getValorTotalGastoAvulsoDesseMes().replace(",", ".");
+                                            valorTotalGastoAvulso = modeloMontanteMensalLoja.getValorTotalGastoAvulsoDesseMes().replace(",", ".");
+
+                                        }else{
+                                            valorTotalGastoAvulso = "0";
+                                        }
 
                                         double quantidadeDinheiroConvert = Double.parseDouble(quantidadeDinheiro);
                                         double valorTotalGastoAvulsoConvert = Double.parseDouble(valorTotalGastoAvulso);
@@ -187,7 +193,9 @@ public class AdicionarOuEditarGastoAvulsoActivity extends AppCompatActivity {
 
         System.out.println("adicionaGastoAvulsoNoMontanteMensal ModeloGastosAvulsos " + modeloGastosAvulsos);
         modeloMontanteMensalDAO.adicionarGastoAvulsoMontanteMensal(somaQuantidadeDinheiroSaiu, somaValorTotalGastoAvulso, idRecuperadoMontante, modeloGastosAvulsos);
-
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.popBackStackImmediate();
+        finish();
 
     }
 
