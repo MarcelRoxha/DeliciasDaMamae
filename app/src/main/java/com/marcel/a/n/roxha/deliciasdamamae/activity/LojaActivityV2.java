@@ -8,6 +8,7 @@ import com.marcel.a.n.roxha.deliciasdamamae.R;
 import com.marcel.a.n.roxha.deliciasdamamae.fragments.CaixaLojaFragment;
 import com.marcel.a.n.roxha.deliciasdamamae.fragments.FinanceiroFragment;
 import com.marcel.a.n.roxha.deliciasdamamae.fragments.GraficosFragment;
+import com.marcel.a.n.roxha.deliciasdamamae.fragments.ListaDeItensAcabandoFragment;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
@@ -40,6 +41,7 @@ public class LojaActivityV2 extends AppCompatActivity {
                         .add("CAIXA", CaixaLojaFragment.class)
                         .add("FINANCEIRO", FinanceiroFragment.class)
                         .add("GRÁFICOS", GraficosFragment.class)
+                        .add("DASH INGREDIENTES", ListaDeItensAcabandoFragment.class)
                         .create()
         );
         viewPager.setAdapter(adapter);

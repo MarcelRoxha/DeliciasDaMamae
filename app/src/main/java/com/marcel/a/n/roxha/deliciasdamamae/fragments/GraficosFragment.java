@@ -458,7 +458,7 @@ public class GraficosFragment extends Fragment {
                 for (ModeloItemEstoque list: listaItensEmEstoque){
                     String quantidade = list.getQuantidadeTotalItemEstoque();
                     int quantidadeConvertida = Integer.parseInt(quantidade);
-                    String valorIndividual = list.getValorIndividualItemEstoque();
+                    String valorIndividual = list.getValorIndividualItemEstoque().replace(",", ".");
                     double valorIndividualConvertido = Double.parseDouble(valorIndividual);
                     double valorTotalDoItem = valorIndividualConvertido * quantidadeConvertida;
                     soma += valorTotalDoItem;

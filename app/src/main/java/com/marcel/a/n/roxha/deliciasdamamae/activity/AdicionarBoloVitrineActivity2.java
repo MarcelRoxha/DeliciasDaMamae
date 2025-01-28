@@ -255,13 +255,14 @@ public class AdicionarBoloVitrineActivity2 extends AppCompatActivity {
                                                             String custoTotalItem = modeloItemEstoqueRecuperado.getCustoTotalDoItemEmEstoque();
                                                             String quantidadeUtilizadaNasReceitas = modeloItemEstoqueRecuperado.getQuantidadeUtilizadaNasReceitas();
                                                             String quantidadeTotalPorVolume = modeloItemEstoqueRecuperado.getQuantidadeTotalItemEmEstoquePorVolume();*/
-                                                            String quantidadeTotalItemEmEstoqueRecuperado  = modeloItemEstoqueRecuperado.getQuantidadeTotalItemEmEstoqueEmGramas();
+                                                            double quantidadeConvertidada = Double.parseDouble(modeloItemEstoqueRecuperado.getQuantidadeTotalItemEmEstoqueEmGramas());
+
                                                             String quantidadePorVolumeDesseItem = modeloItemEstoqueRecuperado.getQuantidadePorVolumeItemEstoque();
 
-                                                            double quantidadeTotalItemEmEstoqueConvertidoDouble = Double.parseDouble(quantidadeTotalItemEmEstoqueRecuperado);
+//                                                            double quantidadeTotalItemEmEstoqueConvertidoDouble = Double.parseDouble(quantidadeTotalItemEmEstoqueRecuperado);
                                                             double quantidadePorVolumeItemEmEstoqueConvertidoDouble = Double.parseDouble(quantidadePorVolumeDesseItem);
 
-                                                            resultadoDaConta = quantidadeTotalItemEmEstoqueConvertidoDouble - quantidadeUsadaRecuperadaConvertida;
+                                                            resultadoDaConta = quantidadeConvertidada - quantidadeUsadaRecuperadaConvertida;
 
                                                             if(resultadoDaConta < 0){
 
